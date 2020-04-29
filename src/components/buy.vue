@@ -1,6 +1,6 @@
 <template>
   <div>
-    <home-header />
+    <p>开发中...</p>
     <home-nav></home-nav>
   </div>
 </template>
@@ -12,6 +12,7 @@ import HomeNav from './pages/nav'
 export default {
   data () {
     return {
+      active: 0
     }
   },
   components: {
@@ -23,4 +24,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>
