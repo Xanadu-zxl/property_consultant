@@ -3,10 +3,13 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import { Tabbar, TabbarItem } from 'vant'
+import './assets/css/reset.css'
+import { Tabbar, TabbarItem, Collapse, CollapseItem } from 'vant'
 
 Vue.use(Tabbar)
 Vue.use(TabbarItem)
+Vue.use(Collapse)
+Vue.use(CollapseItem)
 
 Vue.config.productionTip = false
 
