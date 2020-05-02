@@ -4,12 +4,14 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import './assets/css/reset.css'
-import { Tabbar, TabbarItem, Collapse, CollapseItem } from 'vant'
+import './assets/svg/style.css'
+import { Tabbar, TabbarItem, Collapse, CollapseItem, List } from 'vant'
 
 Vue.use(Tabbar)
 Vue.use(TabbarItem)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
+Vue.use(List)
 
 Vue.config.productionTip = false
 
