@@ -1,11 +1,11 @@
 <template>
   <div>
     <van-tabbar fixed route>
-      <van-tabbar-item icon="like"  to="/" >首页</van-tabbar-item>
-      <van-tabbar-item icon="star"  to="/buy">认购前</van-tabbar-item>
-      <van-tabbar-item icon="fire"  to="/subscribe">已认购</van-tabbar-item>
-      <van-tabbar-item icon="cart"  to="/sign">已签约</van-tabbar-item>
-      <van-tabbar-item icon="bag"  to="/owner">准业主</van-tabbar-item>
+      <van-tabbar-item class="icon-Index-Icon-Home" to="/">首页</van-tabbar-item>
+      <van-tabbar-item class="icon-Index-Icon-Before-Subscription" to="/buy">认购前</van-tabbar-item>
+      <van-tabbar-item class="icon-Index-Icon-Subscription" to="/subscribe">已认购</van-tabbar-item>
+      <van-tabbar-item class="icon-Index-Icon-Subscribed" to="/sign">已签约</van-tabbar-item>
+      <van-tabbar-item class="icon-Index-Icon-Owner" to="/owner">准业主</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
@@ -22,4 +22,23 @@ export default {
 </script>
 
 <style>
+.van-tabbar {
+  height: 40px;
+}
+
+.van-tabbar-item__icon {
+  margin-bottom: 6px;
+}
+
+.van-tabbar-item--active,
+.van-tabbar-item--active::before {
+  color: #00a862;
+}
+
+.van-tabbar-item {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
 </style>

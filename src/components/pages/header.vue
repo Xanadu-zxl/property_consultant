@@ -1,13 +1,13 @@
 <template>
   <div>
     <header class="header">
-      <div class="box">
+      <router-link class="box" to="/customer">
         <p class="title">新客户</p>
-        <img src="@/assets/img/Index-Card-Users.png" class="img">
-      </div>
+        <img class="img" src="@/assets/img/Index-Card-Users.png" />
+      </router-link>
       <div class="box">
         <p class="title">工具箱</p>
-        <img src="@/assets/img/Index-Card-Tool.png" class="img">
+        <img class="img" src="@/assets/img/Index-Card-Tool.png" />
       </div>
     </header>
   </div>
@@ -34,7 +34,7 @@ export default {
 .box {
   width: 47%;
   position: relative;
-  border-radius: 0.3125rem;
+  border-radius: 4;
 }
 
 .title {
@@ -46,9 +46,8 @@ export default {
   font-weight: 600;
 }
 
-.img{
-  width:100%;
+.img {
+  width: 100%;
   border-radius: 0.3125rem;
-
 }
 </style>
