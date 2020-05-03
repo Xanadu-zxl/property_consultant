@@ -27,7 +27,7 @@ export default {
 <style  scoped>
 .header {
   width: 88%;
-  margin: 0 auto;
+  margin: 60px auto 0px;
   display: flex;
   justify-content: space-around;
 }
