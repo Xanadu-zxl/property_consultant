@@ -22,8 +22,12 @@ export default [
   {
     path: '/owner',
     name: 'owner',
-
     component: () => import(/* webpackChunkName:'owner' */'@/components/owner')
+  },
+  {
+    path: '/customer',
+    name: 'customer',
+    component: () => import(/* webpackChunkName:'customer' */'@/components/customer')
   },
   {
     path: '*',
