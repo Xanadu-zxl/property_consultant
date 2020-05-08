@@ -1,18 +1,19 @@
 @font-face {
-  font-family: 'icomoon';
-  src:  url('fontss/icomoon.eot?mvsfxn');
-  src:  url('fontss/icomoon.eot?mvsfxn#iefix') format('embedded-opentype'),
-    url('fontss/icomoon.ttf?mvsfxn') format('truetype'),
-    url('fontss/icomoon.woff?mvsfxn') format('woff'),
-    url('fontss/icomoon.svg?mvsfxn#icomoon') format('svg');
+  font-family: "icomoon";
+  src: url("fontss/icomoon.eot?mvsfxn");
+  src: url("fontss/icomoon.eot?mvsfxn#iefix") format("embedded-opentype"),
+    url("fontss/icomoon.ttf?mvsfxn") format("truetype"),
+    url("fontss/icomoon.woff?mvsfxn") format("woff"),
+    url("fontss/icomoon.svg?mvsfxn#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="icon-"],
+[class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icomoon' !important;
+  font-family: "icomoon" !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -24,42 +25,73 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+/* message */
 .icon-Info-Icon-User:before {
   content: "\e100";
+  font-size: 25px;
+  color: #fff;
+  line-height: 1.5;
 }
 .icon-Info-Icon-Type:before {
   content: "\e101";
+  font-size: 25px;
+  color: #fff;
+  line-height: 1.5;
 }
 .icon-Info-Icon-Structure:before {
   content: "\e102";
+  font-size: 25px;
+  color: #fff;
+  line-height: 1.5;
 }
 .icon-Info-Icon-Star:before {
   content: "\e103";
+  font-size: 25px;
+  color: #fff;
+  line-height: 1.5;
 }
 .icon-Info-Icon-Region:before {
   content: "\e104";
+  font-size: 25px;
+  color: #fff;
+  line-height: 1.5;
 }
 .icon-Info-Icon-Question:before {
   content: "\e105";
+  font-size: 25px;
+  color: #fff;
+  line-height: 1.5;
 }
 .icon-Info-Icon-Price:before {
   content: "\e106";
-}
-.icon-Info-Icon-Phone:before {
-  content: "\e107";
-  color: #00A862;
-  font-size: 20px;
+  font-size: 25px;
+  color: #fff;
+  line-height: 1.5;
 }
 .icon-Info-Icon-link:before {
   content: "\e108";
+  font-size: 25px;
+  color: #fff;
+  line-height: 1.5;
 }
 .icon-Info-Icon-Foot:before {
   content: "\e109";
+  font-size: 25px;
+  color: #fff;
+  line-height: 1.5;
 }
 .icon-Info-Icon-File:before {
   content: "\e10a";
+  font-size: 25px;
+  color: #fff;
+  line-height: 1.5;
 }
+.icon-Info-Icon-Phone:before {
+  content: "\e107";
+  color: #00a862;
+  font-size: 20px;
+}
+/* 11 */
 .icon-Info-Icon-Edit:before {
   content: "\e10b";
 }

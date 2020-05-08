@@ -6,12 +6,14 @@ import router from './router'
 import './assets/css/reset.css'
 import './assets/svg/styles.css'
 import './assets/svg/style.css'
-import { Tab, Tabs, Tabbar, TabbarItem, Collapse, CollapseItem, List, Field, Picker, Cell, Popup, RadioGroup, Radio, Calendar, DatetimePicker, DropdownMenu, DropdownItem } from 'vant'
+import { Tab, Tabs, Tabbar, TabbarItem, Collapse, CollapseItem, List, Field, Picker, Cell, Popup, RadioGroup, Radio, Calendar, DatetimePicker, DropdownMenu, DropdownItem, Icon } from 'vant'
 import axios from 'axios'
 
 Vue.prototype.$axios = axios
 
 Vue.use(DropdownMenu)
+
+Vue.use(Icon)
 Vue.use(DropdownItem)
 Vue.use(Tab)
 Vue.use(Tabs)
