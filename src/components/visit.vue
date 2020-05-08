@@ -2,19 +2,19 @@
   <div>
     <customer-tabbar :title="title" />
     <header class="header">
-      <img alt class="img" src="../assets/img/Avator-Man.png" />
+      <img alt class="img" src="@/assets/img/Avator-Man.png" />
     </header>
     <aside class="aside">
-      <van-field label="客户姓名" placeholder="例如：张三" v-model="id" />
+      <van-field label="客户姓名" required placeholder="例如：张三" v-model="id" />
       <van-field label="客户性别" name="gender">
         <template #input>
-          <van-radio-group direction="horizontal" v-model="gender">
+          <van-radio-group direction="horizontal" v-model="customer_gender">
             <van-radio checked-color="#00A862" name="0">女</van-radio>
             <van-radio checked-color="#00A862" name="1">男</van-radio>
           </van-radio-group>
         </template>
       </van-field>
-      <van-field label="手机号码" placeholder="+ 10086" type="number" v-model="number" />
+      <van-field label="手机号码" required placeholder="+ 10086" type="number" v-model="number" />
       <van-field label="E-mail" placeholder="例如：10086@gmail.com" type="email" v-model="email" />
 
       <van-field
@@ -38,7 +38,7 @@
         />
       </van-popup>
 
-      <van-field label="意向等级" name="grade">
+      <van-field label="意向等级" required name="grade">
         <template #input>
           <van-radio-group direction="horizontal" v-model="grade">
             <van-radio checked-color="#00A862" name="A">A</van-radio>
@@ -66,7 +66,7 @@ export default {
       number: '',
       email: '',
       birthday: '',
-      gender: '0',
+      customer_gender: '0',
       grade: 'A',
       dataTime: '',
       showPicker: false,
@@ -119,7 +119,7 @@ export default {
     font-size: 17px
 
   .van-field__body
-    margin-top: 20px
+    margin-top: 15px
     font-size: 15px
 
   .van-field__control

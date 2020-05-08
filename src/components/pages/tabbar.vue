@@ -37,5 +37,7 @@ export default {
 .icon-Index-Icon-Down {
   position: absolute;
   left: 10px;
+  top: 50%;
+  transform: translate(0, -50%);
 }
 </style>
