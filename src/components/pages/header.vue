@@ -1,14 +1,14 @@
 <template>
   <div>
     <header class="header">
-      <router-link class="box" to="/customer">
+      <router-link class="box" to="/real_estate/saler/customer">
         <p class="title">新客户</p>
         <img class="img" src="@/assets/img/Index-Card-Users.png" />
       </router-link>
-      <div class="box">
+      <router-link to="#" class="box">
         <p class="title">工具箱</p>
         <img class="img" src="@/assets/img/Index-Card-Tool.png" />
-      </div>
+      </router-link>
     </header>
   </div>
 </template>

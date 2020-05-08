@@ -18,6 +18,7 @@
   "plugins": [
     "transform-vue-jsx",
     "transform-runtime",
+    //配置.babelrc
     [
       "import",
       {

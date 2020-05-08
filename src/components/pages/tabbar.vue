@@ -1,7 +1,7 @@
 <template>
   <div>
     <header class="tabnar-header">
-      <i class="icon-Index-Icon-Down"></i>
+      <i @click="back" class="icon-Index-Icon-Down"></i>
       {{title}}
     </header>
   </div>
@@ -13,6 +13,11 @@ export default {
   data () {
     return {
 
+    }
+  },
+  methods: {
+    back () {
+      this.$router.go(-1)
     }
   }
 

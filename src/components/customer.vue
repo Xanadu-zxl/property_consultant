@@ -1,10 +1,10 @@
 <template>
   <div>
     <customer-tabbar :title="title" />
-    <div class="customer-phone">
+    <router-link to="/real_estate/saler/visit" class="customer-phone">
       <img alt src="@/assets/img/Card-Visit.png" />
       <span>到访客户</span>
-    </div>
+    </router-link>
     <div class="customer-visit">
       <img alt src="@/assets/img/Card-phone.png" />
       <span>来电客户</span>
@@ -52,6 +52,7 @@ export default {
   width: 80%;
   margin: 0px auto;
   height: 100px;
+  display: block;
   position: relative;
 }
 

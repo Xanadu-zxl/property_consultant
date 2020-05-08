@@ -5,20 +5,24 @@ import App from './App'
 import router from './router'
 import './assets/css/reset.css'
 import './assets/svg/style.css'
-import { Tabbar, TabbarItem, Collapse, CollapseItem, List } from 'vant'
-import axios from 'axios'
-import unit from './unit/index'
-import vueJsonp from 'vue-jsonp'
+import { Tabbar, TabbarItem, Collapse, CollapseItem, List, Field, Picker, Cell, Popup, RadioGroup, Radio, Calendar, DatetimePicker } from 'vant'
+import axios from 'axios' // 全局注册，使用方法为:this.$axios
 
-Vue.prototype.$axios = axios // 全局注册，使用方法为:this.$axios
+Vue.prototype.$axios = axios
 
+Vue.use(DatetimePicker)
 Vue.use(Tabbar)
 Vue.use(TabbarItem)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(List)
-Vue.use(unit)
-Vue.use(vueJsonp)
+Vue.use(Field)
+Vue.use(Popup)
+Vue.use(Picker)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(Calendar)
+Vue.use(Cell)
 
 Vue.config.productionTip = false
 

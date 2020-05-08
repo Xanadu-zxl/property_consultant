@@ -35,6 +35,21 @@ export default [
     component: () => import(/* webpackChunkName:'code' */'@/components/code')
   },
   {
+    path: '/real_estate/saler/visit',
+    name: 'visit',
+    component: () => import(/* webpackChunkName:'visit' */'@/components/visit')
+  },
+  {
+    path: '/real_estate/saler/call',
+    name: 'call',
+    component: () => import(/* webpackChunkName:'call' */'@/components/call')
+  },
+  {
+    path: '/real_estate/saler/message',
+    name: 'message',
+    component: () => import(/* webpackChunkName:'message' */'@/components/message')
+  },
+  {
     path: '*',
     name: '404',
     component: () => import('@/components/home')
