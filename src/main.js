@@ -4,12 +4,17 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import './assets/css/reset.css'
+import './assets/svg/styles.css'
 import './assets/svg/style.css'
-import { Tabbar, TabbarItem, Collapse, CollapseItem, List, Field, Picker, Cell, Popup, RadioGroup, Radio, Calendar, DatetimePicker } from 'vant'
-import axios from 'axios' // 全局注册，使用方法为:this.$axios
+import { Tab, Tabs, Tabbar, TabbarItem, Collapse, CollapseItem, List, Field, Picker, Cell, Popup, RadioGroup, Radio, Calendar, DatetimePicker, DropdownMenu, DropdownItem } from 'vant'
+import axios from 'axios'
 
 Vue.prototype.$axios = axios
 
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
+Vue.use(Tab)
+Vue.use(Tabs)
 Vue.use(DatetimePicker)
 Vue.use(Tabbar)
 Vue.use(TabbarItem)
