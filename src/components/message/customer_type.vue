@@ -2,14 +2,13 @@
   <div>
     <customer-tabbar :title="title" />
     <div class="channel-content">
-      <div class="channel-content-class">东门</div>
-      <div class="channel-content-class">西门</div>
-      <div class="channel-content-class">南门</div>
-      <div class="channel-content-class">北门</div>
-      <div class="channel-content-class">二环内</div>
-      <div class="channel-content-class">三环内</div>
+      <div class="channel-content-class">夫妻家庭</div>
+      <div class="channel-content-class">核心家庭</div>
+      <div class="channel-content-class">主干家庭</div>
+      <div class="channel-content-class">联合家庭</div>
+      <div class="channel-content-class">单亲家庭</div>
+      <div class="channel-content-class">隔代家庭</div>
     </div>
-
   </div>
 </template>
 
@@ -19,7 +18,7 @@ export default {
 
   data () {
     return {
-      title: '客户区域'
+      title: '家庭结构'
     }
   },
   components: {

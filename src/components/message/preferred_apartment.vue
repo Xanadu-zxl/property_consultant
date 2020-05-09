@@ -2,12 +2,14 @@
   <div>
     <customer-tabbar :title="title" />
     <div class="channel-content">
-      <div class="channel-content-class">东门</div>
-      <div class="channel-content-class">西门</div>
-      <div class="channel-content-class">南门</div>
-      <div class="channel-content-class">北门</div>
-      <div class="channel-content-class">二环内</div>
-      <div class="channel-content-class">三环内</div>
+      <div class="channel-content-class">平层户型</div>
+      <div class="channel-content-class">跃层户型</div>
+      <div class="channel-content-class">错层户型</div>
+      <div class="channel-content-class">复式户型</div>
+      <div class="channel-content-class">高层</div>
+      <div class="channel-content-class">多层</div>
+      <div class="channel-content-class">中高层</div>
+      <div class="channel-content-class">超高层</div>
     </div>
 
   </div>
@@ -19,7 +21,7 @@ export default {
 
   data () {
     return {
-      title: '客户区域'
+      title: '喜好户型'
     }
   },
   components: {

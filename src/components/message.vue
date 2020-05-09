@@ -50,18 +50,18 @@
         <i class="icon-Info-Icon-Region message-style-green"></i>
         <span class="message-project-title">客户区域</span>
       </router-link>
-      <div class="message-project">
+      <router-link to="/real_estate/saler/message/customer_type" class="message-project">
         <i class="icon-Info-Icon-Structure message-style-red"></i>
         <span class="message-project-title">家庭结构</span>
-      </div>
-      <div class="message-project">
+      </router-link>
+      <router-link to="/real_estate/saler/message/focus" class="message-project">
         <i class="icon-Info-Icon-Star message-style-blue"></i>
         <span class="message-project-title">关注重点</span>
-      </div>
-      <div class="message-project">
+      </router-link>
+      <router-link to="/real_estate/saler/message/preferred_apartment" class="message-project">
         <i class="icon-Info-Icon-Type message-style-orange"></i>
         <span class="message-project-title">意向户型</span>
-      </div>
+      </router-link>
       <div class="message-project">
         <i class="icon-Info-Icon-Foot message-style-blue"></i>
         <span class="message-project-title">置业跟踪</span>

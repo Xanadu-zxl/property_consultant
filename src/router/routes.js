@@ -75,6 +75,21 @@ export default [
     component: () => import(/* webpackChunkName:'living_area' */'@/components/message/living_area')
   },
   {
+    path: '/real_estate/saler/message/customer_type',
+    name: 'customer_type',
+    component: () => import(/* webpackChunkName:'customer_type' */'@/components/message/customer_type')
+  },
+  {
+    path: '/real_estate/saler/message/focus',
+    name: 'focus',
+    component: () => import(/* webpackChunkName:'focus' */'@/components/message/focus')
+  },
+  {
+    path: '/real_estate/saler/message/preferred_apartment',
+    name: 'preferred_apartment',
+    component: () => import(/* webpackChunkName:'preferred_apartment' */'@/components/message/preferred_apartment')
+  },
+  {
     path: '/real_estate/saler/message/channel/media',
     name: 'media',
     component: () => import(/* webpackChunkName:'media' */'@/components/message/media')

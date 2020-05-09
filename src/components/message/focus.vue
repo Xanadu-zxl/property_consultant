@@ -2,14 +2,15 @@
   <div>
     <customer-tabbar :title="title" />
     <div class="channel-content">
-      <div class="channel-content-class">东门</div>
-      <div class="channel-content-class">西门</div>
-      <div class="channel-content-class">南门</div>
-      <div class="channel-content-class">北门</div>
-      <div class="channel-content-class">二环内</div>
-      <div class="channel-content-class">三环内</div>
+      <div class="channel-content-class">公摊</div>
+      <div class="channel-content-class">得房率</div>
+      <div class="channel-content-class">开间和进深</div>
+      <div class="channel-content-class">楼间距</div>
+      <div class="channel-content-class">车位比</div>
+      <div class="channel-content-class">绿地率</div>
+      <div class="channel-content-class">容积率</div>
+      <div class="channel-content-class">赠送面积</div>
     </div>
-
   </div>
 </template>
 
@@ -19,7 +20,7 @@ export default {
 
   data () {
     return {
-      title: '客户区域'
+      title: '关注重点'
     }
   },
   components: {
@@ -52,5 +53,4 @@ export default {
   color: #00a862;
   border: 2px solid #00a862;
 }
-
 </style>
