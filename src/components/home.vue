@@ -78,6 +78,8 @@ export default {
       overdue: '2个',
       collection: '0位',
       messages: '',
+      CURRENT_USER_ID: '',
+      CURRENT_USER_PHONE: '',
 
       message: [{
         id: '1',
@@ -125,7 +127,17 @@ export default {
     HomeNav
   },
   mounted () {
+    // 读取cookie
+    this.id = this.$cookies.get('CURRENT_USER_ID')
+    this.phone = this.$cookies.get('CURRENT_USER_PHONRE')
 
+    // this.CURRENT_USER_ID = this.$cookies.get(CURRENT_USER_ID)
+    // this.CURRENT_USER_ID = this.$cookies.get(CURRENT_USER_ID)
+    this.$axios({
+      method: 'GET',
+      url: '/magnate/saler/welcome',
+      headers: {'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone}
+    })
   }
 }
 

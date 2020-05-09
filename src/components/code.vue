@@ -45,12 +45,6 @@ export default {
         // this.phone = data.data.phone
         this.$cookies.set('CURRENT_USER_ID', this.id)
         this.$cookies.set('CURRENT_USER_PHONE', this.phone)
-
-        this.$axios({
-          method: 'GET',
-          url: '/magnate/saler/welcome',
-          headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone }
-        })
       })
     })
   }
