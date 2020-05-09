@@ -50,6 +50,16 @@ export default [
     component: () => import(/* webpackChunkName:'message' */'@/components/message')
   },
   {
+    path: '/real_estate/saler/message/channel',
+    name: 'channel',
+    component: () => import(/* webpackChunkName:'channel' */'@/components/message/channel')
+  },
+  {
+    path: '/real_estate/saler/message/media',
+    name: 'media',
+    component: () => import(/* webpackChunkName:'media' */'@/components/message/media')
+  },
+  {
     path: '*',
     name: '404',
     component: () => import('@/components/home')

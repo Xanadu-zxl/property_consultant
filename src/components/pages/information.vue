@@ -3,7 +3,7 @@
     <div :key="item.customer_phone" class="content" v-for="item in list">
       <div class="information-left">
         <div class="information-left-head">
-          <img class="information-left-img" src="@/assets/img/Avator-Woman.png" />
+          <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
         </div>
         <div class="information-left-matter">
           <h2>{{item.customer_name}}</h2>
@@ -20,6 +20,7 @@
 
 <script>
 export default {
+  // props: ['list'],
   data () {
     return {
       list: [{
