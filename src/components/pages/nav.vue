@@ -17,13 +17,12 @@ export default {
       replace: true
     }
   }
-
 }
 </script>
 
 <style>
 .van-tabbar {
-  height: 40px;
+  height: 50px;
 }
 
 .van-tabbar-item__icon {
