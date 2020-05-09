@@ -73,13 +73,12 @@ import HomeNav from './pages/nav'
 export default {
   data () {
     return {
-      client_id: '',
-      client_secret: '',
       activeName: '1',
       remind: '2条新提醒',
       overdue: '2个',
       collection: '0位',
       messages: '',
+
       message: [{
         id: '1',
         message: '测试'
@@ -126,27 +125,8 @@ export default {
     HomeNav
   },
   mounted () {
-    // const client_id = this.client_id
-    this.$axios.get('http://skylark-local.natappvip.cc/magnate/oauth')
-      .then((response) => {
-        let data = response.data
-        this.client_id = data.client_id
-        this.client_secret = data.client_secret
-        console.log(this.client_id)
-      })
-    if (this.client_id) {
-      window.location.href = `https://beta.skylarkly.com/oauth/authorize?client_id=${this.client_id}c&redirect_uri=http://vpxydb.natappfree.cc/real_estate/saler/code&response_type=code`
-    }
+
   }
-
-  // .then(this.$axios.get('https://beta.skylarkly.com/oauth/authorize?client_id=e84c788580a5bdc0353b680f6c4d6ef4b10894b220f544d3dd97f27366a02b8c&redirect_uri=http://vpxydb.natappfree.cc/real_estate/saler/code&response_type=code')
-  // // this.$axios.get('https://beta.skylarkly.com/oauth/authorize', { client_id: this.client_id, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob', response_type: 'code' })
-  // .then((res) => {
-  //   console.log()
-
-  //   console.log(res.path)
-  //   console.log(res)
-  // }))
 }
 
 </script>

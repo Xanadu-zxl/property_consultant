@@ -5,6 +5,11 @@ export default [
     component: () => import(/* webpackChunkName:'home' */'@/components/home')
   },
   {
+    path: '/real_estate/saler/login',
+    name: 'login',
+    component: () => import(/* webpackChunkName:'login' */'@/components/axios/login')
+  },
+  {
     path: '/real_estate/saler/buy',
     name: 'buy',
     component: () => import(/* webpackChunkName:'buy' */'@/components/buy')

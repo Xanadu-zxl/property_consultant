@@ -1,7 +1,11 @@
 module.exports = {
   devServer: {
-    disableHostCheck: true,
-  }
+    proxy: {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+    },
+  },
 }
 
 
