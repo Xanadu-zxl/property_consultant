@@ -8,20 +8,25 @@
       <van-dropdown-item :options="option3" v-model="value3" />
     </van-dropdown-menu>
     <!-- <buy-information></buy-information> -->
-    <div :key="item.customer_phone" class="content" v-for="item in list">
-      <div class="information-left">
-        <div class="information-left-head">
-          <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
+    <div :key="item.customer_phone" v-for="item in list">
+      <router-link
+        :to="{ name:'message', query: {customer_phone:item.customer_phone }}"
+        class="content"
+      >
+        <div class="information-left">
+          <div class="information-left-head">
+            <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
+          </div>
+          <div class="information-left-matter">
+            <h2>{{item.customer_name}}</h2>
+            <p>电话：{{item.customer_phone}}</p>
+            <p>意向：{{item.intention}}</p>
+          </div>
         </div>
-        <div class="information-left-matter">
-          <h2>{{item.customer_name}}</h2>
-          <p>电话：{{item.customer_phone}}</p>
-          <p>意向：{{item.intention}}</p>
+        <div class="information-right">
+          <i class="icon-Info-Icon-Phone"></i>
         </div>
-      </div>
-      <div class="information-right">
-        <i class="icon-Info-Icon-Phone"></i>
-      </div>
+      </router-link>
     </div>
     <home-nav></home-nav>
   </div>
@@ -37,6 +42,7 @@ export default {
   data () {
     return {
       title: '认购前客户',
+      value: '',
       value1: 0,
       value2: 'a',
       value3: '11',

@@ -80,7 +80,6 @@ export default {
 
 <style lang="sass" scoped>
 .header
-
   width: 4.0625rem
   margin: .8125rem auto 1.0625rem
 

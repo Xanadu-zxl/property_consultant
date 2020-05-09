@@ -55,7 +55,22 @@ export default [
     component: () => import(/* webpackChunkName:'channel' */'@/components/message/channel')
   },
   {
-    path: '/real_estate/saler/message/media',
+    path: '/real_estate/saler/message/trait',
+    name: 'trait',
+    component: () => import(/* webpackChunkName:'trait' */'@/components/message/trait')
+  },
+  {
+    path: '/real_estate/saler/message/motivation',
+    name: 'motivation',
+    component: () => import(/* webpackChunkName:'motivation' */'@/components/message/motivation')
+  },
+  {
+    path: '/real_estate/saler/message/living_area',
+    name: 'living_area',
+    component: () => import(/* webpackChunkName:'living_area' */'@/components/message/living_area')
+  },
+  {
+    path: '/real_estate/saler/message/channel/media',
     name: 'media',
     component: () => import(/* webpackChunkName:'media' */'@/components/message/media')
   },

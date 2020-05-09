@@ -2,18 +2,15 @@
   <div>
     <customer-tabbar :title="title" />
     <div class="channel-content">
-      <router-link class="channel-content-class" to="/real_estate/saler/message/channel/media">媒体渠道</router-link>
-      <div class="channel-content-class">微博</div>
-      <div class="channel-content-class">朋友介绍</div>
-      <div class="channel-content-class">行销</div>
-      <div class="channel-content-class">小蜜蜂</div>
-      <div class="channel-content-class">线下活动</div>
-      <div class="channel-content-class">电视宣传</div>
-      <div class="channel-content-class">人民日报</div>
+      <router-link class="channel-content-class" to="#">交通方便</router-link>
+      <div class="channel-content-class">个人喜好</div>
+      <div class="channel-content-class">为子女购房</div>
+      <div class="channel-content-class">养老</div>
+      <div class="channel-content-class">小孩上学</div>
+      <div class="channel-content-class">投资</div>
+      <div class="channel-content-class">上班方便</div>
+      <div class="channel-content-class">帮亲戚</div>
     </div>
-    <footer class="channel-footer">
-      <p>* 长按可查看详情</p>
-    </footer>
   </div>
 </template>
 
@@ -23,7 +20,7 @@ export default {
 
   data () {
     return {
-      title: '知晓途径'
+      title: '置业动机'
     }
   },
   components: {
@@ -56,9 +53,5 @@ export default {
   color: #00a862;
   border: 2px solid #00a862;
 }
-.channel-footer {
-  font-size: 12px;
-  color: #787878;
-  margin-top: 18px;
-}
+
 </style>
