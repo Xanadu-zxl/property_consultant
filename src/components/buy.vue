@@ -2,7 +2,7 @@
   <div>
     <buy-tabbar :title="title" />
     <van-search placeholder="输入姓名/手机号" v-model="value" />
-    <van-dropdown-menu>
+    <van-dropdown-menu active-color="#00a862">
       <van-dropdown-item :options="option1" v-model="value1" />
       <van-dropdown-item :options="option2" v-model="value2" />
       <van-dropdown-item :options="option3" v-model="value3" />
