@@ -1,9 +1,14 @@
 <template>
   <div>
-    <home-header></home-header>
+    <home-header ref="child"></home-header>
     <div class="content">
       <van-collapse accordion v-model="activeName">
-        <van-collapse-item :value="remind" icon=" icon-Index-Icon-Foot" name="1" title="到访提醒">
+        <van-collapse-item
+          :value="remind"
+          icon=" icon-Index-Icon-Foot"
+          name="1"
+          title="到访提醒"
+        >
           <p class="content-header">
             <span>姓名</span>
             <span>意向等级</span>
@@ -17,7 +22,12 @@
             <span>{{item.time}}</span>
           </p>
         </van-collapse-item>
-        <van-collapse-item :value="overdue" icon=" icon-Index-Icon-Warning" name="2" title="回访逾期">
+        <van-collapse-item
+          :value="overdue"
+          icon=" icon-Index-Icon-Warning"
+          name="2"
+          title="回访逾期"
+        >
           <p class="content-header">
             <span>姓名</span>
             <span>意向等级</span>
@@ -78,8 +88,8 @@ export default {
       overdue: '2个',
       collection: '0位',
       messages: '',
-      CURRENT_USER_ID: '',
-      CURRENT_USER_PHONE: '',
+      id: '',
+      phone: '',
 
       message: [{
         id: '1',
@@ -129,15 +139,19 @@ export default {
   mounted () {
     // 读取cookie
     this.id = this.$cookies.get('CURRENT_USER_ID')
-    this.phone = this.$cookies.get('CURRENT_USER_PHONRE')
+    this.phone = this.$cookies.get('CURRENT_USER_PHONE')
+    console.log(this.id)
 
-    // this.CURRENT_USER_ID = this.$cookies.get(CURRENT_USER_ID)
-    // this.CURRENT_USER_ID = this.$cookies.get(CURRENT_USER_ID)
     this.$axios({
       method: 'GET',
       url: '/magnate/saler/welcome',
-      headers: {'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone}
+      headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone }
+    }).then((data) => {
+      console.log(data)
     })
+  },
+  methods: {
+
   }
 }
 

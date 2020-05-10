@@ -34,7 +34,7 @@
         <i class="icon-Info-Icon-link message-style-orange"></i>
         <span class="message-project-title">知晓途径</span>
       </router-link>
-      <div class="message-project">
+      <div @click="prompt" class="message-project">
         <i class="icon-Info-Icon-Price message-style-blue"></i>
         <span class="message-project-title">户型算价</span>
       </div>
@@ -50,19 +50,19 @@
         <i class="icon-Info-Icon-Region message-style-green"></i>
         <span class="message-project-title">客户区域</span>
       </router-link>
-      <router-link to="/real_estate/saler/message/customer_type" class="message-project">
+      <router-link class="message-project" to="/real_estate/saler/message/customer_type">
         <i class="icon-Info-Icon-Structure message-style-red"></i>
         <span class="message-project-title">家庭结构</span>
       </router-link>
-      <router-link to="/real_estate/saler/message/focus" class="message-project">
+      <router-link class="message-project" to="/real_estate/saler/message/focus">
         <i class="icon-Info-Icon-Star message-style-blue"></i>
         <span class="message-project-title">关注重点</span>
       </router-link>
-      <router-link to="/real_estate/saler/message/preferred_apartment" class="message-project">
+      <router-link class="message-project" to="/real_estate/saler/message/preferred_apartment">
         <i class="icon-Info-Icon-Type message-style-orange"></i>
         <span class="message-project-title">意向户型</span>
       </router-link>
-      <div class="message-project">
+      <div @click="prompt" class="message-project">
         <i class="icon-Info-Icon-Foot message-style-blue"></i>
         <span class="message-project-title">置业跟踪</span>
       </div>
@@ -84,8 +84,12 @@ export default {
   },
   components: {
     CustomerTabbar
+  },
+  methods: {
+    prompt () {
+      this.$toast('开发中 ✨')
+    }
   }
-
 }
 </script>
 

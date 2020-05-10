@@ -5,7 +5,7 @@
         <p class="title">新客户</p>
         <img class="img" src="@/assets/img/Index-Card-Users.png" />
       </router-link>
-      <router-link to="#" class="box">
+      <router-link @click.native="prompt" class="box" to="#">
         <p class="title">工具箱</p>
         <img class="img" src="@/assets/img/Index-Card-Tool.png" />
       </router-link>
@@ -17,7 +17,12 @@
 export default {
   data () {
     return {
-
+      show: true
+    }
+  },
+  methods: {
+    prompt () {
+      this.$toast('开发中 ✨')
     }
   }
 

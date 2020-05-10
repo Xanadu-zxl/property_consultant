@@ -3,9 +3,12 @@
     <van-tabbar fixed route>
       <van-tabbar-item class="icon-Index-Icon-Home" to="/real_estate/saler/home">首页</van-tabbar-item>
       <van-tabbar-item class="icon-Index-Icon-Before-Subscription" to="/real_estate/saler/buy">认购前</van-tabbar-item>
-      <van-tabbar-item class="icon-Index-Icon-Subscription" to="/real_estate/saler/subscribe">已认购</van-tabbar-item>
+      <!-- <van-tabbar-item class="icon-Index-Icon-Subscription" to="/real_estate/saler/subscribe">已认购</van-tabbar-item>
       <van-tabbar-item class="icon-Index-Icon-Subscribed" to="/real_estate/saler/sign">已签约</van-tabbar-item>
-      <van-tabbar-item class="icon-Index-Icon-Owner" to="/real_estate/saler/owner">准业主</van-tabbar-item>
+      <van-tabbar-item class="icon-Index-Icon-Owner" to="/real_estate/saler/owner">准业主</van-tabbar-item>-->
+      <van-tabbar-item @click.native="prompt" class="icon-Index-Icon-Subscription" to="#">已认购</van-tabbar-item>
+      <van-tabbar-item @click.native="prompt" class="icon-Index-Icon-Subscribed" to="#">已签约</van-tabbar-item>
+      <van-tabbar-item @click.native="prompt" class="icon-Index-Icon-Owner" to="#">准业主</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
@@ -15,6 +18,11 @@ export default {
   data () {
     return {
       replace: true
+    }
+  },
+  methods: {
+    prompt () {
+      this.$toast('开发中 ✨')
     }
   }
 }
@@ -39,5 +47,4 @@ export default {
   font-weight: 600;
   letter-spacing: 0.5px;
 }
-
 </style>
