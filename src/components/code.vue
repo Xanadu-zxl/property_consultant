@@ -12,8 +12,8 @@ export default {
     return {
       code: '',
       token: '',
-      id: '',
-      phone: '18615769209'
+      id: '73',
+      phone: '18980807092'
     }
   },
   mounted () {
@@ -21,6 +21,8 @@ export default {
     this.code = this.$route.query.code
     console.log(this.code)
 
+    this.$cookies.set('CURRENT_USER_ID', this.id)
+    this.$cookies.set('CURRENT_USER_PHONE', this.phone)
     this.$axios({
       method: 'POST',
       url: '/oauth/token',
@@ -38,7 +40,7 @@ export default {
       console.log(res.data.access_token)
       this.$axios({
         method: 'GET',
-        url: 'https://beta.skylarkly.com/api/v1/user?access_token=' + this.token
+        url: '/api/v1/user?access_token=' + this.token
       }).then((data) => {
         console.log(data)
         this.id = data.data.id
