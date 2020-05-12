@@ -3,31 +3,19 @@
     <home-header ref="child"></home-header>
     <div class="content">
       <van-collapse accordion v-model="activeName">
-        <van-collapse-item
-          :value="remind"
-          icon=" icon-Index-Icon-Foot"
-          name="1"
-          title="到访提醒"
-        >
+        <van-collapse-item :value="remind" icon=" icon-Index-Icon-Foot" name="1" title="到访提醒">
           <p class="content-header">
             <span>姓名</span>
-            <span>意向等级</span>
-            <span>来访客户</span>
+            <span>性别</span>
             <span>首次来访时间</span>
           </p>
-          <p :key="item.id" class="content-header-content" v-for="item in list">
-            <span>{{item.name}}</span>
-            <span>{{item.class}}</span>
-            <span>{{item.client}}</span>
-            <span>{{item.time}}</span>
+          <p :key="item.id" class="content-header-content" v-for="item in visit">
+            <span>{{item.customer_name}}</span>
+            <span>{{item.customer_gender}}</span>
+            <span>{{item.planed_visit_time}}</span>
           </p>
         </van-collapse-item>
-        <van-collapse-item
-          :value="overdue"
-          icon=" icon-Index-Icon-Warning"
-          name="2"
-          title="回访逾期"
-        >
+        <van-collapse-item :value="overdue" icon=" icon-Index-Icon-Warning" name="2" title="回访逾期">
           <p class="content-header">
             <span>姓名</span>
             <span>意向等级</span>
@@ -35,10 +23,10 @@
             <span>回访时间</span>
           </p>
           <p :key="item.id" class="content-header-content" v-for="item in overdues">
-            <span>{{item.name}}</span>
-            <span>{{item.class}}</span>
-            <span>{{item.client}}</span>
-            <span>{{item.time}}</span>
+            <span>{{item.customer_name}}</span>
+            <span>{{item.intention}}</span>
+            <span>{{item.overdued_days}}</span>
+            <span>{{item.revisit_date}}</span>
           </p>
         </van-collapse-item>
         <van-collapse-item :value="collection" icon=" icon-Index-Icon-File" name="3" title="资料催收"></van-collapse-item>
@@ -49,7 +37,7 @@
           <div class="content-Statistics">
             <div class="content-Statistics-content">
               <p>
-                <em>9</em> 套
+                <em>7</em> 套
               </p>
               <p>共售房</p>
             </div>
@@ -84,49 +72,31 @@ export default {
   data () {
     return {
       activeName: '1',
-      remind: '2条新提醒',
-      overdue: '2个',
-      collection: '0位',
+      remind: '0 条新提醒',
+      overdue: '0 个',
+      collection: '0 位',
       messages: '',
       id: '',
       phone: '',
-
       message: [{
         id: '1',
-        message: '测试'
-      },
-      {
-        id: '2',
         message: '测试数据'
-      }],
-      list: [{
+      }
+      ],
+      visit: [{
         id: 1,
-        name: '李四',
-        class: 'SS级',
-        client: '到访客户',
-        time: '2020/02/21'
-      },
-      {
-        id: 2,
-        name: 'zhangsan',
-        class: 'S级',
-        client: '来电客户',
-        time: '2020/02/20'
+        customer_name: ' ',
+        customer_gender: ' ',
+        client: ' ',
+        planed_visit_time: ' '
       }
       ],
       overdues: [{
         id: 1,
-        name: '李四',
-        class: 'SS级',
-        client: '到访客户',
-        time: '2020/02/21'
-      },
-      {
-        id: 2,
-        name: '张三',
-        class: 'S级',
-        client: '来电客户',
-        time: '2020/02/20'
+        customer_name: ' ',
+        intention: ' ',
+        overdued_days: ' ',
+        revisit_date: ' '
       }
       ]
 
@@ -140,14 +110,50 @@ export default {
     // 读取cookie
     this.id = this.$cookies.get('CURRENT_USER_ID')
     this.phone = this.$cookies.get('CURRENT_USER_PHONE')
-    console.log(this.id)
 
     this.$axios({
       method: 'GET',
       url: '/magnate/saler/welcome',
       headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone }
     }).then((data) => {
-      console.log(data)
+      // console.log(data.data.caller_planed_visit_today_count)
+      this.remind = data.data.caller_planed_visit_today_count + ' 条新提醒'
+      this.overdue = data.data.overdued_return_visit_record_count + ' 个'
+    })
+
+    this.$axios({
+      method: 'GET',
+      url: '/magnate/saler/callers/arrive_today',
+      headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone }
+    }).then((res) => {
+      this.visit = res.data
+      // console.log(res.data)
+    })
+    this.$axios({
+      method: 'GET',
+      url: '/magnate/saler/arrive_visitors/overdued_return_visit_records',
+      headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone }
+    }).then((res) => {
+      this.overdues = res.data
+      // console.log(res)
+    })
+    // 来电
+    this.$axios({
+      method: 'GET',
+      url: '/magnate/saler/callers/70930',
+      headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone },
+      qurey: { 'id': '70955' }
+    }).then((res) => {
+      console.log(res)
+    })
+
+    // 来电列表
+    this.$axios({
+      method: 'GET',
+      url: '/magnate/saler/callers/arrive_today',
+      headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone }
+    }).then((res) => {
+      // console.log(res)
     })
   },
   methods: {
@@ -189,6 +195,7 @@ export default {
 .van-collapse-item__content {
   padding: 0;
 }
+
 .content-header {
   height: 25px;
   line-height: 25px;
@@ -196,7 +203,7 @@ export default {
   font-size: 0.625rem;
   border-radius: 3px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   background: rgba(0, 168, 98, 0.08);
 }
 
@@ -205,7 +212,7 @@ export default {
   line-height: 30px;
   display: flex;
   color: #787878;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .content-header span,
 .content-header-content span {
@@ -219,7 +226,7 @@ export default {
   line-height: 45px;
   background: rgba(212, 212, 212, 0.2);
 }
-
+//销售记录
 .content-Statistics {
   height: 80px;
   display: flex;
