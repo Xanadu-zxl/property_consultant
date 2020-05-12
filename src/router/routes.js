@@ -15,6 +15,11 @@ export default [
     component: () => import(/* webpackChunkName:'buy' */'@/components/buy')
   },
   {
+    path: '/real_estate/saler/buy_message',
+    name: 'buy_message',
+    component: () => import(/* webpackChunkName:'buy_message' */'@/components/visit/buy_message')
+  },
+  {
     path: '/real_estate/saler/subscribe',
     name: 'subscribe',
     component: () => import(/* webpackChunkName:'subscribe' */'@/components/subscribe')
@@ -52,12 +57,32 @@ export default [
   {
     path: '/real_estate/saler/message',
     name: 'message',
-    component: () => import(/* webpackChunkName:'message' */'@/components/message')
+    component: () => import(/* webpackChunkName:'message' */'@/components/message/message')
+  },
+  {
+    path: '/real_estate/saler/message/init',
+    name: 'init',
+    component: () => import(/* webpackChunkName:'init' */'@/components/message/init')
   },
   {
     path: '/real_estate/saler/message/channel',
     name: 'channel',
     component: () => import(/* webpackChunkName:'channel' */'@/components/message/channel')
+  },
+  {
+    path: '/real_estate/saler/message/revisit',
+    name: 'revisit',
+    component: () => import(/* webpackChunkName:'revisit' */'@/components/message/revisit')
+  },
+  {
+    path: '/real_estate/saler/message/revisit/record',
+    name: 'record',
+    component: () => import(/* webpackChunkName:'record' */'@/components/message/record')
+  },
+  {
+    path: '/real_estate/saler/message/channel/media',
+    name: 'media',
+    component: () => import(/* webpackChunkName:'media' */'@/components/message/media')
   },
   {
     path: '/real_estate/saler/message/trait',
@@ -89,11 +114,7 @@ export default [
     name: 'preferred_apartment',
     component: () => import(/* webpackChunkName:'preferred_apartment' */'@/components/message/preferred_apartment')
   },
-  {
-    path: '/real_estate/saler/message/channel/media',
-    name: 'media',
-    component: () => import(/* webpackChunkName:'media' */'@/components/message/media')
-  },
+
   {
     path: '*',
     name: '404',

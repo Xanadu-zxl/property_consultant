@@ -5,7 +5,7 @@
       <img alt class="img" src="@/assets/img/Avator-Man.png" />
     </header>
     <aside class="aside">
-      <van-field label="客户姓名" required placeholder="例如：张三" v-model="id" />
+      <van-field label="客户姓名" placeholder="例如：张三" required v-model="customer_name" />
       <van-field label="客户性别" name="gender">
         <template #input>
           <van-radio-group direction="horizontal" v-model="customer_gender">
@@ -14,14 +14,20 @@
           </van-radio-group>
         </template>
       </van-field>
-      <van-field label="手机号码" required placeholder="+ 10086" type="number" v-model="number" />
+      <van-field
+        label="手机号码"
+        placeholder="+ 10086"
+        required
+        type="number"
+        v-model="customer_phone"
+      />
       <van-field label="E-mail" placeholder="例如：10086@gmail.com" type="email" v-model="email" />
 
       <van-field
-        :value="dataTime"
+        :value="birthday"
         @click="showPicker = true"
         clickable
-        label="时间选择"
+        label="生日"
         name="datetimePicker"
         placeholder="点击选择时间"
         readonly
@@ -38,13 +44,13 @@
         />
       </van-popup>
 
-      <van-field label="意向等级" required name="grade">
+      <van-field label="意向等级" name="intention" required>
         <template #input>
-          <van-radio-group direction="horizontal" v-model="grade">
-            <van-radio checked-color="#00A862" name="A">A</van-radio>
-            <van-radio checked-color="#00A862" name="B">B</van-radio>
-            <van-radio checked-color="#00A862" name="C">C</van-radio>
-            <van-radio checked-color="#00A862" name="D">D</van-radio>
+          <van-radio-group direction="horizontal" v-model="intention">
+            <van-radio checked-color="#00A862" name="A">A很有意向</van-radio>
+            <van-radio checked-color="#00A862" name="B">B较有意向</van-radio>
+            <van-radio checked-color="#00A862" name="C">C可跟踪</van-radio>
+            <van-radio checked-color="#00A862" name="D">D无意向</van-radio>
           </van-radio-group>
         </template>
       </van-field>
@@ -63,25 +69,65 @@ export default {
     return {
       title: '客户基础信息',
       id: '',
-      number: '',
+      phone: '',
+      customer_name: '',
+      customer_phone: '13880430888',
       email: '',
       birthday: '',
       customer_gender: '0',
-      grade: 'A',
-      dataTime: '',
+      intention: 'A',
       showPicker: false,
       minDate: new Date(1900, 0, 1),
       maxDate: new Date(2220, 10, 1),
-      currentDate: new Date()
+      currentDate: new Date(),
+      'response': {
+        'entries_attributes': [
+          {
+            'field_id': 5723,
+            'value': '张三'
+          }
+        ]
+      },
+      'user_id': 73
     }
   },
   components: {
     CustomerTabbar
   },
+  mounted () {
+    // 读取cookie
+    this.id = this.$cookies.get('CURRENT_USER_ID')
+    this.phone = this.$cookies.get('CURRENT_USER_PHONE')
+
+    // 新增数据
+    // this.$axios({
+    //   method: 'GET',
+    //   url: '/magnate/saler/callers/new',
+    //   headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone }
+    // }).then((data) => {
+    //   // console.log(data)
+    // })
+    // this.$axios({
+    //   method: 'POST',
+    //   url: '/magnate/saler/callers',
+    //   headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone },
+    //   data: { 'response': this.response, 'user_id': this.user_id }
+    // }).then((data) => {
+    //   console.log(data)
+    // })
+
+    this.$axios({
+      method: 'GET',
+      url: '/magnate/saler/arrive_visitors/valid_phone?customer_phone=' + this.customer_phone,
+      headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone }
+    }).then((data) => {
+      console.log(data)
+    })
+  },
   methods: {
     onConfirm (currentDate) {
       this.dataTime = this.formatDate(currentDate)
-      this.dataTime = this.dataTime
+      this.birthday = this.dataTime
       this.showPicker = false
       console.log(this.dataTime) // 打印出了时间
     },
@@ -91,7 +137,6 @@ export default {
     p (s) {
       return s < 10 ? '0' + s : s
     }
-
   }
 }
 </script>
@@ -139,6 +184,9 @@ export default {
     display: block
     transform: rotate(90deg)
 
+  .van-radio--horizontal
+    margin: 5px
+
 .footer
   margin-top: 30px
   height: 50px
@@ -149,4 +197,6 @@ export default {
 
   a
     color: #fff
+    width: 100%
+    display: block
 </style>
