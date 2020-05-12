@@ -8,26 +8,28 @@
       <van-dropdown-item :options="option3" v-model="value3" />
     </van-dropdown-menu>
     <!-- <buy-information></buy-information> -->
-    <div :key="item.customer_phone" v-for="item in list">
-      <router-link
-        :to="{ name:'message', query: {customer_phone:item.customer_phone }}"
-        class="content"
-      >
-        <div class="information-left">
-          <div class="information-left-head">
-            <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
+    <div :key="item.customer_phone" class="buy-link" v-for="item in list">
+      <div class="content">
+        <router-link
+          :to="{ name:'buy_message', query: {customer_phone:item.customer_phone,response_id:item.response_id }}"
+        >
+          <div class="information-left">
+            <div class="information-left-head">
+              <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
+            </div>
+            <div class="information-left-matter">
+              <h2>{{item.customer_name}}</h2>
+              <p>电话：{{item.customer_phone}}</p>
+              <p>意向：{{item.intention}}</p>
+            </div>
           </div>
-          <div class="information-left-matter">
-            <h2>{{item.customer_name}}</h2>
-            <p>电话：{{item.customer_phone}}</p>
-            <p>意向：{{item.intention}}</p>
-          </div>
-        </div>
-        <div class="information-right">
+        </router-link>
+        <a :href="'tel:'+ item.customer_phone" class="information-right">
           <i class="icon-Info-Icon-Phone"></i>
-        </div>
-      </router-link>
+        </a>
+      </div>
     </div>
+    <footer class="footer"></footer>
     <home-nav></home-nav>
   </div>
 </template>
@@ -42,6 +44,8 @@ export default {
   data () {
     return {
       title: '认购前客户',
+      id: '',
+      phone: '',
       value: '',
       value1: 0,
       value2: 'a',
@@ -67,30 +71,10 @@ export default {
         { text: '小区', value: '55' }
       ],
       list: [{
-        customer_name: '张先生',
-        customer_phone: '1212123',
-        intention: '公寓',
-        customer_gender: '1'
-      }, {
-        customer_name: '张先生',
-        customer_phone: '1123',
-        intention: '公寓',
-        customer_gender: '男'
-      }, {
-        customer_name: '张先生',
-        customer_phone: '12232312123',
-        intention: '公寓',
-        customer_gender: '男'
-      }, {
-        customer_name: '张先生',
-        customer_phone: '1212135323',
-        intention: '公寓',
-        customer_gender: '男'
-      }, {
-        customer_name: '张女士',
-        customer_phone: '12676812123',
-        intention: '公寓',
-        customer_gender: '女'
+        customer_name: 'xxx',
+        customer_phone: 'xxx',
+        intention: 'xxx',
+        customer_gender: 'xxx'
       }
       ]
 
@@ -101,12 +85,45 @@ export default {
     HomeNav,
     BuyTabbar,
     Buyinformation
-  }
+  },
+  mounted () {
+    // 读取cookie
+    this.id = this.$cookies.get('CURRENT_USER_ID')
+    this.phone = this.$cookies.get('CURRENT_USER_PHONE')
 
+    this.$axios({
+      method: 'GET',
+      url: '/magnate/saler/search',
+      headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone },
+      query: { 'customer_key': this.phone }
+    }).then((data) => {
+      console.log(data)
+      this.list = data.data
+    })
+    // this.$axios({
+    //   method: 'GET',
+    //   url: '/magnate/saler/search',
+    //   headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone },
+    //   query: { 'search_type': 'created_at' }
+    // }).then((data) => {
+    //   console.log(data)
+    // })
+    // this.$axios({
+    //   method: 'GET',
+    //   url: '/magnate/saler/search',
+    //   headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone },
+    //   query: { 'created_at': 'away_month' }
+    // }).then((data) => {
+    //   console.log(data)
+    // })
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+.footer {
+  height: 50px;
+}
 .content {
   width: 88%;
   margin: 0 auto;
