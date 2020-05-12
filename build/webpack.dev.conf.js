@@ -54,6 +54,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         target: 'https://beta.skylarkly.com',
         changeOrigin: true,
       },
+      '/api': {
+        target: 'https://beta.skylarkly.com',
+        changeOrigin: true,
+      },
     },
 
   },
