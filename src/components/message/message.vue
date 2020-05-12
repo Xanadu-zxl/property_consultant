@@ -5,7 +5,7 @@
       <div class="content">
         <div class="information-left">
           <div class="information-left-head">
-            <img class="information-left-img" src="@/assets/img/Avator-Woman.png" />
+            <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
           </div>
           <div class="information-left-matter">
             <h2>{{customer_name}}</h2>
@@ -19,17 +19,17 @@
             </p>
           </div>
         </div>
-        <div class="information-right">
+        <a :href="'tel:'+ customer_phone" class="information-right">
           <i class="icon-Info-Icon-Phone"></i>
-        </div>
+        </a>
       </div>
     </div>
 
     <div class="message-content">
-      <div class="message-project">
+      <router-link class="message-project" to="/real_estate/saler/message/init">
         <i class="icon-Info-Icon-File message-style-green"></i>
         <span class="message-project-title">基础信息</span>
-      </div>
+      </router-link>
       <router-link class="message-project" to="/real_estate/saler/message/channel">
         <i class="icon-Info-Icon-link message-style-orange"></i>
         <span class="message-project-title">知晓途径</span>
@@ -62,28 +62,42 @@
         <i class="icon-Info-Icon-Type message-style-orange"></i>
         <span class="message-project-title">意向户型</span>
       </router-link>
-      <div @click="prompt" class="message-project">
+      <router-link
+        :to="{ name:'revisit',query:{customer_phone:customer_phone,response_id:response_id}}"
+        class="message-project"
+      >
         <i class="icon-Info-Icon-Foot message-style-blue"></i>
         <span class="message-project-title">置业跟踪</span>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>
 
 <script>
-import CustomerTabbar from './pages/tabbar'
+import CustomerTabbar from '@/components/pages/tabbar'
 
 export default {
   data () {
     return {
       title: '客户信息',
-      customer_name: '张先生',
-      preferred_apartment: '四室一厅',
-      planed_visit_time: '2020/02/20'
+      customer_name: 'xxx',
+      preferred_apartment: 'xxx',
+      planed_visit_time: '2020/02/20',
+      response_id: '',
+      customer_phone: '',
+      id: '',
+      phone: ''
     }
   },
   components: {
     CustomerTabbar
+  },
+  mounted () {
+    this.response_id = this.$route.query.response_id
+    this.customer_phone = this.$route.query.customer_phone
+    // 读取cookie
+    this.id = this.$cookies.get('CURRENT_USER_ID')
+    this.phone = this.$cookies.get('CURRENT_USER_PHONE')
   },
   methods: {
     prompt () {
@@ -96,7 +110,7 @@ export default {
 <style lang="scss" scoped>
 .message-main {
   width: 94%;
-  background: url('../assets/img/info-bg.png');
+  background: url('../../assets/img/info-bg.png');
   margin: 0 auto;
   height: 112px;
   background-size: cover;
@@ -117,7 +131,7 @@ export default {
   align-content: center;
 
   .information-left-img {
-    width: 46px;
+    width: 65px;
     margin: 10px auto;
   }
 
@@ -146,12 +160,12 @@ export default {
   }
 }
 .information-right {
-  background: #e4f3ec;
+  background: #b6d0c4;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   text-align: center;
-  line-height: 38px;
+  line-height: 44px;
 }
 .message-content {
   width: 94%;
