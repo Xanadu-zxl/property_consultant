@@ -91,10 +91,12 @@
   color: #00a862;
   font-size: 20px;
 }
-/* 11 */
 .icon-Info-Icon-Edit:before {
   content: "\e10b";
+  color: #00a862;
+  font-size: 20px;
 }
+/* 11 */
 .icon-Index-Icon-Warning:before {
   content: "\e10c";
 }
