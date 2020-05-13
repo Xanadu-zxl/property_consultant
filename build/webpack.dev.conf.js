@@ -47,7 +47,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     historyApiFallback: true,
     proxy: {
       '/magnate': {
-        target: 'http://skylark-local.natappvip.cc',
+        target: 'http://shandenabian.skylarkly.com',
         changeOrigin: true,
       },
       '/oauth': {

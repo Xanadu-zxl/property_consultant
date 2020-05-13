@@ -70,13 +70,13 @@ export default {
   },
   mounted () {
     // 读取cookie
-    this.id = this.$cookies.get('CURRENT_USER_ID')
-    this.phone = this.$cookies.get('CURRENT_USER_PHONE')
+    this.id = this.$cookies.get('CURRENT-USER-ID')
+    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
 
     // this.$axios({
     //   method: 'GET',
     //   url: '/magnate/saler/return_visit_records',
-    //   headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone }
+    //   headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     // }).then((data) => {
     //   console.log(data)
     // })

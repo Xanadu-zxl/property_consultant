@@ -1,11 +1,11 @@
 <template>
   <div>
     <customer-tabbar :title="title" />
-    <router-link to="/real_estate/saler/visit" class="customer-phone">
+    <router-link class="customer-phone" to="/real_estate/saler/arrive_visitors">
       <img alt src="@/assets/img/Card-Visit.png" />
       <span>到访客户</span>
     </router-link>
-    <router-link to="/real_estate/saler/call" class="customer-visit">
+    <router-link class="customer-visit" to="/real_estate/saler/caller/new">
       <img alt src="@/assets/img/Card-phone.png" />
       <span>来电客户</span>
     </router-link>

@@ -21,8 +21,8 @@ export default {
     this.code = this.$route.query.code
     console.log(this.code)
 
-    this.$cookies.set('CURRENT_USER_ID', this.id)
-    this.$cookies.set('CURRENT_USER_PHONE', this.phone)
+    this.$cookies.set('CURRENT-USER-ID', this.id)
+    this.$cookies.set('CURRENT-USER-PHONE', this.phone)
     this.$axios({
       method: 'POST',
       url: '/oauth/token',
@@ -45,8 +45,8 @@ export default {
         console.log(data)
         this.id = data.data.id
         // this.phone = data.data.phone
-        this.$cookies.set('CURRENT_USER_ID', this.id)
-        this.$cookies.set('CURRENT_USER_PHONE', this.phone)
+        this.$cookies.set('CURRENT-USER-ID', this.id)
+        this.$cookies.set('CURRENT-USER-PHONE', this.phone)
       })
     })
   }

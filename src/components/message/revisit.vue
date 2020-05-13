@@ -5,10 +5,10 @@
       <van-field class="revist_aside_visit_header" label="意向等级" name="intention">
         <template #input>
           <van-radio-group direction="horizontal" v-model="intention">
-            <van-radio checked-color="#00A862" name="A">A很有意向</van-radio>
-            <van-radio checked-color="#00A862" name="B">B较有意向</van-radio>
-            <van-radio checked-color="#00A862" name="C">C可跟踪</van-radio>
-            <van-radio checked-color="#00A862" name="D">D无意向</van-radio>
+            <van-radio checked-color="#00A862" name="A很有意向">A很有意向</van-radio>
+            <van-radio checked-color="#00A862" name="B较有意向">B较有意向</van-radio>
+            <van-radio checked-color="#00A862" name="C可跟踪">C可跟踪</van-radio>
+            <van-radio checked-color="#00A862" name="D无意向">D无意向</van-radio>
           </van-radio-group>
         </template>
       </van-field>
@@ -34,13 +34,13 @@
       <div class="revist_aside_visit_body">
         <div class="revist_aside_visit-content">
           <p>
-            <em>7</em> 次
+            <em>{{total_count}}</em> 次
           </p>
           <p>现场回访</p>
         </div>
         <div class="revist_aside_visit-content">
           <p>
-            <em>7</em>次
+            <em>{{total_count}}</em>次
           </p>
           <p>电话回访</p>
         </div>
@@ -54,7 +54,7 @@
       <div :key="item.id" class="revist_aside_content-header-content" v-for="item in revisit">
         <span>{{item.return_type}}</span>
         <span>{{item.revisit_date}}</span>
-        <span>{{item.return_remark}}</span>
+        <span>{{item.remark}}</span>
       </div>
     </aside>
   </div>
@@ -67,12 +67,13 @@ export default {
   data () {
     return {
       title: '置业跟踪',
-      intention: 'A',
+      intention: '',
       revisit: [],
       id: '',
       phone: '',
       customer_phone: '',
-      response_id: ''
+      response_id: '',
+      total_count: '7'
 
     }
   },
@@ -80,18 +81,27 @@ export default {
     CustomerTabbar
   },
   mounted () {
+    this.response_id = this.$route.query.response_id
+    this.customer_phone = this.$route.query.customer_phone
     // 读取cookie
-    this.id = this.$cookies.get('CURRENT_USER_ID')
-    this.phone = this.$cookies.get('CURRENT_USER_PHONE')
+    this.id = this.$cookies.get('CURRENT-USER-ID')
+    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
 
     this.$axios({
       method: 'GET',
-      url: '/magnate/saler/return_visit_records?customer_phone=' + 15928664925,
-      headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone }
-    }).then((data) => {
-      console.log(data)
+      url: '/magnate/saler/return_visit_records/current_user_return_records?customer_phone=' + this.customer_phone,
+      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
+    }).then((res) => {
+      this.revisit = res.data
+      // this.total_count = res.data[0].user_id
+      console.log(res.headers)
+
+      console.log(res)
     })
   }
+  // methods () {
+
+  // }
 }
 </script>
 

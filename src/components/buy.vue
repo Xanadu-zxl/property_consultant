@@ -1,14 +1,13 @@
 <template>
   <div>
     <buy-tabbar :title="title" />
-    <van-search placeholder="输入姓名/手机号" v-model="value" />
+    <van-search @blur="search" placeholder="输入姓名/手机号" v-model="namePhone" />
     <van-dropdown-menu active-color="#00a862">
-      <van-dropdown-item :options="option1" v-model="value1" />
-      <van-dropdown-item :options="option2" v-model="value2" />
-      <van-dropdown-item :options="option3" v-model="value3" />
+      <van-dropdown-item :options="option1" v-model="created_at" />
+      <van-dropdown-item :options="option2" v-model="intention" />
+      <van-dropdown-item :options="option3" v-model="preferred_apartment" />
     </van-dropdown-menu>
-    <!-- <buy-information></buy-information> -->
-    <div :key="item.customer_phone" class="buy-link" v-for="item in list">
+    <div :key="item.id" class="buy-link" v-for="item in list">
       <div class="content">
         <router-link
           :to="{ name:'buy_message', query: {customer_phone:item.customer_phone,response_id:item.response_id }}"
@@ -38,7 +37,6 @@
 import HomeHeader from './pages/header'
 import HomeNav from './pages/nav'
 import BuyTabbar from './pages/tabbar'
-import Buyinformation from './pages/information'
 
 export default {
   data () {
@@ -46,29 +44,29 @@ export default {
       title: '认购前客户',
       id: '',
       phone: '',
-      value: '',
-      value1: 0,
-      value2: 'a',
-      value3: '11',
+      namePhone: '',
+      created_at: '时间',
+      intention: '意向',
+      preferred_apartment: '喜好户型',
       option1: [
-        { text: '时间', value: 0 },
-        { text: '一周内', value: 1 },
-        { text: '一个月内', value: 2 },
-        { text: '一个月以上', value: 3 }
+        { text: '时间', value: '时间' },
+        { text: '一周内', value: 'within_week' },
+        { text: '一个月内', value: 'within_month' },
+        { text: '一个月以上', value: 'away_month' }
       ],
       option2: [
-        { text: '意向', value: 'a' },
-        { text: 'A级', value: 'b' },
-        { text: 'B级', value: 'c' },
-        { text: 'C级', value: 'd' },
-        { text: 'D级', value: 'e' }
+        { text: '意向', value: '意向' },
+        { text: 'A很有意向', value: 'A很有意向' },
+        { text: 'B较有意向', value: 'B较有意向' },
+        { text: 'C可跟踪', value: 'C可跟踪' },
+        { text: 'D无意向', value: 'D无意向' }
       ],
       option3: [
-        { text: '类型', value: '11' },
-        { text: '别墅', value: '22' },
-        { text: '公寓', value: '33' },
-        { text: '住宅', value: '44' },
-        { text: '小区', value: '55' }
+        { text: '喜好户型', value: '喜好户型' },
+        { text: '平层户型', value: '平层户型' },
+        { text: '跃层户型', value: '跃层户型' },
+        { text: '错层户型', value: '错层户型' },
+        { text: '复式户型', value: '复式户型' }
       ],
       list: [{
         customer_name: 'xxx',
@@ -77,45 +75,115 @@ export default {
         customer_gender: 'xxx'
       }
       ]
+    }
+  },
+  watch: {
+    // tab 切换
+    created_at: function (newQuestion, oldQuestion) {
+      if (newQuestion === '时间') {
+        this.$axios({
+          method: 'GET',
+          url: '/magnate/saler/search',
+          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
+        }).then((res) => {
+          // console.log(res)
+          this.list = res.data
+        })
+      } else {
+        this.$axios({
+          method: 'GET',
+          url: '/magnate/saler/search',
+          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+          params: { 'search_type': 'created_at', 'search_key': newQuestion }
+        }).then((res) => {
+          this.list = res.data
+        })
+      }
+    },
+    intention: function (newQuestion, oldQuestion) {
+      if (newQuestion === '意向') {
+        this.$axios({
+          method: 'GET',
+          url: '/magnate/saler/search',
+          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
+        }).then((res) => {
+          this.list = res.data
+        })
+      } else {
+        this.$axios({
+          method: 'GET',
+          url: '/magnate/saler/search',
+          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+          params: { 'search_type': 'intention', 'search_key': newQuestion }
+        }).then((res) => {
+          console.log(res)
+          this.list = res.data
+        })
+      }
+    },
+    preferred_apartment: function (newQuestion, oldQuestion) {
+      if (newQuestion === '喜好户型') {
+        this.$axios({
+          method: 'GET',
+          url: '/magnate/saler/search',
+          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
+        }).then((res) => {
+          this.list = res.data
+        })
+      } else {
+        this.$axios({
+          method: 'GET',
+          url: '/magnate/saler/search',
+          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+          params: { 'search_type': 'preferred_apartment', 'search_key': newQuestion }
+        }).then((res) => {
+          console.log(res)
 
+          this.list = res.data
+        })
+      }
     }
   },
   components: {
     HomeHeader,
     HomeNav,
-    BuyTabbar,
-    Buyinformation
+    BuyTabbar
   },
   mounted () {
     // 读取cookie
-    this.id = this.$cookies.get('CURRENT_USER_ID')
-    this.phone = this.$cookies.get('CURRENT_USER_PHONE')
+    this.id = this.$cookies.get('CURRENT-USER-ID')
+    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
 
     this.$axios({
       method: 'GET',
       url: '/magnate/saler/search',
-      headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone },
-      query: { 'customer_key': this.phone }
-    }).then((data) => {
-      console.log(data)
-      this.list = data.data
+      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
+    }).then((res) => {
+      // console.log(res)
+      this.list = res.data
     })
+
     // this.$axios({
     //   method: 'GET',
     //   url: '/magnate/saler/search',
-    //   headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone },
-    //   query: { 'search_type': 'created_at' }
-    // }).then((data) => {
-    //   console.log(data)
-    // })
-    // this.$axios({
-    //   method: 'GET',
-    //   url: '/magnate/saler/search',
-    //   headers: { 'CURRENT_USER_ID': this.id, 'CURRENT_USER_PHONE': this.phone },
+    //   headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
     //   query: { 'created_at': 'away_month' }
     // }).then((data) => {
     //   console.log(data)
     // })
+  },
+  methods: {
+    search () {
+      this.$axios({
+        method: 'GET',
+        url: '/magnate/saler/search',
+        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+        params: { 'customer_key': this.namePhone, 'customer_name': this.customer_name }
+      }).then((res) => {
+        console.log(res)
+        this.list = res.data
+      })
+    }
   }
 }
 </script>

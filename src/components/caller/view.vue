@@ -5,53 +5,56 @@
         <div class="information-left-head">
           <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
         </div>
-        <div class="information-left-matter">
+        <router-link
+          :to="{ name:'caller_buy_message', query: {customer_phone:item.customer_phone,response_id:item.response_id }}"
+          class="information-left-matter"
+        >
           <h2>{{item.customer_name}}</h2>
           <p>电话：{{item.customer_phone}}</p>
-          <p>意向：{{item.intention}}</p>
-        </div>
+          <p>来访时间：{{item.dataTime}}</p>
+        </router-link>
       </div>
-      <div class="information-right">
+      <a :href="'tel:'+ item.customer_phone" class="information-right">
         <i class="icon-Info-Icon-Phone"></i>
-      </div>
+      </a>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  // props: ['list'],
   data () {
     return {
+      id: '',
+      phone: '',
+      response_id: '',
       list: [{
         customer_name: '张先生',
-        customer_phone: '1212123',
-        intention: '公寓',
-        customer_gender: '1'
-      }, {
-        customer_name: '张先生',
-        customer_phone: '1123',
-        intention: '公寓',
-        customer_gender: '男'
-      }, {
-        customer_name: '张先生',
-        customer_phone: '12232312123',
-        intention: '公寓',
-        customer_gender: '男'
-      }, {
-        customer_name: '张先生',
-        customer_phone: '1212135323',
-        intention: '公寓',
-        customer_gender: '男'
-      }, {
-        customer_name: '张女士',
-        customer_phone: '12676812123',
-        intention: '公寓',
-        customer_gender: '女'
-      }
-      ]
-
+        customer_phone: 'xxx'
+      }]
     }
+  },
+  mounted () {
+    this.response_id = this.$route.query.response_id
+    this.customer_phone = this.$route.query.customer_phone
+    // 读取cookie
+
+    // 读取cookie
+    this.id = this.$cookies.get('CURRENT-USER-ID')
+    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
+    // 来电列表view
+    this.$axios({
+      method: 'GET',
+      url: '/magnate/saler/callers/arrive_today',
+      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
+    }).then((res) => {
+      this.list = res.data
+      for (let i = 0; i < res.data.length; i++) {
+        let dataTime = res.data[i].planed_visit_time
+        dataTime = dataTime.substr(0, 10)
+        this.list[i].dataTime = dataTime
+      }
+    })
   }
 
 }

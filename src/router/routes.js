@@ -20,6 +20,11 @@ export default [
     component: () => import(/* webpackChunkName:'buy_message' */'@/components/visit/buy_message')
   },
   {
+    path: '/real_estate/saler/call/caller_buy_message',
+    name: 'caller_buy_message',
+    component: () => import(/* webpackChunkName:'caller_buy_message' */'@/components/caller/caller_buy_message')
+  },
+  {
     path: '/real_estate/saler/subscribe',
     name: 'subscribe',
     component: () => import(/* webpackChunkName:'subscribe' */'@/components/subscribe')
@@ -45,14 +50,24 @@ export default [
     component: () => import(/* webpackChunkName:'code' */'@/components/code')
   },
   {
-    path: '/real_estate/saler/visit',
-    name: 'visit',
+    path: '/real_estate/saler/arrive_visitors',
+    name: 'arrive_visitors',
     component: () => import(/* webpackChunkName:'visit' */'@/components/visit')
   },
   {
-    path: '/real_estate/saler/call',
-    name: 'call',
-    component: () => import(/* webpackChunkName:'call' */'@/components/call')
+    path: '/real_estate/saler/caller',
+    name: 'caller',
+    component: () => import(/* webpackChunkName:'call' */'@/components/caller/caller'),
+    children: [{
+      path: 'new',
+      component: () => import(/* webpackChunkName:'call' */'@/components/caller/new')
+    },
+    {
+      path: 'view',
+      name: 'call_view',
+      component: () => import(/* webpackChunkName:'call' */'@/components/caller/view')
+    }
+    ]
   },
   {
     path: '/real_estate/saler/message',

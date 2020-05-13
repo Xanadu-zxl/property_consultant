@@ -14,12 +14,7 @@
             </p>
           </div>
         </div>
-        <router-link
-          :to="{ name:'message',query:{customer_phone:customer_phone,response_id:response_id}}"
-          class="information-right information-right-modify"
-        >
-          <i class="icon-Info-Icon-Edit"></i>
-        </router-link>
+
         <a :href="'tel:'+ customer_phone" class="information-right">
           <i class="icon-Info-Icon-Phone"></i>
         </a>
@@ -87,7 +82,7 @@
     <div class="buy_message_bottom"></div>
     <footer class="footer">
       <div class="buy_message_footer">
-        <div @click="prompt" to="/#">认购</div>
+        <div @click="prompt" >保存</div>
       </div>
     </footer>
   </div>
@@ -111,7 +106,33 @@ export default {
       focus: ' ',
       family_structure: ' ',
       feature: ' ',
-      planed_visit_time: ' '
+      planed_visit_time: ' ',
+      response: {
+        entries_attributes: [
+          {
+            'field_id': 5678,
+            'value': ''
+          },
+          {
+            'field_id': 5679,
+            'value': ''
+          },
+          {
+            'field_id': 5680,
+            'value': '女'
+          },
+
+          {
+            'field_id': 5681,
+            'value': '行销'
+          },
+          {
+            'field_id': 5706,
+            'value': ''
+          }
+        ]
+      },
+      user_id: ''
     }
   },
   components: {
@@ -129,15 +150,13 @@ export default {
     this.$axios({
       method: 'GET',
       url: '/magnate/saler/arrive_visitors/' + this.response_id,
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
+      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+      qurey: { 'id': '70961' }
     }).then((res) => {
       console.log(res)
       let mappedValues = res.data.mapped_values
       if (mappedValues.customer_name) {
         this.customer_name = mappedValues.customer_name.text_value[0]
-      }
-      if (mappedValues.channel) {
-        this.channel = mappedValues.channel.text_value[0]
       }
       if (mappedValues.intention) {
         this.intention = mappedValues.intention.text_value[0]

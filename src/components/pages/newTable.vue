@@ -1,9 +1,9 @@
 <template>
   <div>
-    <header class="header">
+    <header class="table_header">
       <img alt class="img" src="@/assets/img/Avator-Man.png" />
     </header>
-    <aside class="aside">
+    <aside class="table_aside">
       <van-field label="客户姓名" placeholder="例如：张三" type="text" v-model="customer_name" />
       <van-field label="客户性别" name="gender">
         <template #input>
@@ -50,8 +50,8 @@
         </template>
       </van-field>
     </aside>
-    <footer class="footer">
-      <router-link to="/real_estate/saler/customer">保存</router-link>
+    <footer class="table_footer">
+      <router-link to="/real_estate/saler/customer">新建客户</router-link>
     </footer>
   </div>
 </template>
@@ -79,14 +79,14 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.header
+.table_header
   width: 4.0625rem
   margin: .8125rem auto 1.0625rem
 
-.header .img
+.table_header .img
   width: 100%
 
-.aside
+.table_aside
   width: 84%
   margin: 0 auto
 
@@ -118,14 +118,19 @@ export default {
     font-size: 15px
     font-weight: 600
 
-.footer
+.table_footer
   margin-top: 30px
+  position: fixed
+  bottom: 0px
+  width: 100%
   height: 50px
   line-height: 50px
   font-size: 15px
   font-weight: 600
   background: #00A862
+  color: #fff
 
   a
     color: #fff
+
 </style>

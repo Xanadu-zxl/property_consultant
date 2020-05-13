@@ -96,8 +96,8 @@ export default {
     this.response_id = this.$route.query.response_id
     this.customer_phone = this.$route.query.customer_phone
     // 读取cookie
-    this.id = this.$cookies.get('CURRENT_USER_ID')
-    this.phone = this.$cookies.get('CURRENT_USER_PHONE')
+    this.id = this.$cookies.get('CURRENT-USER-ID')
+    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
   },
   methods: {
     prompt () {
