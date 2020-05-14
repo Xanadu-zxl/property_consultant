@@ -1,36 +1,45 @@
 <template>
   <div>
     <customer-tabbar :title="title" />
-    <header class="header">
+
+    <header class="table_header">
       <img alt class="img" src="@/assets/img/Avator-Man.png" />
     </header>
-    <aside class="aside">
-      <van-field label="客户姓名" placeholder="例如：张三" required v-model="customer_name" />
-      <van-field label="客户性别" name="gender">
-        <template #input>
-          <van-radio-group direction="horizontal" v-model="customer_gender">
-            <van-radio checked-color="#00A862" name="0">女</van-radio>
-            <van-radio checked-color="#00A862" name="1">男</van-radio>
-          </van-radio-group>
-        </template>
-      </van-field>
-      <van-field
-        label="手机号码"
-        placeholder="例如：10086"
-        readonly
-        type="number"
-        v-model="customer_phone"
-      />
-      <van-field label="E-mail" placeholder="例如：10086@gmail.com" type="email" v-model="email" />
-
-      <van-field
-        :value="dataTime"
+    <aside class="table_aside">
+      <div :key="field.identity_key" v-for="field in formData">
+        <p v-if="field['type'] === 'Field::TextField'">
+          <van-field
+            :id="field['identity_key']"
+            :label="field['title']"
+            type="text"
+            v-model="field['value']"
+          />
+        </p>
+        <p v-else-if="field['type'] === 'Field::RadioButton'">
+          <van-field :label="field['title']">
+            <template #input>
+              <van-radio-group
+                :id="field['identity_key']"
+                direction="horizontal"
+                v-model="field['option_id']"
+              >
+                <div :key="option.id" v-for="option in field.options">
+                  <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
+                </div>
+              </van-radio-group>
+            </template>
+          </van-field>
+        </p>
+        <!-- <p v-else-if="field['type'] === 'Field::DateTime'">
+         <van-field
+        :value="field['value']"
         @click="showPicker = true"
         clickable
-        label="生日"
+        :label="field['title']"
         name="datetimePicker"
         placeholder="点击选择时间"
         readonly
+        :id="field['identity_key']"
       />
       <van-popup position="bottom" round v-model="showPicker">
         <van-datetime-picker
@@ -43,149 +52,235 @@
           v-model="currentDate"
         />
       </van-popup>
+        </p>-->
+      </div>
 
-      <van-field label="意向等级" name="intention" required>
-        <template #input>
-          <van-radio-group direction="horizontal" v-model="intention">
-            <van-radio checked-color="#00A862" name="A">A</van-radio>
-            <van-radio checked-color="#00A862" name="B">B</van-radio>
-            <van-radio checked-color="#00A862" name="C">C</van-radio>
-            <van-radio checked-color="#00A862" name="D">D</van-radio>
-          </van-radio-group>
-        </template>
-      </van-field>
+      <div class="footer"></div>
     </aside>
-    <footer class="footer">
-      <router-link to="/real_estate/saler/message">保存</router-link>
+    <footer class="table_footer">
+      <div @click="newTable">保存</div>
     </footer>
   </div>
 </template>
 
 <script>
-import CustomerTabbar from '@/components/pages/tabbar'
+import CustomerTabbar from '../pages/tabbar'
 
 export default {
   data () {
     return {
       title: '客户基础信息',
-      id: '',
-      phone: '',
-      customer_name: '',
-      customer_phone: '',
-      email: '',
-      birthday: '',
-      customer_gender: '0',
-      intention: 'A',
-      dataTime: '',
+      fields: [],
+      orderFieldList: ['customer_name', 'customer_phone', 'email', 'intention'],
+      formData: [],
       showPicker: false,
       minDate: new Date(1900, 0, 1),
       maxDate: new Date(2220, 10, 1),
-      currentDate: new Date(),
-      'response': {
-        'entries_attributes': [
-          {
-            'field_id': 5723,
-            'value': '张三'
-          }
-        ]
-      },
-      'user_id': 73
+      currentDate: new Date()
     }
   },
   components: {
     CustomerTabbar
   },
   mounted () {
-    // 读取cookie
-    this.id = this.$cookies.get('CURRENT-USER-ID')
-    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-
-    // this.$axios({
-    //   method: 'GET',
-    //   url: '/magnate/saler/callers/new',
-    //   headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    // }).then((data) => {
-    //   console.log(data)
-    // })
+    // 新增数据
     this.$axios({
-      method: 'POST',
-      url: ' /magnate/saler/callers',
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-      data: { 'response': this.response, 'user_id': this.user_id }
-    }).then((data) => {
-      console.log(data)
+      method: 'GET',
+      url: '/magnate/saler/arrive_visitors/new',
+      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
+    }).then((res) => {
+      console.log(res)
+
+      this.fields = res.data.fields
+      this.orderFieldList.forEach(element => {
+        let field = this.fields.find(field => field.identity_key === element)
+        if (field) {
+          switch (field.type) {
+            case 'Field::RadioButton': {
+              // eslint-disable-next-line standard/object-curly-even-spacing
+              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, option_id: '', options: field.options })
+              break
+            }
+            // case 'Field::DateTime': {
+            //   this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: ''})
+            // }
+            default: {
+              // eslint-disable-next-line standard/object-curly-even-spacing
+              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
+            }
+          }
+        }
+      })
     })
   },
   methods: {
-    onConfirm (currentDate) {
-      this.dataTime = this.formatDate(currentDate)
-      this.dataTime = this.dataTime
-      this.showPicker = false
-      console.log(this.dataTime) // 打印出了时间
-    },
-    formatDate: function (d) {
-      return d.getFullYear() + '-' + this.p((d.getMonth() + 1)) + '-' + this.p(d.getDate())
-    },
-    p (s) {
-      return s < 10 ? '0' + s : s
+    // onConfirm (currentDate) {
+    //   this.dataTime = this.formatDate(currentDate)
+    //   let dateField = this.formatDate.find(field => field['identity_key'] === 'planed_visit_time')
+    //   dateField['value'] = this.dataTime
+    //   this.showPicker = false
+    //   // console.log(this.dataTime)
+    // },
+    // formatDate: function (d) {
+    //   return d.getFullYear() + '-' + this.p((d.getMonth() + 1)) + '-' + this.p(d.getDate())
+    // },
+    // p (s) {
+    //   return s < 10 ? '0' + s : s
+    // },
+
+    // 发送数据
+    newTable () {
+      let payload = { response: { entries_attributes: [] } }
+
+      this.formData.forEach(element => {
+        switch (element.type) {
+          case 'Field::RadioButton': {
+            if (element.option_id !== '' && element) {
+              payload.response.entries_attributes.push({ field_id: element.field_id, option_id: element.option_id })
+            }
+            break
+          }
+          default: {
+            if (element.value !== '' && element) {
+              payload.response.entries_attributes.push({ field_id: element.field_id, value: element.value })
+            }
+          }
+        }
+      })
+
+      payload.user_id = this.$cookies.get('CURRENT-USER-ID')
+      let salerField = this.fields.find(element => element.identity_key === 'saler')
+      payload.response.entries_attributes.push({value: this.$cookies.get('CURRENT-NAME'), field_id: salerField.id})
+      let salerPhoneField = this.fields.find(element => element.identity_key === 'saler_phone')
+      payload.response.entries_attributes.push({value: this.$cookies.get('CURRENT-USER-PHONE'), field_id: salerPhoneField.id})
+
+      this.$axios({
+        method: 'POST',
+        url: '/magnate/saler/arrive_visitors',
+        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+        data: payload
+      }).then((res) => {
+        console.log(res)
+        if (res.status === 201) {
+          this.$toast('新建成功✨')
+        }
+      })
     }
+    // onConfirm (currentDate) {
+    //   this.dataTime = this.formatDate(currentDate)
+    //   this.response.entries_attributes[12].value = this.dataTime
+    //   this.showPicker = false
+    //   // console.log(this.dataTime)
+    // },
+    // formatDate: function (d) {
+    //   return d.getFullYear() + '-' + this.p((d.getMonth() + 1)) + '-' + this.p(d.getDate())
+    // },
+    // p (s) {
+    //   return s < 10 ? '0' + s : s
+    // },
+
+    // // 发送数据
+    // newTable () {
+    //   this.$axios({
+    //     method: 'POST',
+    //     url: '/magnate/saler/arrive_visitors',
+    //     headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+    //     data: { 'response': this.response, 'user_id': this.user_id }
+    //   }).then((res) => {
+    //     console.log(res)
+    //     if (res.status === 201) {
+    //       this.$toast('新建成功✨')
+    //     }
+    //   })
+    // },
+    // telBlur () {
+    //   // 去重
+    //   this.$axios({
+    //     method: 'GET',
+    //     url: '/magnate/saler/arrive_visitors/valid_phone?customer_phone=' + this.response.entries_attributes[2].value,
+    //     headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
+    //   }).then((res) => {
+    //     console.log(res)
+    //     if (res.data.customer_phone) {
+    //       this.$toast('手机号重复✨')
+    //     } else {
+    //       this.$toast('手机号bubububuubu✨')
+    //     }
+    //   })
+    // }
   }
+
 }
 </script>
 
-<style  scoped lang="sass">
-.header
-  width: 65px
-  margin: 0 auto 1.0625rem
+<style lang="scss" scoped>
+.table_header {
+  width: 4.0625rem;
+  margin: 0.8125rem auto 1.0625rem;
+}
 
-.header .img
-  width: 100%
+.table_header .img {
+  width: 100%;
+}
 
-.aside
-  width: 84%
-  margin: 0 auto
+.table_aside {
+  width: 84%;
+  margin: 0 auto;
+}
 
-/deep/
-  .van-field
-    flex-direction: column
+/deep/ .van-field {
+  flex-direction: column;
 
-  .van-field__label
-    text-align: left
-    padding: 0px
-    color: #222222
-    font-size: 17px
+  .van-field__label {
+    text-align: left;
+    padding: 0px;
+    color: #222222;
+    font-size: 17px;
+    width: 190px;
+  }
+}
 
-  .van-field__body
-    margin-top: 15px
-    font-size: 15px
+.van-field__body {
+  margin-top: 15px;
+  font-size: 15px;
+}
 
-  .van-field__control
-    font-size: 15px
+.van-field__control {
+  font-size: 15px;
+}
+.van-picker__cancel {
+  color: #787878;
+  font-size: 15px;
+  font-weight: 600;
+}
+.van-radio--horizontal {
+  margin: 4px;
+}
 
-  .van-picker__cancel
-    color: #787878
-    font-size: 15px
-    font-weight: 600
+.van-picker__confirm {
+  color: #00a862;
+  font-size: 15px;
+  font-weight: 600;
+}
 
-  .van-picker__confirm
-    color: #00a862
-    font-size: 15px
-    font-weight: 600
+.table_footer {
+  margin-top: 30px;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  background: #00a862;
+  color: #fff;
+}
 
-  .van-icon-play
-    display: block
-    transform: rotate(90deg)
+a {
+  color: #fff;
+}
 
-.footer
-  margin-top: 30px
-  height: 50px
-  line-height: 50px
-  font-size: 15px
-  font-weight: 600
-  background: #00A862
-
-  a
-    color: #fff
-    width: 100%
-    display: block
+.footer {
+  height: 50px;
+}
 </style>

@@ -52,7 +52,7 @@ export default [
   {
     path: '/real_estate/saler/arrive_visitors',
     name: 'arrive_visitors',
-    component: () => import(/* webpackChunkName:'visit' */'@/components/visit')
+    component: () => import(/* webpackChunkName:'visit' */'@/components/arrive_visitors')
   },
   {
     path: '/real_estate/saler/caller',

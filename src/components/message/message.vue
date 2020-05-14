@@ -26,7 +26,10 @@
     </div>
 
     <div class="message-content">
-      <router-link class="message-project" to="/real_estate/saler/message/init">
+      <router-link
+        :to="{ name:'init',query:{customer_phone:customer_phone,response_id:response_id}}"
+        class="message-project"
+      >
         <i class="icon-Info-Icon-File message-style-green"></i>
         <span class="message-project-title">基础信息</span>
       </router-link>
@@ -82,7 +85,7 @@ export default {
       title: '客户信息',
       customer_name: 'xxx',
       preferred_apartment: 'xxx',
-      planed_visit_time: '2020/02/20',
+      planed_visit_time: '0000/00/00',
       response_id: '',
       customer_phone: '',
       id: '',
@@ -98,6 +101,24 @@ export default {
     // 读取cookie
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
+
+    this.$axios({
+      method: 'GET',
+      url: '/magnate/saler/arrive_visitors/' + this.response_id,
+      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
+    }).then((res) => {
+      console.log(res)
+      let mappedValues = res.data.mapped_values
+      if (mappedValues.customer_name) {
+        this.customer_name = mappedValues.customer_name.text_value[0]
+      }
+      if (mappedValues.preferred_apartment) {
+        this.preferred_apartment = mappedValues.preferred_apartment.text_value[0]
+      }
+      if (mappedValues.planed_visit_time) {
+        this.planed_visit_time = mappedValues.planed_visit_time.text_value[0]
+      }
+    })
   },
   methods: {
     prompt () {
