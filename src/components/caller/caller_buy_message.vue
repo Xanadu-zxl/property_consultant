@@ -102,13 +102,6 @@ export default {
       entries: []
     }
   },
-  // watch: {
-  //   'formData[0].value': function (newQuestion, oldQuestion) {
-  //     console.log(newQuestion)
-  //     console.log(oldQuestion)
-  //   }
-
-  // },
 
   components: {
     BuyMessageTabbar
@@ -129,7 +122,7 @@ export default {
 
       this.orderFieldList.forEach(element => {
         let field = this.fields.find(field => field.identity_key === element)
-
+        // 单选表单
         if (field) {
           switch (field.type) {
             case 'Field::RadioButton': {
@@ -185,7 +178,6 @@ export default {
       this.dataTime = this.formatDate(currentDate)
       this.newTime = this.dataTime
       this.showPicker = false
-      // console.log(this.dataTime)
     },
     formatDate: function (d) {
       return d.getFullYear() + '-' + this.p((d.getMonth() + 1)) + '-' + this.p(d.getDate())
@@ -203,16 +195,25 @@ export default {
 
         switch (field.type) {
           case 'Field::RadioButton': {
+            if (field.option_id) {
+              if (entry && entry.option_id !== field.option_id) {
+                payload.response.entries_attributes.push({ id: entry.id, option_id: field.option_id })
+              } else if (entry) {
+
+              } else {
+                payload.response.entries_attributes.push({ field_id: field.field_id, option_id: field.option_id })
+              }
+            }
             break
           }
           default: {
             if (field.value) {
               if (entry && entry.value !== field.value) {
-                payload.response.entries_attributes.push({id: entry.id, value: field.value})
+                payload.response.entries_attributes.push({ id: entry.id, value: field.value })
               } else if (entry) {
 
               } else {
-                payload.response.entries_attributes.push({field_id: field.field_id, value: field.value})
+                payload.response.entries_attributes.push({ field_id: field.field_id, value: field.value })
               }
             }
           }
@@ -221,19 +222,19 @@ export default {
 
       payload.user_id = this.$cookies.get('CURRENT-USER-ID')
 
-      console.log(payload)
+      // console.log(payload)
 
-      this.$axios({
-        method: 'PUT',
-        url: '/magnate/saler/callers/' + this.response_id,
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-        data: payload
-      }).then((res) => {
-        console.log(res)
-        if (res.status === 200) {
-          this.$toast('更新成功✨')
-        }
-      })
+      // this.$axios({
+      //   method: 'PUT',
+      //   url: '/magnate/saler/callers/' + this.response_id,
+      //   headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+      //   data: payload
+      // }).then((res) => {
+      //   console.log(res)
+      //   if (res.status === 200) {
+      //     this.$toast('更新成功✨')
+      //   }
+      // })
     }
 
     // telBlur () {
