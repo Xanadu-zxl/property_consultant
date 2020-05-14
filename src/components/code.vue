@@ -13,7 +13,8 @@ export default {
       code: '',
       token: '',
       id: '73',
-      phone: '18980807092'
+      phone: '18980807092',
+      name: ''
     }
   },
   mounted () {
@@ -23,6 +24,7 @@ export default {
 
     this.$cookies.set('CURRENT-USER-ID', this.id)
     this.$cookies.set('CURRENT-USER-PHONE', this.phone)
+    this.$cookies.set('CURRENT-NAME', this.name)
     this.$axios({
       method: 'POST',
       url: '/oauth/token',
@@ -41,12 +43,14 @@ export default {
       this.$axios({
         method: 'GET',
         url: '/api/v1/user?access_token=' + this.token
-      }).then((data) => {
-        console.log(data)
-        this.id = data.data.id
+      }).then((res) => {
+        console.log(res)
+        this.id = res.data.id
+        this.name = res.data.name
         // this.phone = data.data.phone
         this.$cookies.set('CURRENT-USER-ID', this.id)
         this.$cookies.set('CURRENT-USER-PHONE', this.phone)
+        this.$cookies.set('CURRENT-NAME', this.name)
       })
     })
   }
