@@ -243,10 +243,11 @@ export default {
         headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
         data: payload
       }).then((res) => {
-        console.log(res)
         if (res.status === 201) {
           this.$toast('新建成功✨')
           this.$router.push({ name: 'message', query: { response_id: res.data.id } })
+        } else {
+          this.$toast('新建失败~')
         }
       })
     },
@@ -343,7 +344,7 @@ a {
 .footer {
   height: 50px;
 }
-
+// 遮罩层
 .show {
   padding-top: 70%;
   position: absolute;

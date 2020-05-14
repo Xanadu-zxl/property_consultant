@@ -5,16 +5,41 @@
     </header>
     <aside class="table_aside">
       <div :key="field.identity_key" v-for="field in formData">
-        <p v-if="field['type'] === 'Field::TextField'">
-          <van-field
-            :id="field.identity_key"
-            :label="field['title']"
-            type="text"
-            v-model="field['value']"
-          />
-        </p>
+        <div v-if="field.type === 'Field::TextField'">
+          <p v-if="field.identity_key == 'customer_name'">
+            <van-field
+              :id="field.identity_key"
+              :label="field.title"
+              placeholder="请输入"
+              required
+              type="text"
+              v-model="field.value"
+            />
+          </p>
+          <p v-else-if="field.identity_key == 'customer_phone'">
+            <van-field
+              :id="field.identity_key"
+              :label="field.title"
+              @blur="telBlur(field)"
+              placeholder="请输入"
+              required
+              type="text"
+              v-model="field.value"
+            />
+          </p>
+
+          <p v-else-if="field.identity_key">
+            <van-field
+              :id="field.identity_key"
+              :label="field.title"
+              placeholder="请输入"
+              type="text"
+              v-model="field.value"
+            />
+          </p>
+        </div>
         <p v-else-if="field['type'] === 'Field::RadioButton'">
-          <van-field :label="field['title']">
+          <van-field :label="field['title']" required>
             <template #input>
               <van-radio-group
                 :id="field['identity_key']"
@@ -38,6 +63,7 @@
             name="datetimePicker"
             placeholder="点击选择时间"
             readonly
+            required
           />
           <van-popup position="bottom" round v-model="showPicker">
             <van-datetime-picker
@@ -51,6 +77,17 @@
             />
           </van-popup>
         </p>
+      </div>
+      <!-- 手机号遮罩层 -->
+      <div @click="show = false" class="show" v-show="show">
+        <div class="show_main">
+          <h1>提示</h1>
+          <h2>客户已存在，请重新输入手机号</h2>
+          <div class="show_footer">
+            <p>客户姓名：{{customer_name}}</p>
+            <p>首次到访时间：{{created_at}}</p>
+          </div>
+        </div>
       </div>
 
       <div class="footer"></div>
@@ -75,13 +112,21 @@ export default {
       minDate: new Date(1900, 0, 1),
       maxDate: new Date(2220, 10, 1),
       currentDate: new Date(),
-      newTime: ''
+      newTime: '',
+      show: false,
+      created_at: '',
+      customer_name: '',
+      id: '',
+      phone: ''
     }
   },
   components: {
     CustomerTabbar
   },
   mounted () {
+    // 读取cookie
+    this.id = this.$cookies.get('CURRENT-USER-ID')
+    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
     // 新增数据
     this.$axios({
       method: 'GET',
@@ -161,7 +206,6 @@ export default {
       payload.response.entries_attributes.push({ value: this.$cookies.get('CURRENT-NAME'), field_id: salerField.id })
       let salerPhoneField = this.fields.find(element => element.identity_key === 'saler_phone')
       payload.response.entries_attributes.push({ value: this.$cookies.get('CURRENT-USER-PHONE'), field_id: salerPhoneField.id })
-
       this.$axios({
         method: 'POST',
         url: '/magnate/saler/callers',
@@ -172,51 +216,30 @@ export default {
         if (res.status === 201) {
           this.$toast('新建成功✨')
           this.$router.push({ name: 'call_view' })
+        } else {
+          this.$toast('新建失败～')
+        }
+      })
+    },
+
+    // 判定手机号
+    telBlur (field) {
+      if (field.value.length !== 11) {
+        this.$toast('手机号格式错误!!!')
+        return
+      }
+      this.$axios({
+        method: 'GET',
+        url: '/magnate/saler/arrive_visitors/valid_phone?customer_phone=' + field.value,
+        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
+      }).then((res) => {
+        if (res.data.customer_phone) {
+          this.customer_name = res.data.customer_name
+          this.created_at = res.data.created_at.slice(0, 10)
+          this.show = true
         }
       })
     }
-    // onConfirm (currentDate) {
-    //   this.dataTime = this.formatDate(currentDate)
-    //   this.response.entries_attributes[12].value = this.dataTime
-    //   this.showPicker = false
-    //   // console.log(this.dataTime)
-    // },
-    // formatDate: function (d) {
-    //   return d.getFullYear() + '-' + this.p((d.getMonth() + 1)) + '-' + this.p(d.getDate())
-    // },
-    // p (s) {
-    //   return s < 10 ? '0' + s : s
-    // },
-
-    // // 发送数据
-    // newTable () {
-    //   this.$axios({
-    //     method: 'POST',
-    //     url: '/magnate/saler/callers',
-    //     headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-    //     data: { 'response': this.response, 'user_id': this.user_id }
-    //   }).then((res) => {
-    //     console.log(res)
-    //     if (res.status === 201) {
-    //       this.$toast('新建成功✨')
-    //     }
-    //   })
-    // },
-    // telBlur () {
-    //   // 去重
-    //   this.$axios({
-    //     method: 'GET',
-    //     url: '/magnate/saler/arrive_visitors/valid_phone?customer_phone=' + this.response.entries_attributes[2].value,
-    //     headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    //   }).then((res) => {
-    //     console.log(res)
-    //     if (res.data.customer_phone) {
-    //       this.$toast('手机号重复✨')
-    //     } else {
-    //       this.$toast('手机号bubububuubu✨')
-    //     }
-    //   })
-    // }
   }
 
 }
@@ -291,5 +314,50 @@ a {
 
 .footer {
   height: 50px;
+}
+
+// 遮罩层
+.show {
+  padding-top: 70%;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background: rgba(000, 000, 000, 0.2);
+  .show_main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    background: #fff;
+    margin: 0 auto;
+    border-radius: 6px;
+    height: 164px;
+
+    h1 {
+      font-size: 18px;
+      color: #222222;
+      margin: 25px auto 15px;
+    }
+    h2 {
+      width: 90%;
+      font-size: 14px;
+      color: #c15959;
+      margin-bottom: 15px;
+    }
+    .show_footer {
+      padding-top: 10px;
+      width: 80%;
+      border-top: 1px solid #d4d4d4;
+      p {
+        text-align: left;
+        color: #787878;
+        font-size: 12px;
+        line-height: 20px;
+      }
+    }
+  }
 }
 </style>
