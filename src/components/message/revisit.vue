@@ -53,7 +53,7 @@
       </p>
       <div :key="item.id" class="revist_aside_content-header-content" v-for="item in revisit">
         <span>{{item.return_type}}</span>
-        <span>{{item.revisit_date}}</span>
+        <span>{{item.lastDataTime}}</span>
         <span>{{item.remark}}</span>
       </div>
     </aside>
@@ -87,16 +87,32 @@ export default {
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
 
+    // 来访
+    this.$axios({
+      method: 'GET',
+      url: '/magnate/saler/arrive_visitors/' + this.response_id,
+      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
+    }).then((res) => {
+      console.log(res)
+      let mappedValues = res.data.mapped_values
+      if (mappedValues.intention) {
+        this.intention = mappedValues.intention.text_value[0]
+      }
+    })
+    // 回访
     this.$axios({
       method: 'GET',
       url: '/magnate/saler/return_visit_records/current_user_return_records?customer_phone=' + this.customer_phone,
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
       this.revisit = res.data
-      // this.total_count = res.data[0].user_id
-      console.log(res.headers)
-
-      console.log(res)
+      // console.log(res)
+      // 格式化时间
+      for (let i = 0; i < res.data.length; i++) {
+        let lastDataTime = res.data[i].revisit_date
+        lastDataTime = lastDataTime.slice(0, 10)
+        this.revisit[i].lastDataTime = lastDataTime
+      }
     })
   }
   // methods () {

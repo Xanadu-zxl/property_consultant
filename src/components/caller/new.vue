@@ -7,7 +7,7 @@
       <div :key="field.identity_key" v-for="field in formData">
         <p v-if="field['type'] === 'Field::TextField'">
           <van-field
-            :id="field['identity_key']"
+            :id="field.identity_key"
             :label="field['title']"
             type="text"
             v-model="field['value']"
@@ -28,11 +28,11 @@
             </template>
           </van-field>
         </p>
-        <p v-else-if="field['type'] === 'Field::DateTime'">
+        <p v-else-if="field.type === 'Field::DateTime'">
           <van-field
-            :id="field['identity_key']"
-            :label="field['title']"
-            :value="field['value']"
+            :id="field.identity_key"
+            :label="field.title"
+            :value="newTime"
             @click="showPicker = true"
             clickable
             name="datetimePicker"
@@ -69,12 +69,13 @@ export default {
     return {
       title: '来电客户',
       fields: [],
-      orderFieldList: ['customer_name', 'customer_phone', 'channel', 'focus', 'motivation', 'planed_visit_time', 'demand_floor', 'travel_mode', 'call_area'],
+      orderFieldList: ['customer_name', 'customer_phone', 'customer_gender', 'channel', 'focus', 'motivation', 'planed_visit_time', 'demand_floor', 'travel_mode', 'call_area'],
       formData: [],
       showPicker: false,
       minDate: new Date(1900, 0, 1),
       maxDate: new Date(2220, 10, 1),
-      currentDate: new Date()
+      currentDate: new Date(),
+      newTime: ''
     }
   },
   components: {
@@ -101,6 +102,7 @@ export default {
             }
             case 'Field::DateTime': {
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
+              break
             }
             // eslint-disable-next-line no-fallthrough
             default: {
@@ -115,10 +117,11 @@ export default {
     // 时间选择器
     onConfirm (currentDate) {
       this.dataTime = this.formatDate(currentDate)
-      let dateField = this.formatDate.find(field => field['identity_key'] === 'planed_visit_time')
-      dateField['value'] = this.dataTime
+      // let dateField = this.formatDate.find(field => field['identity_key'] === 'planed_visit_time')
+      // dateField['value'] = this.dataTime
+      this.newTime = this.dataTime
       this.showPicker = false
-      // console.log(this.dataTime)
+      console.log(this.newTime)
     },
     formatDate: function (d) {
       return d.getFullYear() + '-' + this.p((d.getMonth() + 1)) + '-' + this.p(d.getDate())
@@ -136,6 +139,12 @@ export default {
           case 'Field::RadioButton': {
             if (element.option_id !== '' && element) {
               payload.response.entries_attributes.push({ field_id: element.field_id, option_id: element.option_id })
+            }
+            break
+          }
+          case 'Field::DateTime': {
+            if (element.option_id !== '' && element) {
+              payload.response.entries_attributes.push({ field_id: element.field_id, value: this.newTime })
             }
             break
           }
@@ -162,6 +171,7 @@ export default {
         console.log(res)
         if (res.status === 201) {
           this.$toast('新建成功✨')
+          // this.$router.push({path: '/customer'})
         }
       })
     }

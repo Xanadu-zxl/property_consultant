@@ -45,7 +45,7 @@ export default {
     // 来电列表view
     this.$axios({
       method: 'GET',
-      url: '/magnate/saler/callers/arrive_today',
+      url: '/magnate/saler/callers',
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
       this.list = res.data

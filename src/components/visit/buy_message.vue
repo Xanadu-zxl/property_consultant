@@ -283,7 +283,7 @@ export default {
   line-height: 50px;
   font-size: 15px;
   font-weight: 600;
-  background: #00a862;
+  background: #929292;
   color: #fff;
   div {
     width: 100%;

@@ -58,6 +58,7 @@
           </div>
         </van-collapse-item>
       </van-collapse>
+      <div class="footer"></div>
     </div>
     <home-nav></home-nav>
   </div>
@@ -127,6 +128,8 @@ export default {
     }).then((res) => {
       this.overdues = res.data
       // 格式化时间
+      console.log(res)
+
       for (let i = 0; i < res.data.length; i++) {
         let lastDataTime = res.data[i].last_revisit_date
         lastDataTime = lastDataTime.slice(0, 10)
@@ -134,9 +137,6 @@ export default {
       }
       // console.log(this.overdues)
     })
-  },
-  methods: {
-
   }
 }
 
@@ -236,5 +236,9 @@ export default {
 }
 .content-Statistics-content p i {
   font-size: 20px;
+}
+
+.footer {
+  height: 50px;
 }
 </style>

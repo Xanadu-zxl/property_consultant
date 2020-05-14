@@ -71,16 +71,16 @@ import CustomerTabbar from '../pages/tabbar'
 export default {
   data () {
     return {
-      title: '来电客户',
-      textList: [],
-      radioList: [],
-      dataList: [],
-      orderFieldList: ['customer_name', 'customer_phone', 'channel', 'focus', 'motivation', 'planed_visit_time', 'demand_floor', 'travel_mode', 'call_area'],
-      formData: [],
-      showPicker: false,
-      minDate: new Date(1900, 0, 1),
-      maxDate: new Date(2220, 10, 1),
-      currentDate: new Date()
+      title: '来电客户'
+      // textList: [],
+      // radioList: [],
+      // dataList: [],
+      // orderFieldList: ['customer_name', 'customer_phone', 'channel', 'focus', 'motivation', 'planed_visit_time', 'demand_floor', 'travel_mode', 'call_area'],
+      // formData: [],
+      // showPicker: false,
+      // minDate: new Date(1900, 0, 1),
+      // maxDate: new Date(2220, 10, 1),
+      // currentDate: new Date()
     }
   },
   components: {
@@ -138,38 +138,38 @@ export default {
 
     // 发送数据
     newTable () {
-      let payload = { response: { entries_attributes: [] } }
+      // let payload = { response: { entries_attributes: [] } }
 
-      this.formData.forEach(element => {
-        console.log(element)
-        switch (element.type) {
-          case 'Field::RadioButton': {
-            if (element.option_id !== '' && element) {
-              payload.response.entries_attributes.push({ field_id: element.field_id, option_id: element.option_id })
-            }
-            break
-          }
-          default: {
-            if (element.value !== '' && element) {
-              payload.response.entries_attributes.push({ field_id: element.field_id, value: element.value })
-            }
-          }
-        }
-      })
+      // this.formData.forEach(element => {
+      //   console.log(element)
+      //   switch (element.type) {
+      //     case 'Field::RadioButton': {
+      //       if (element.option_id !== '' && element) {
+      //         payload.response.entries_attributes.push({ field_id: element.field_id, option_id: element.option_id })
+      //       }
+      //       break
+      //     }
+      //     default: {
+      //       if (element.value !== '' && element) {
+      //         payload.response.entries_attributes.push({ field_id: element.field_id, value: element.value })
+      //       }
+      //     }
+      //   }
+      // })
 
-      payload.user_id = this.$cookies.get('CURRENT-USER-ID')
+      // payload.user_id = this.$cookies.get('CURRENT-USER-ID')
 
-      this.$axios({
-        method: 'POST',
-        url: '/magnate/saler/callers',
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-        data: payload
-      }).then((res) => {
-        console.log(res)
-        if (res.status === 201) {
-          this.$toast('新建成功✨')
-        }
-      })
+      // this.$axios({
+      //   method: 'POST',
+      //   url: '/magnate/saler/callers',
+      //   headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+      //   data: payload
+      // }).then((res) => {
+      //   console.log(res)
+      //   if (res.status === 201) {
+      //     this.$toast('新建成功✨')
+      //   }
+      // })
     }
     // onConfirm (currentDate) {
     //   this.dataTime = this.formatDate(currentDate)

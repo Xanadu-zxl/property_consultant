@@ -30,29 +30,29 @@
             </template>
           </van-field>
         </p>
-        <!-- <p v-else-if="field['type'] === 'Field::DateTime'">
-         <van-field
-        :value="field['value']"
-        @click="showPicker = true"
-        clickable
-        :label="field['title']"
-        name="datetimePicker"
-        placeholder="点击选择时间"
-        readonly
-        :id="field['identity_key']"
-      />
-      <van-popup position="bottom" round v-model="showPicker">
-        <van-datetime-picker
-          :max-date="maxDate"
-          :min-date="minDate"
-          @cancel="showPicker = false"
-          @confirm="onConfirm"
-          title="选择年月日"
-          type="date"
-          v-model="currentDate"
-        />
-      </van-popup>
-        </p>-->
+        <p v-else-if="field['type'] === 'Field::DateTime'">
+          <van-field
+            :id="field['identity_key']"
+            :label="field['title']"
+            :value="newTime"
+            @click="showPicker = true"
+            clickable
+            name="datetimePicker"
+            placeholder="点击选择时间"
+            readonly
+          />
+          <van-popup position="bottom" round v-model="showPicker">
+            <van-datetime-picker
+              :max-date="maxDate"
+              :min-date="minDate"
+              @cancel="showPicker = false"
+              @confirm="onConfirm"
+              title="选择年月日"
+              type="date"
+              v-model="currentDate"
+            />
+          </van-popup>
+        </p>
       </div>
 
       <div class="footer"></div>
@@ -76,7 +76,8 @@ export default {
       showPicker: false,
       minDate: new Date(1900, 0, 1),
       maxDate: new Date(2220, 10, 1),
-      currentDate: new Date()
+      currentDate: new Date(),
+      newTime: ''
     }
   },
   components: {
@@ -89,7 +90,7 @@ export default {
       url: '/magnate/saler/arrive_visitors/new',
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
-      console.log(res)
+      // console.log(res)
 
       this.fields = res.data.fields
       this.orderFieldList.forEach(element => {
@@ -101,9 +102,10 @@ export default {
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, option_id: '', options: field.options })
               break
             }
-            // case 'Field::DateTime': {
-            //   this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: ''})
-            // }
+            case 'Field::DateTime': {
+              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
+              break
+            }
             default: {
               // eslint-disable-next-line standard/object-curly-even-spacing
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
@@ -114,19 +116,17 @@ export default {
     })
   },
   methods: {
-    // onConfirm (currentDate) {
-    //   this.dataTime = this.formatDate(currentDate)
-    //   let dateField = this.formatDate.find(field => field['identity_key'] === 'planed_visit_time')
-    //   dateField['value'] = this.dataTime
-    //   this.showPicker = false
-    //   // console.log(this.dataTime)
-    // },
-    // formatDate: function (d) {
-    //   return d.getFullYear() + '-' + this.p((d.getMonth() + 1)) + '-' + this.p(d.getDate())
-    // },
-    // p (s) {
-    //   return s < 10 ? '0' + s : s
-    // },
+    onConfirm (currentDate) {
+      this.dataTime = this.formatDate(currentDate)
+      this.newTime = this.dataTime
+      this.showPicker = false
+    },
+    formatDate: function (d) {
+      return d.getFullYear() + '-' + this.p((d.getMonth() + 1)) + '-' + this.p(d.getDate())
+    },
+    p (s) {
+      return s < 10 ? '0' + s : s
+    },
 
     // 发送数据
     newTable () {
@@ -149,50 +149,19 @@ export default {
       })
 
       payload.user_id = this.$cookies.get('CURRENT-USER-ID')
-      let salerField = this.fields.find(element => element.identity_key === 'saler')
-      payload.response.entries_attributes.push({value: this.$cookies.get('CURRENT-NAME'), field_id: salerField.id})
-      let salerPhoneField = this.fields.find(element => element.identity_key === 'saler_phone')
-      payload.response.entries_attributes.push({value: this.$cookies.get('CURRENT-USER-PHONE'), field_id: salerPhoneField.id})
 
       this.$axios({
-        method: 'POST',
-        url: '/magnate/saler/arrive_visitors',
+        method: 'PUT',
+        url: '/magnate/saler/arrive_visitors/' + this.response_id,
         headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
         data: payload
       }).then((res) => {
         console.log(res)
-        if (res.status === 201) {
-          this.$toast('新建成功✨')
+        if (res.status === 200) {
+          this.$toast('更新成功✨')
         }
       })
     }
-    // onConfirm (currentDate) {
-    //   this.dataTime = this.formatDate(currentDate)
-    //   this.response.entries_attributes[12].value = this.dataTime
-    //   this.showPicker = false
-    //   // console.log(this.dataTime)
-    // },
-    // formatDate: function (d) {
-    //   return d.getFullYear() + '-' + this.p((d.getMonth() + 1)) + '-' + this.p(d.getDate())
-    // },
-    // p (s) {
-    //   return s < 10 ? '0' + s : s
-    // },
-
-    // // 发送数据
-    // newTable () {
-    //   this.$axios({
-    //     method: 'POST',
-    //     url: '/magnate/saler/arrive_visitors',
-    //     headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-    //     data: { 'response': this.response, 'user_id': this.user_id }
-    //   }).then((res) => {
-    //     console.log(res)
-    //     if (res.status === 201) {
-    //       this.$toast('新建成功✨')
-    //     }
-    //   })
-    // },
     // telBlur () {
     //   // 去重
     //   this.$axios({
