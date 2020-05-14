@@ -60,6 +60,7 @@ export default [
     component: () => import(/* webpackChunkName:'call' */'@/components/caller/caller'),
     children: [{
       path: 'new',
+      name: 'new',
       component: () => import(/* webpackChunkName:'call' */'@/components/caller/new')
     },
     {

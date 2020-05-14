@@ -171,7 +171,7 @@ export default {
         console.log(res)
         if (res.status === 201) {
           this.$toast('新建成功✨')
-          // this.$router.push({path: '/customer'})
+          this.$router.push({ name: 'call_view' })
         }
       })
     }

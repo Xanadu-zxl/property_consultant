@@ -51,7 +51,7 @@ export default {
       this.list = res.data
       for (let i = 0; i < res.data.length; i++) {
         let dataTime = res.data[i].planed_visit_time
-        dataTime = dataTime.substr(0, 10)
+        this.dataTime = dataTime.substr(0, 10)
         this.list[i].dataTime = dataTime
       }
     })

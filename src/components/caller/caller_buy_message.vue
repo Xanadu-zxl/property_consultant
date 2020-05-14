@@ -10,7 +10,7 @@
           <div class="information-left-matter">
             <h2>{{customer_name}}</h2>
             <p>
-              <span>{{intention}}</span>
+              <span>{{planed_visit_time}}</span>
             </p>
           </div>
         </div>
@@ -97,7 +97,7 @@ export default {
       phone: '',
       id: '',
       customer_name: 'xxx',
-      intention: '暂无意向',
+      planed_visit_time: '0000/00/00',
       newTime: '',
       entries: []
     }
@@ -146,6 +146,13 @@ export default {
         url: '/magnate/saler/callers/' + this.response_id,
         headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
       }).then((res) => {
+        console.log(res)
+        if (res.data.mapped_values.customer_name.text_value[0]) {
+          this.customer_name = res.data.mapped_values.customer_name.text_value[0]
+        }
+        if (res.data.mapped_values.planed_visit_time.text_value[0]) {
+          this.planed_visit_time = res.data.mapped_values.planed_visit_time.text_value[0]
+        }
         this.entries = res.data.entries
 
         Object.keys(res.data.mapped_values).forEach(element => {
@@ -222,19 +229,16 @@ export default {
 
       payload.user_id = this.$cookies.get('CURRENT-USER-ID')
 
-      // console.log(payload)
-
-      // this.$axios({
-      //   method: 'PUT',
-      //   url: '/magnate/saler/callers/' + this.response_id,
-      //   headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-      //   data: payload
-      // }).then((res) => {
-      //   console.log(res)
-      //   if (res.status === 200) {
-      //     this.$toast('更新成功✨')
-      //   }
-      // })
+      this.$axios({
+        method: 'PUT',
+        url: '/magnate/saler/callers/' + this.response_id,
+        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+        data: payload
+      }).then((res) => {
+        if (res.status === 200) {
+          this.$toast('更新成功✨')
+        }
+      })
     }
 
     // telBlur () {

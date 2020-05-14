@@ -71,7 +71,7 @@ export default {
     return {
       title: '客户基础信息',
       fields: [],
-      orderFieldList: ['customer_name', 'customer_phone', 'planed_visit_time', 'email', 'intention'],
+      orderFieldList: ['customer_name', 'customer_phone', 'birthday', 'email', 'intention'],
       formData: [],
       showPicker: false,
       minDate: new Date(1900, 0, 1),

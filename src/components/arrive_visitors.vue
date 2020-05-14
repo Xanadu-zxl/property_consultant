@@ -71,7 +71,7 @@ export default {
     return {
       title: '到访客户',
       fields: [],
-      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'planed_visit_time', 'email', 'intention'],
+      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'birthday', 'email', 'intention'],
       formData: [],
       showPicker: false,
       minDate: new Date(1900, 0, 1),
@@ -170,6 +170,7 @@ export default {
         console.log(res)
         if (res.status === 201) {
           this.$toast('新建成功✨')
+          this.$router.push({ name: 'message', query: { response_id: res.data.id } })
         }
       })
     }
