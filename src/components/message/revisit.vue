@@ -12,14 +12,7 @@
           </van-radio-group>
         </template>
       </van-field>
-      <!-- <van-field label="算价清单" name="intention">
-        <template #input>
-          <van-radio-group direction="horizontal" v-model="intention">
-            <van-radio checked-color="#00A862" name="公寓">公寓</van-radio>
-            <van-radio checked-color="#00A862" name="住宅">住宅</van-radio>
-          </van-radio-group>
-        </template>
-      </van-field>-->
+
       <div class="revist_aside_visit">
         <div class="revist_aside_visit_left">
           <h2 class="revist_aside_visit_h2">回访记录</h2>
@@ -27,7 +20,7 @@
         <div class="revist_aside_visit_right">
           <router-link
             class="revist_aside_visit_right_h3"
-            to="/real_estate/saler/message/revisit/record"
+        :to="{ name:'record',query:{customer_phone:customer_phone,response_id:response_id}}"
           >新增</router-link>
         </div>
       </div>
@@ -115,9 +108,7 @@ export default {
       }
     })
   }
-  // methods () {
 
-  // }
 }
 </script>
 
