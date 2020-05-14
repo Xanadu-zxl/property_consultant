@@ -112,7 +112,7 @@ export default {
               break
             }
             case 'Field::DateTime': {
-              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
+              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: this.newTime })
               break
             }
             default: {
@@ -184,6 +184,18 @@ export default {
 
               } else {
                 payload.response.entries_attributes.push({ field_id: field.field_id, option_id: field.option_id })
+              }
+            }
+            break
+          }
+          case 'Field::DateTime': {
+            if (field.value) {
+              if (entry && entry.value !== field.value) {
+                payload.response.entries_attributes.push({ id: entry.id, value: field.value })
+              } else if (entry) {
+
+              } else {
+                payload.response.entries_attributes.push({ field_id: field.field_id, value: field.value })
               }
             }
             break

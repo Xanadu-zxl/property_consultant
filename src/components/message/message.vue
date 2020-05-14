@@ -10,10 +10,6 @@
           <div class="information-left-matter">
             <h2>{{customer_name}}</h2>
             <p>
-              首访时间：
-              <span>{{planed_visit_time}}</span>
-            </p>
-            <p>
               意向户型：
               <span>{{preferred_apartment}}</span>
             </p>
@@ -159,6 +155,9 @@ export default {
   .information-left-matter {
     margin-left: 10px;
     text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     h2 {
       font-size: 15px;
