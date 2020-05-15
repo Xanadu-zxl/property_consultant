@@ -77,8 +77,9 @@ export default {
       overdue: '0 个',
       collection: '0 位',
       messages: '',
-      id: '',
-      phone: '',
+      id: '73',
+      phone: '18980807092',
+      name: '苏凯',
       message: [{
         id: '1',
         message: '测试数据'
@@ -94,9 +95,13 @@ export default {
     HomeNav
   },
   mounted () {
+    // 设置cookie
+    this.$cookies.set('CURRENT-USER-ID', this.id)
+    this.$cookies.set('CURRENT-USER-PHONE', this.phone)
+    this.$cookies.set('CURRENT-NAME', this.name)
     // 读取cookie
-    this.id = this.$cookies.get('CURRENT-USER-ID')
-    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
+    // this.id = this.$cookies.get('CURRENT-USER-ID')
+    // this.phone = this.$cookies.get('CURRENT-USER-PHONE')
 
     this.$axios({
       method: 'GET',
