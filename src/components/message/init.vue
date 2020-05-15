@@ -7,14 +7,37 @@
     </header>
     <aside class="table_aside">
       <div :key="field.identity_key" v-for="field in formData">
-        <p v-if="field['type'] === 'Field::TextField'">
-          <van-field
-            :id="field.identity_key"
-            :label="field.title"
-            type="text"
-            v-model="field.value"
-          />
-        </p>
+        <div v-if="field.type === 'Field::TextField'">
+          <p v-if="field.identity_key == 'customer_name'">
+            <van-field
+              :id="field.identity_key"
+              :label="field.title"
+              placeholder="请输入"
+              type="text"
+              v-model="field.value"
+            />
+          </p>
+          <p v-else-if="field.identity_key == 'customer_phone'">
+            <van-field
+              :id="field.identity_key"
+              :label="field.title"
+              disabled
+              placeholder="请输入"
+              type="text"
+              v-model="field.value"
+            />
+          </p>
+
+          <p v-else-if="field.identity_key">
+            <van-field
+              :id="field.identity_key"
+              :label="field.title"
+              placeholder="请输入"
+              type="text"
+              v-model="field.value"
+            />
+          </p>
+        </div>
         <p v-else-if="field['type'] === 'Field::RadioButton'">
           <van-field :label="field['title']">
             <template #input>
@@ -225,24 +248,10 @@ export default {
         console.log(res)
         if (res.status === 200) {
           this.$toast('更新成功✨')
+          this.$router.push({ name: 'message', query: { response_id: res.data.id, customer_phone: res.data.user.phone } })
         }
       })
     }
-    // telBlur () {
-    //   // 去重
-    //   this.$axios({
-    //     method: 'GET',
-    //     url: '/magnate/saler/arrive_visitors/valid_phone?customer_phone=' + this.response.entries_attributes[2].value,
-    //     headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    //   }).then((res) => {
-    //     console.log(res)
-    //     if (res.data.customer_phone) {
-    //       this.$toast('手机号重复✨')
-    //     } else {
-    //       this.$toast('手机号bubububuubu✨')
-    //     }
-    //   })
-    // }
   }
 
 }
