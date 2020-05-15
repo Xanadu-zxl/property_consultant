@@ -57,7 +57,7 @@
             </van-field>
           </div>
           <div v-else-if="field.identity_key === 'birthday'">
-            <van-field :label="field['title']" required>
+            <van-field :label="field.title" required>
               <template #input>
                 <van-radio-group
                   :id="field['identity_key']"
@@ -96,7 +96,7 @@
             clickable
             name="datetimePicker"
             placeholder="点击选择时间"
-            readonly
+            required
           />
           <van-popup position="bottom" round v-model="showPicker">
             <van-datetime-picker
