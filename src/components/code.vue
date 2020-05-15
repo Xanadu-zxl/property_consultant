@@ -1,7 +1,8 @@
  <template>
   <div>
-    code:{{code}}
-    token:{{token}}
+    <!-- code:{{code}}
+    token:{{token}}-->
+    <p>授权成功</p>
   </div>
 </template>
 
@@ -12,8 +13,10 @@ export default {
     return {
       code: '',
       token: '',
-      id: '73',
+      id: '',
+      // id: '73',
       phone: '18980807092',
+      // phone: '',
       name: ''
     }
   },
@@ -53,6 +56,8 @@ export default {
         this.$cookies.set('CURRENT-NAME', this.name)
       })
     })
+
+    window.location.href = '/'
   }
 }
 </script>
