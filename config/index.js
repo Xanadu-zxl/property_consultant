@@ -8,7 +8,7 @@ module.exports = {
   dev: {
     // Paths
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: '/real_estate',
     proxy: {
       '/api': {
         target: 'http://skylark-local.natappvip.cc',//设置你调用的接口域名和端口号 
@@ -58,7 +58,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: '/real_estate/',
 
     /**
      * Source Maps
