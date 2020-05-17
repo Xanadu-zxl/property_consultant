@@ -11,6 +11,7 @@
               :id="field.identity_key"
               :label="field.title"
               placeholder="请输入"
+              autocomplete="off"
               required
               type="text"
               v-model="field.value"
@@ -22,6 +23,7 @@
               :label="field.title"
               @blur="telBlur(field)"
               placeholder="请输入"
+              autocomplete="off"
               required
               type="text"
               v-model="field.value"
@@ -33,6 +35,7 @@
               :id="field.identity_key"
               :label="field.title"
               placeholder="请输入"
+              autocomplete="off"
               type="text"
               v-model="field.value"
             />
@@ -62,7 +65,7 @@
             clickable
             name="datetimePicker"
             placeholder="点击选择时间"
-            readonly
+            autocomplete="off"
             required
           />
           <van-popup position="bottom" round v-model="showPicker">
@@ -269,6 +272,10 @@ export default {
     color: #222222;
     font-size: 17px;
     width: 190px;
+  }
+  .van-picker__confirm,
+  .van-picker__cancel {
+    color: #00a862;
   }
 }
 

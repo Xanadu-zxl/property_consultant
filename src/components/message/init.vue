@@ -12,6 +12,7 @@
             <van-field
               :id="field.identity_key"
               :label="field.title"
+              autocomplete="off"
               placeholder="请输入"
               type="text"
               v-model="field.value"
@@ -21,6 +22,7 @@
             <van-field
               :id="field.identity_key"
               :label="field.title"
+              autocomplete="off"
               disabled
               placeholder="请输入"
               type="text"
@@ -32,6 +34,7 @@
             <van-field
               :id="field.identity_key"
               :label="field.title"
+              autocomplete="off"
               placeholder="请输入"
               type="text"
               v-model="field.value"
@@ -59,6 +62,7 @@
             :label="field['title']"
             :value="newTime"
             @click="showPicker = true"
+            autocomplete="off"
             clickable
             name="datetimePicker"
             placeholder="点击选择时间"
@@ -116,7 +120,7 @@ export default {
     // 读取cookie
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-    // 新增数据
+    // 渲染数据
     this.$axios({
       method: 'GET',
       url: '/magnate/saler/arrive_visitors/new',
@@ -129,16 +133,14 @@ export default {
         if (field) {
           switch (field.type) {
             case 'Field::RadioButton': {
-              // eslint-disable-next-line standard/object-curly-even-spacing
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, option_id: '', options: field.options })
               break
             }
             case 'Field::DateTime': {
-              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: this.newTime })
+              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
               break
             }
             default: {
-              // eslint-disable-next-line standard/object-curly-even-spacing
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
             }
           }
@@ -165,6 +167,7 @@ export default {
                 }
                 case 'Field::DateTime': {
                   field.value = res.data.mapped_values[element]['text_value'][0]
+                  this.newTime = field.value
                   break
                 }
                 default: {
@@ -211,13 +214,13 @@ export default {
             break
           }
           case 'Field::DateTime': {
-            if (field.value) {
-              if (entry && entry.value !== field.value) {
-                payload.response.entries_attributes.push({ id: entry.id, value: field.value })
+            if (this.newTime) {
+              if (entry && entry.value !== this.newTime) {
+                payload.response.entries_attributes.push({ id: entry.id, value: this.newTime })
               } else if (entry) {
 
               } else {
-                payload.response.entries_attributes.push({ field_id: field.field_id, value: field.value })
+                payload.response.entries_attributes.push({ field_id: field.field_id, value: this.newTime })
               }
             }
             break

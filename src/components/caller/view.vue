@@ -48,6 +48,8 @@ export default {
       url: '/magnate/saler/callers',
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
+      console.log(res)
+
       this.list = res.data
       for (let i = 0; i < res.data.length; i++) {
         let dataTime = res.data[i].planed_visit_time

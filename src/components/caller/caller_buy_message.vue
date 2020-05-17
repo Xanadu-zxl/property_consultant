@@ -22,14 +22,28 @@
     </div>
     <aside class="table_aside">
       <div :key="field.identity_key" v-for="field in formData">
-        <p v-if="field['type'] === 'Field::TextField'">
+        <p v-if="field.identity_key == 'customer_name'">
           <van-field
             :id="field.identity_key"
             :label="field.title"
+            autocomplete="off"
+            placeholder="请输入"
             type="text"
             v-model="field.value"
           />
         </p>
+        <p v-else-if="field.identity_key == 'customer_phone'">
+          <van-field
+            :id="field.identity_key"
+            :label="field.title"
+            autocomplete="off"
+            disabled
+            placeholder="请输入"
+            type="text"
+            v-model="field.value"
+          />
+        </p>
+
         <p v-else-if="field['type'] === 'Field::RadioButton'">
           <van-field :label="field['title']">
             <template #input>
@@ -51,6 +65,7 @@
             :label="field['title']"
             :value="newTime"
             @click="showPicker = true"
+            autocomplete="off"
             clickable
             name="datetimePicker"
             placeholder="点击选择时间"
@@ -112,7 +127,6 @@ export default {
     // 读取cookie
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-    // 新增数据
     this.$axios({
       method: 'GET',
       url: '/magnate/saler/callers/new',
@@ -122,11 +136,9 @@ export default {
 
       this.orderFieldList.forEach(element => {
         let field = this.fields.find(field => field.identity_key === element)
-        // 单选表单
         if (field) {
           switch (field.type) {
             case 'Field::RadioButton': {
-              // eslint-disable-next-line standard/object-curly-even-spacing
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, option_id: '', options: field.options })
               break
             }
@@ -141,18 +153,22 @@ export default {
         }
       })
     }).then(() => {
+      // 新增数据
       this.$axios({
         method: 'GET',
         url: '/magnate/saler/callers/' + this.response_id,
         headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
       }).then((res) => {
+        // 头部信息
         console.log(res)
-        if (res.data.mapped_values.customer_name.text_value[0]) {
+
+        if (res.data.mapped_values.customer_name) {
           this.customer_name = res.data.mapped_values.customer_name.text_value[0]
         }
-        if (res.data.mapped_values.planed_visit_time.text_value[0]) {
+        if (res.data.mapped_values.planed_visit_time) {
           this.planed_visit_time = res.data.mapped_values.planed_visit_time.text_value[0]
         }
+
         this.entries = res.data.entries
 
         Object.keys(res.data.mapped_values).forEach(element => {
@@ -168,6 +184,7 @@ export default {
                 }
                 case 'Field::DateTime': {
                   field.value = res.data.mapped_values[element]['text_value'][0]
+                  this.newTime = field.value
                   break
                 }
                 default: {
@@ -209,6 +226,18 @@ export default {
 
               } else {
                 payload.response.entries_attributes.push({ field_id: field.field_id, option_id: field.option_id })
+              }
+            }
+            break
+          }
+          case 'Field::DateTime': {
+            if (this.newTime) {
+              if (entry && entry.value !== this.newTime) {
+                payload.response.entries_attributes.push({ id: entry.id, value: this.newTime })
+              } else if (entry) {
+
+              } else {
+                payload.response.entries_attributes.push({ field_id: field.field_id, value: this.newTime })
               }
             }
             break

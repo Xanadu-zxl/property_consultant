@@ -12,6 +12,7 @@
             <van-field
               :id="field.identity_key"
               :label="field.title"
+              autocomplete="off"
               placeholder="请输入"
               required
               type="text"
@@ -23,6 +24,7 @@
               :id="field.identity_key"
               :label="field.title"
               @blur="telBlur(field)"
+              autocomplete="off"
               placeholder="请输入"
               required
               type="text"
@@ -34,6 +36,7 @@
             <van-field
               :id="field.identity_key"
               :label="field.title"
+              autocomplete="off"
               placeholder="请输入"
               type="text"
               v-model="field.value"
@@ -56,11 +59,12 @@
               </template>
             </van-field>
           </div>
-          <div v-else-if="field.identity_key === 'birthday'">
+          <!-- <div v-else-if="field['type'] === 'Field::DateTime'">
             <van-field :label="field.title" required>
               <template #input>
                 <van-radio-group
                   :id="field['identity_key']"
+                  autocomplete="off"
                   direction="horizontal"
                   v-model="field['option_id']"
                 >
@@ -70,7 +74,7 @@
                 </van-radio-group>
               </template>
             </van-field>
-          </div>
+          </div>-->
           <div v-else-if="field.identity_key !== ''">
             <van-field :label="field['title']" required>
               <template #input>
@@ -93,10 +97,12 @@
             :label="field['title']"
             :value="newTime"
             @click="showPicker = true"
+            autocomplete="off"
             clickable
             name="datetimePicker"
             placeholder="点击选择时间"
             required
+            checked-color="#00A862"
           />
           <van-popup position="bottom" round v-model="showPicker">
             <van-datetime-picker
