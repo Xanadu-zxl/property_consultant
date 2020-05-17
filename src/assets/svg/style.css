@@ -67,27 +67,22 @@
 /* nav */
 .icon-Index-Icon-Home:before {
   content: "\e904";
-  color: #d4d4d4;
   font-size: 18px;
 }
 .icon-Index-Icon-Before-Subscription:before {
   content: "\e900";
-  color: #d4d4d4;
   font-size: 18px;
 }
 .icon-Index-Icon-Subscription:before {
   content: "\e909";
-  color: #d4d4d4;
   font-size: 18px;
 }
 .icon-Index-Icon-Subscribed:before {
   content: "\e908";
-  color: #d4d4d4;
   font-size: 18px;
 }
 
 .icon-Index-Icon-Owner:before {
   content: "\e906";
-  color: #d4d4d4;
   font-size: 18px;
 }
