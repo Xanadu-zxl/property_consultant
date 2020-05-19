@@ -250,7 +250,7 @@ export default {
         console.log(res)
         if (res.status === 200) {
           this.$toast('更新成功✨')
-          this.$router.push({ name: 'message', query: { response_id: res.data.id, customer_phone: res.data.user.phone } })
+          this.$router.push({ name: 'message', query: { response_id: this.response_id, customer_phone: this.customer_phone } })
         }
       })
     }

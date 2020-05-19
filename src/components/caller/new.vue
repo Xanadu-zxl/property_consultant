@@ -10,8 +10,8 @@
             <van-field
               :id="field.identity_key"
               :label="field.title"
-              placeholder="请输入"
               autocomplete="off"
+              placeholder="请输入"
               required
               type="text"
               v-model="field.value"
@@ -22,8 +22,8 @@
               :id="field.identity_key"
               :label="field.title"
               @blur="telBlur(field)"
-              placeholder="请输入"
               autocomplete="off"
+              placeholder="请输入"
               required
               type="text"
               v-model="field.value"
@@ -34,15 +34,15 @@
             <van-field
               :id="field.identity_key"
               :label="field.title"
-              placeholder="请输入"
               autocomplete="off"
+              placeholder="请输入"
               type="text"
               v-model="field.value"
             />
           </p>
         </div>
         <p v-else-if="field['type'] === 'Field::RadioButton'">
-          <van-field :label="field['title']" required>
+          <van-field :label="field['title']">
             <template #input>
               <van-radio-group
                 :id="field['identity_key']"
@@ -62,11 +62,10 @@
             :label="field.title"
             :value="newTime"
             @click="showPicker = true"
+            autocomplete="off"
             clickable
             name="datetimePicker"
             placeholder="点击选择时间"
-            autocomplete="off"
-            required
           />
           <van-popup position="bottom" round v-model="showPicker">
             <van-datetime-picker
@@ -87,6 +86,7 @@
           <h1>提示</h1>
           <h2>客户已存在，请重新输入手机号</h2>
           <div class="show_footer">
+            <p>置业顾问：{{user_name}}</p>
             <p>客户姓名：{{customer_name}}</p>
             <p>首次到访时间：{{created_at}}</p>
           </div>
@@ -120,7 +120,8 @@ export default {
       created_at: '',
       customer_name: '',
       id: '',
-      phone: ''
+      phone: '',
+      user_name: ''
     }
   },
   components: {
@@ -169,7 +170,6 @@ export default {
       // dateField['value'] = this.dataTime
       this.newTime = this.dataTime
       this.showPicker = false
-      console.log(this.newTime)
     },
     formatDate: function (d) {
       return d.getFullYear() + '-' + this.p((d.getMonth() + 1)) + '-' + this.p(d.getDate())
@@ -192,7 +192,9 @@ export default {
           }
           case 'Field::DateTime': {
             if (element.option_id !== '' && element) {
-              payload.response.entries_attributes.push({ field_id: element.field_id, value: this.newTime })
+              if (this.newTime) {
+                payload.response.entries_attributes.push({ field_id: element.field_id, value: this.newTime })
+              }
             }
             break
           }
@@ -215,21 +217,19 @@ export default {
         headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
         data: payload
       }).then((res) => {
-        console.log(res)
-        if (res.status === 201) {
-          this.$toast('新建成功✨')
-          this.$router.push({ name: 'call_view' })
-        } else {
-          this.$toast('新建失败～')
-        }
+        this.$toast('新建成功✨')
+        this.$router.push({ name: 'call_view' })
       })
+        .catch(() => {
+          this.$toast('数据不完整，新建失败>_<')
+        })
     },
 
     // 判定手机号
     telBlur (field) {
       if (field.value.length !== 11) {
-        this.$toast('手机号格式错误!!!')
-        return
+        this.$toast('手机号位数错误🙅')
+        field.value = ''
       }
       this.$axios({
         method: 'GET',
@@ -237,8 +237,10 @@ export default {
         headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
       }).then((res) => {
         if (res.data.customer_phone) {
-          this.customer_name = res.data.customer_name
+          field.value = ''
           this.created_at = res.data.created_at.slice(0, 10)
+          this.customer_name = res.data.customer_name
+          this.user_name = res.data.user_name
           this.show = true
         }
       })
@@ -325,7 +327,7 @@ a {
 
 // 遮罩层
 .show {
-  padding-top: 70%;
+  padding-top: 60%;
   position: absolute;
   top: 0px;
   bottom: 0px;
@@ -341,7 +343,7 @@ a {
     background: #fff;
     margin: 0 auto;
     border-radius: 6px;
-    height: 164px;
+    height: 12.5rem;
 
     h1 {
       font-size: 18px;

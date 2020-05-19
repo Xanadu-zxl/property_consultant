@@ -27,13 +27,13 @@
       <div class="revist_aside_visit_body">
         <div class="revist_aside_visit-content">
           <p>
-            <em>{{total_count}}</em> 次
+            <em>{{visit_count}}</em> 次
           </p>
           <p>现场回访</p>
         </div>
         <div class="revist_aside_visit-content">
           <p>
-            <em>{{total_count}}</em>次
+            <em>{{call_count}}</em>次
           </p>
           <p>电话回访</p>
         </div>
@@ -56,7 +56,6 @@
 <script>
 import CustomerTabbar from '../pages/tabbar'
 export default {
-
   data () {
     return {
       title: '置业跟踪',
@@ -66,9 +65,8 @@ export default {
       phone: '',
       customer_phone: '',
       response_id: '',
-      total_count: '6',
-      call: '',
-      visit: ''
+      call_count: '0',
+      visit_count: '0'
 
     }
   },
@@ -81,7 +79,6 @@ export default {
     // 读取cookie
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-
     // 来访
     this.$axios({
       method: 'GET',
@@ -100,19 +97,21 @@ export default {
       url: '/magnate/saler/return_visit_records/current_user_return_records?customer_phone=' + this.customer_phone,
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
-      this.revisit = res.data
-      console.log(res)
       // 格式化时间
+      this.revisit = res.data
       for (let i = 0; i < res.data.length; i++) {
         let lastDataTime = res.data[i].revisit_date
         lastDataTime = lastDataTime.slice(0, 10)
         this.revisit[i].lastDataTime = lastDataTime
       }
-
+      // 回访次数
       let data = res.data
       for (let i = 0; i < data.length; i++) {
         if (data[i].return_type === '电话回访') {
-
+          this.call_count++
+        }
+        if (data[i].return_type === '现场回访') {
+          this.visit_count++
         }
       }
     })
