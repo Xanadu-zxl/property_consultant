@@ -29,59 +29,10 @@
         <i class="icon-Info-Icon-File message-style-green"></i>
         <span class="message-project-title">基础信息</span>
       </router-link>
-      <router-link
-        :to="{name:'channel',query:{customer_phone:customer_phone,response_id:response_id}}"
-        class="message-project"
-      >
-        <i class="icon-Info-Icon-link message-style-orange"></i>
-        <span class="message-project-title">知晓途径</span>
-      </router-link>
       <div @click="prompt" class="message-project">
         <i class="icon-Info-Icon-Price message-style-blue"></i>
         <span class="message-project-title">户型算价</span>
       </div>
-      <router-link
-        :to="{name:'trait',query:{customer_phone:customer_phone,response_id:response_id}}"
-        class="message-project"
-      >
-        <i class="icon-Info-Icon-User message-style-gray"></i>
-        <span class="message-project-title">客户特征</span>
-      </router-link>
-      <router-link
-        :to="{name:'motivation',query:{customer_phone:customer_phone,response_id:response_id}}"
-        class="message-project"
-      >
-        <i class="icon-Info-Icon-Question message-style-red"></i>
-        <span class="message-project-title">置业动机</span>
-      </router-link>
-      <router-link
-        :to="{name:'living_area',query:{customer_phone:customer_phone,response_id:response_id}}"
-        class="message-project"
-      >
-        <i class="icon-Info-Icon-Region message-style-green"></i>
-        <span class="message-project-title">客户区域</span>
-      </router-link>
-      <router-link
-        :to="{name:'customer_type',query:{customer_phone:customer_phone,response_id:response_id}}"
-        class="message-project"
-      >
-        <i class="icon-Info-Icon-Structure message-style-red"></i>
-        <span class="message-project-title">家庭结构</span>
-      </router-link>
-      <router-link
-        :to="{name:'focus',query:{customer_phone:customer_phone,response_id:response_id}}"
-        class="message-project"
-      >
-        <i class="icon-Info-Icon-Star message-style-blue"></i>
-        <span class="message-project-title">关注重点</span>
-      </router-link>
-      <router-link
-        :to="{name:'preferred_apartment',query:{customer_phone:customer_phone,response_id:response_id}}"
-        class="message-project"
-      >
-        <i class="icon-Info-Icon-Type message-style-orange"></i>
-        <span class="message-project-title">意向户型</span>
-      </router-link>
       <router-link
         :to="{ name:'revisit',query:{customer_phone:customer_phone,response_id:response_id}}"
         class="message-project"
