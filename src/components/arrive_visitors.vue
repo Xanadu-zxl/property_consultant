@@ -27,7 +27,7 @@
               autocomplete="off"
               placeholder="请输入"
               required
-              type="text"
+              type="digit"
               v-model="field.value"
             />
           </p>
@@ -45,7 +45,7 @@
         </div>
         <div v-else-if="field['type'] === 'Field::RadioButton'">
           <div v-if="field.identity_key === 'intention'">
-            <van-field :label="field['title']" required>
+            <van-field :label="field['title']">
               <template #input>
                 <van-radio-group
                   :id="field['identity_key']"
@@ -59,24 +59,8 @@
               </template>
             </van-field>
           </div>
-          <!-- <div v-else-if="field['type'] === 'Field::DateTime'">
-            <van-field :label="field.title" required>
-              <template #input>
-                <van-radio-group
-                  :id="field['identity_key']"
-                  autocomplete="off"
-                  direction="horizontal"
-                  v-model="field['option_id']"
-                >
-                  <div :key="option.id" v-for="option in field.options">
-                    <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
-                  </div>
-                </van-radio-group>
-              </template>
-            </van-field>
-          </div>-->
           <div v-else-if="field.identity_key !== ''">
-            <van-field :label="field['title']" required>
+            <van-field :label="field['title']">
               <template #input>
                 <van-radio-group
                   :id="field['identity_key']"
@@ -98,11 +82,10 @@
             :value="newTime"
             @click="showPicker = true"
             autocomplete="off"
+            checked-color="#00A862"
             clickable
             name="datetimePicker"
             placeholder="点击选择时间"
-            required
-            checked-color="#00A862"
           />
           <van-popup position="bottom" round v-model="showPicker">
             <van-datetime-picker
@@ -123,6 +106,7 @@
           <h1>提示</h1>
           <h2>客户已存在，请重新输入手机号</h2>
           <div class="show_footer">
+            <p>置业顾问：{{user_name}}</p>
             <p>客户姓名：{{customer_name}}</p>
             <p>首次到访时间：{{created_at}}</p>
           </div>
@@ -156,7 +140,8 @@ export default {
       phone: '',
       show: false,
       created_at: '',
-      customer_name: ''
+      customer_name: '',
+      user_name: ''
     }
   },
   components: {
@@ -172,8 +157,6 @@ export default {
       url: '/magnate/saler/arrive_visitors/new',
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
-      console.log(res)
-
       this.fields = res.data.fields
       this.orderFieldList.forEach(element => {
         let field = this.fields.find(field => field.identity_key === element)
@@ -202,7 +185,6 @@ export default {
       this.dataTime = this.formatDate(currentDate)
       this.newTime = this.dataTime
       this.showPicker = false
-      // console.log(this.dataTime)
     },
     formatDate: function (d) {
       return d.getFullYear() + '-' + this.p((d.getMonth() + 1)) + '-' + this.p(d.getDate())
@@ -211,7 +193,6 @@ export default {
       return s < 10 ? '0' + s : s
     },
 
-    // 发送数据
     newTable () {
       let payload = { response: { entries_attributes: [] } }
 
@@ -225,7 +206,9 @@ export default {
           }
           case 'Field::DateTime': {
             if (element.option_id !== '' && element) {
-              payload.response.entries_attributes.push({ field_id: element.field_id, value: this.newTime })
+              if (this.newTime) {
+                payload.response.entries_attributes.push({ field_id: element.field_id, value: this.newTime })
+              }
             }
             break
           }
@@ -249,28 +232,32 @@ export default {
         headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
         data: payload
       }).then((res) => {
-        if (res.status === 201) {
-          this.$toast('新建成功✨')
-          this.$router.push({ name: 'message', query: { response_id: res.data.id } })
-        } else {
-          this.$toast('新建失败~')
-        }
+        this.$toast('新建成功 ✨')
+        this.$router.push({ name: 'message', query: { response_id: res.data.id } })
+      }).catch((err) => {
+        console.log(err)
+        this.$toast('新建失败 >_<')
       })
     },
 
     // 判定手机号
     telBlur (field) {
       if (field.value.length !== 11) {
-        this.$toast('手机号格式错误!!!')
+        this.$toast('手机号位数错误🙅')
+        field.value = ''
       }
       this.$axios({
         method: 'GET',
         url: '/magnate/saler/arrive_visitors/valid_phone?customer_phone=' + field.value,
         headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
       }).then((res) => {
+        console.log(res)
+
         if (res.data.customer_phone) {
-          this.customer_name = res.data.customer_name
+          field.value = ''
           this.created_at = res.data.created_at.slice(0, 10)
+          this.customer_name = res.data.customer_name
+          this.user_name = res.data.user_name
           this.show = true
         }
       })
@@ -278,6 +265,7 @@ export default {
   }
 
 }
+
 </script>
 
 <style lang="scss" scoped>
@@ -348,11 +336,11 @@ a {
 }
 
 .footer {
-  height: 50px;
+  height: 3.125rem;
 }
 // 遮罩层
 .show {
-  padding-top: 70%;
+  padding-top: 60%;
   position: absolute;
   top: 0px;
   bottom: 0px;
@@ -368,7 +356,7 @@ a {
     background: #fff;
     margin: 0 auto;
     border-radius: 6px;
-    height: 164px;
+    height: 12.5rem;
 
     h1 {
       font-size: 18px;
