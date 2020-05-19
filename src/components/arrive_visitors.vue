@@ -84,6 +84,7 @@
             autocomplete="off"
             checked-color="#00A862"
             clickable
+            readonly
             name="datetimePicker"
             placeholder="点击选择时间"
           />
