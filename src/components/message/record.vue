@@ -1,20 +1,21 @@
 <template>
   <div>
     <customer-tabbar :title="title" />
-
     <aside class="table_aside">
       <div :key="field.identity_key" v-for="field in formData">
-        <div v-if="field.type === 'Field::TextField'">
-            <van-field
-              :id="field.identity_key"
-              :label="field.title"
-              placeholder="请输入"
-              type="text"
-              v-model="field.value"
-            />
+        <div v-if="field.identity_key === 'return_remark'">
+          <van-field
+            :id="field.identity_key"
+            :label="field.title"
+            autocomplete="off"
+            placeholder="请输入"
+            required
+            type="text"
+            v-model="field.value"
+          />
         </div>
-        <p v-else-if="field['type'] === 'Field::RadioButton'">
-          <van-field :label="field['title']">
+        <p v-else-if="field.identity_key === 'return_type'">
+          <van-field :label="field['title']" required>
             <template #input>
               <van-radio-group
                 :id="field['identity_key']"
@@ -28,16 +29,18 @@
             </template>
           </van-field>
         </p>
-        <p v-else-if="field['type'] === 'Field::DateTime'">
+        <p v-else-if="field.identity_key === 'revisit_date'">
           <van-field
             :id="field['identity_key']"
             :label="field['title']"
             :value="newTime"
             @click="showPicker = true"
+            autocomplete="off"
             clickable
             name="datetimePicker"
             placeholder="点击选择时间"
             readonly
+            required
           />
           <van-popup position="bottom" round v-model="showPicker">
             <van-datetime-picker
@@ -129,8 +132,9 @@ export default {
         url: '/magnate/saler/return_visit_records/' + this.response_id,
         headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
       }).then((res) => {
-        this.entries = res.data.entries
+        console.log(res)
 
+        this.entries = res.data.entries
         Object.keys(res.data.mapped_values).forEach(element => {
           if (res.data.mapped_values[element]['text_value']) {
             let field = this.formData.find(field => field.identity_key === element)
@@ -172,10 +176,8 @@ export default {
     // 发送数据
     newTable () {
       let payload = { response: { entries_attributes: [] } }
-
       this.formData.forEach(field => {
         let entry = this.entries.find(entry => entry.field_id === field.field_id)
-
         switch (field.type) {
           case 'Field::RadioButton': {
             if (field.option_id) {
@@ -190,13 +192,12 @@ export default {
             break
           }
           case 'Field::DateTime': {
-            if (field.value) {
+            if (this.newTime) {
               if (entry && entry.value !== field.value) {
-                payload.response.entries_attributes.push({ id: entry.id, value: field.value })
+                payload.response.entries_attributes.push({ id: entry.id, value: this.newTime })
               } else if (entry) {
-
               } else {
-                payload.response.entries_attributes.push({ field_id: field.field_id, value: field.value })
+                payload.response.entries_attributes.push({ field_id: field.field_id, value: this.newTime })
               }
             }
             break
@@ -217,9 +218,9 @@ export default {
 
       payload.user_id = this.$cookies.get('CURRENT-USER-ID')
       let salerField = this.fields.find(element => element.identity_key === 'saler')
-      payload.response.entries_attributes.push({ value: this.$cookies.get('CURRENT-NAME'), field_id: salerField.id })
+      payload.response.entries_attributes.push({ field_id: salerField.id, value: this.$cookies.get('CURRENT-NAME') })
       let salerPhoneField = this.fields.find(element => element.identity_key === 'saler_phone')
-      payload.response.entries_attributes.push({ value: this.$cookies.get('CURRENT-USER-PHONE'), field_id: salerPhoneField.id })
+      payload.response.entries_attributes.push({ field_id: salerPhoneField.id, value: this.$cookies.get('CURRENT-USER-PHONE') })
 
       this.$axios({
         method: 'POST',
@@ -229,7 +230,7 @@ export default {
       }).then((res) => {
         if (res.status === 201) {
           this.$toast('新建成功✨')
-          // this.$router.push({ name: 'revisit', query: { response_id: res.data.id, customer_phone: this.customer_phone } })
+          // this.$router.push({ name: 'revisit', query: { response_id: this.response_id, customer_phone: this.customer_phone } })
         }
       })
     }
