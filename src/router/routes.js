@@ -70,6 +70,7 @@ export default [
     }
     ]
   },
+  // message
   {
     path: '/real_estate/saler/message',
     name: 'message',
@@ -81,11 +82,6 @@ export default [
     component: () => import(/* webpackChunkName:'init' */'@/components/message/init')
   },
   {
-    path: '/real_estate/saler/message/channel',
-    name: 'channel',
-    component: () => import(/* webpackChunkName:'channel' */'@/components/message/channel')
-  },
-  {
     path: '/real_estate/saler/message/revisit',
     name: 'revisit',
     component: () => import(/* webpackChunkName:'revisit' */'@/components/message/revisit')
@@ -95,42 +91,6 @@ export default [
     name: 'record',
     component: () => import(/* webpackChunkName:'record' */'@/components/message/record')
   },
-  {
-    path: '/real_estate/saler/message/channel/media',
-    name: 'media',
-    component: () => import(/* webpackChunkName:'media' */'@/components/message/media')
-  },
-  {
-    path: '/real_estate/saler/message/trait',
-    name: 'trait',
-    component: () => import(/* webpackChunkName:'trait' */'@/components/message/trait')
-  },
-  {
-    path: '/real_estate/saler/message/motivation',
-    name: 'motivation',
-    component: () => import(/* webpackChunkName:'motivation' */'@/components/message/motivation')
-  },
-  {
-    path: '/real_estate/saler/message/living_area',
-    name: 'living_area',
-    component: () => import(/* webpackChunkName:'living_area' */'@/components/message/living_area')
-  },
-  {
-    path: '/real_estate/saler/message/customer_type',
-    name: 'customer_type',
-    component: () => import(/* webpackChunkName:'customer_type' */'@/components/message/customer_type')
-  },
-  {
-    path: '/real_estate/saler/message/focus',
-    name: 'focus',
-    component: () => import(/* webpackChunkName:'focus' */'@/components/message/focus')
-  },
-  {
-    path: '/real_estate/saler/message/preferred_apartment',
-    name: 'preferred_apartment',
-    component: () => import(/* webpackChunkName:'preferred_apartment' */'@/components/message/preferred_apartment')
-  },
-
   {
     path: '*',
     name: '404',
