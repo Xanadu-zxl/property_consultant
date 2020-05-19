@@ -130,7 +130,7 @@ export default {
     return {
       title: '到访客户',
       fields: [],
-      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'living_area'],
+      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'living_area'],
       formData: [],
       showPicker: false,
       minDate: new Date(1900, 0, 1),
