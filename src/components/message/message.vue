@@ -41,11 +41,13 @@
         <span class="message-project-title">置业跟踪</span>
       </router-link>
     </div>
+    <message-nav></message-nav>
   </div>
 </template>
 
 <script>
 import CustomerTabbar from '@/components/pages/tabbar'
+import MessageNav from '@/components/pages/nav'
 
 export default {
   data () {
@@ -61,7 +63,8 @@ export default {
     }
   },
   components: {
-    CustomerTabbar
+    CustomerTabbar,
+    MessageNav
   },
   mounted () {
     this.response_id = this.$route.query.response_id
@@ -75,7 +78,7 @@ export default {
       url: '/magnate/saler/arrive_visitors/' + this.response_id,
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
-      console.log(res)
+      // console.log(res)
       let mappedValues = res.data.mapped_values
       if (mappedValues.customer_name) {
         this.customer_name = mappedValues.customer_name.text_value[0]
@@ -158,6 +161,12 @@ export default {
   height: 36px;
   text-align: center;
   line-height: 44px;
+
+  .icon-Info-Icon-Phone {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
 }
 .message-content {
   width: 94%;
