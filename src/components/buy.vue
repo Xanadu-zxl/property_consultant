@@ -231,9 +231,14 @@ export default {
 .information-right {
   background: #e4f3ec;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   text-align: center;
   line-height: 38px;
+  .icon-Info-Icon-Phone {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
 }
 </style>
