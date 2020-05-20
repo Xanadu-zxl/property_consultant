@@ -1,95 +1,98 @@
 <template>
   <div>
     <buy-message-tabbar :title="title" />
-    <div class="message-main">
-      <div class="content">
-        <div class="information-left">
-          <div class="information-left-head">
-            <img class="information-left-img" src="@/assets/img/Avator-Woman.png" />
+    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
+    <div v-show="!isLoading">
+      <div class="message-main">
+        <div class="content">
+          <div class="information-left">
+            <div class="information-left-head">
+              <img class="information-left-img" src="@/assets/img/Avator-Woman.png" />
+            </div>
+            <div class="information-left-matter">
+              <h2>{{customer_name}}</h2>
+              <p>
+                <span>{{intention}}</span>
+              </p>
+            </div>
           </div>
-          <div class="information-left-matter">
-            <h2>{{customer_name}}</h2>
-            <p>
-              <span>{{intention}}</span>
-            </p>
+          <router-link
+            :to="{ name:'message',query:{customer_phone:customer_phone,response_id:response_id}}"
+            class="information-right information-right-modify"
+          >
+            <i class="icon-Info-Icon-Edit"></i>
+          </router-link>
+          <a :href="'tel:'+ customer_phone" class="information-right">
+            <i class="icon-Info-Icon-Phone"></i>
+          </a>
+        </div>
+      </div>
+      <div class="buy_message_content">
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>关注重点</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{focus}}</span>
           </div>
         </div>
-        <router-link
-          :to="{ name:'message',query:{customer_phone:customer_phone,response_id:response_id}}"
-          class="information-right information-right-modify"
-        >
-          <i class="icon-Info-Icon-Edit"></i>
-        </router-link>
-        <a :href="'tel:'+ customer_phone" class="information-right">
-          <i class="icon-Info-Icon-Phone"></i>
-        </a>
-      </div>
-    </div>
-    <div class="buy_message_content">
-      <div class="buy_message_content_body">
-        <div class="buy_message_content_body_left">
-          <span>关注重点</span>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>客户特征</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{feature}}</span>
+          </div>
         </div>
-        <div class="buy_message_content_body_right">
-          <span>{{focus}}</span>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>到访记录</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{planed_visit_time}}</span>
+          </div>
         </div>
-      </div>
-      <div class="buy_message_content_body">
-        <div class="buy_message_content_body_left">
-          <span>客户特征</span>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>知晓途径</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{channel}}</span>
+          </div>
         </div>
-        <div class="buy_message_content_body_right">
-          <span>{{feature}}</span>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>置业动机</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{motivation}}</span>
+          </div>
         </div>
-      </div>
-      <div class="buy_message_content_body">
-        <div class="buy_message_content_body_left">
-          <span>到访记录</span>
-        </div>
-        <div class="buy_message_content_body_right">
-          <span>{{planed_visit_time}}</span>
-        </div>
-      </div>
-      <div class="buy_message_content_body">
-        <div class="buy_message_content_body_left">
-          <span>知晓途径</span>
-        </div>
-        <div class="buy_message_content_body_right">
-          <span>{{channel}}</span>
-        </div>
-      </div>
-      <div class="buy_message_content_body">
-        <div class="buy_message_content_body_left">
-          <span>置业动机</span>
-        </div>
-        <div class="buy_message_content_body_right">
-          <span>{{motivation}}</span>
-        </div>
-      </div>
 
-      <div class="buy_message_content_body">
-        <div class="buy_message_content_body_left">
-          <span>家庭结构</span>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>家庭结构</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{family_structure}}</span>
+          </div>
         </div>
-        <div class="buy_message_content_body_right">
-          <span>{{family_structure}}</span>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>喜好户型</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{preferred_apartment}}</span>
+          </div>
         </div>
       </div>
-      <div class="buy_message_content_body">
-        <div class="buy_message_content_body_left">
-          <span>喜好户型</span>
+      <div class="buy_message_bottom"></div>
+      <footer class="footer">
+        <div class="buy_message_footer">
+          <div @click="prompt" to="/#">认购</div>
         </div>
-        <div class="buy_message_content_body_right">
-          <span>{{preferred_apartment}}</span>
-        </div>
-      </div>
+      </footer>
     </div>
-    <div class="buy_message_bottom"></div>
-    <footer class="footer">
-      <div class="buy_message_footer">
-        <div @click="prompt" to="/#">认购</div>
-      </div>
-    </footer>
   </div>
 </template>
 
@@ -103,6 +106,7 @@ export default {
       customer_name: ' ',
       customer_phone: '',
       preferred_apartment: ' ',
+      isLoading: true,
       id: ' ',
       phone: ' ',
       response_id: '',
@@ -131,7 +135,8 @@ export default {
       url: '/magnate/saler/arrive_visitors/' + this.response_id,
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
-      console.log(res)
+      // console.log(res)
+      this.isLoading = false
       let mappedValues = res.data.mapped_values
       if (mappedValues.customer_name) {
         this.customer_name = mappedValues.customer_name.text_value[0]
@@ -170,6 +175,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.loading {
+  margin-top: 100px;
+}
 .message-main {
   width: 94%;
   background: url('../../assets/img/info-bg.png');

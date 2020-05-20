@@ -1,45 +1,48 @@
 <template>
   <div>
     <customer-tabbar :title="title" />
-    <div class="message-main">
-      <div class="content">
-        <div class="information-left">
-          <div class="information-left-head">
-            <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
+    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
+    <div v-show="!isLoading">
+      <div class="message-main">
+        <div class="content">
+          <div class="information-left">
+            <div class="information-left-head">
+              <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
+            </div>
+            <div class="information-left-matter">
+              <h2>{{customer_name}}</h2>
+              <p>
+                意向户型：
+                <span>{{preferred_apartment}}</span>
+              </p>
+            </div>
           </div>
-          <div class="information-left-matter">
-            <h2>{{customer_name}}</h2>
-            <p>
-              意向户型：
-              <span>{{preferred_apartment}}</span>
-            </p>
-          </div>
+          <a :href="'tel:'+ customer_phone" class="information-right">
+            <i class="icon-Info-Icon-Phone"></i>
+          </a>
         </div>
-        <a :href="'tel:'+ customer_phone" class="information-right">
-          <i class="icon-Info-Icon-Phone"></i>
-        </a>
       </div>
-    </div>
 
-    <div class="message-content">
-      <router-link
-        :to="{ name:'init',query:{customer_phone:customer_phone,response_id:response_id}}"
-        class="message-project"
-      >
-        <i class="icon-Info-Icon-File message-style-green"></i>
-        <span class="message-project-title">基础信息</span>
-      </router-link>
-      <div @click="prompt" class="message-project">
-        <i class="icon-Info-Icon-Price message-style-blue"></i>
-        <span class="message-project-title">户型算价</span>
+      <div class="message-content">
+        <router-link
+          :to="{ name:'init',query:{customer_phone:customer_phone,response_id:response_id}}"
+          class="message-project"
+        >
+          <i class="icon-Info-Icon-File message-style-green"></i>
+          <span class="message-project-title">基础信息</span>
+        </router-link>
+        <div @click="prompt" class="message-project">
+          <i class="icon-Info-Icon-Price message-style-blue"></i>
+          <span class="message-project-title">户型算价</span>
+        </div>
+        <router-link
+          :to="{ name:'revisit',query:{customer_phone:customer_phone,response_id:response_id}}"
+          class="message-project"
+        >
+          <i class="icon-Info-Icon-Foot message-style-blue"></i>
+          <span class="message-project-title">置业跟踪</span>
+        </router-link>
       </div>
-      <router-link
-        :to="{ name:'revisit',query:{customer_phone:customer_phone,response_id:response_id}}"
-        class="message-project"
-      >
-        <i class="icon-Info-Icon-Foot message-style-blue"></i>
-        <span class="message-project-title">置业跟踪</span>
-      </router-link>
     </div>
     <message-nav></message-nav>
   </div>
@@ -58,6 +61,7 @@ export default {
       planed_visit_time: '0000/00/00',
       response_id: '',
       customer_phone: '',
+      isLoading: true,
       id: '',
       phone: ''
     }
@@ -78,7 +82,7 @@ export default {
       url: '/magnate/saler/arrive_visitors/' + this.response_id,
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
-      // console.log(res)
+      this.isLoading = false
       let mappedValues = res.data.mapped_values
       if (mappedValues.customer_name) {
         this.customer_name = mappedValues.customer_name.text_value[0]
@@ -100,6 +104,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.loading {
+  margin-top: 100px;
+}
 .message-main {
   width: 94%;
   background: url('../../assets/img/info-bg.png');

@@ -3,12 +3,13 @@
     <buy-tabbar :title="title" />
     <van-search @blur="search" placeholder="输入姓名/手机号" v-model="namePhone" />
     <van-dropdown-menu active-color="#00a862">
-      <van-dropdown-item :options="option1" v-model="created_at" />
-      <van-dropdown-item :options="option2" v-model="intention" />
-      <van-dropdown-item :options="option3" v-model="preferred_apartment" />
+      <van-dropdown-item :options="search_time" v-model="created_at" />
+      <van-dropdown-item :options="search_intention" v-model="intention" />
+      <van-dropdown-item :options="search_model" v-model="preferred_apartment" />
     </van-dropdown-menu>
+    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
     <div :key="item.id" class="buy-link" v-for="item in list">
-      <div class="content">
+      <div class="content" v-show="!isLoading">
         <router-link
           :to="{ name:'buy_message', query: {customer_phone:item.customer_phone,response_id:item.response_id }}"
         >
@@ -45,23 +46,24 @@ export default {
       id: '',
       phone: '',
       namePhone: '',
+      isLoading: true,
       created_at: '时间',
       intention: '意向',
       preferred_apartment: '喜好户型',
-      option1: [
+      search_time: [
         { text: '时间', value: '时间' },
         { text: '一周内', value: 'within_week' },
         { text: '一个月内', value: 'within_month' },
         { text: '一个月以上', value: 'away_month' }
       ],
-      option2: [
+      search_intention: [
         { text: '意向', value: '意向' },
         { text: 'A很有意向', value: 'A很有意向' },
         { text: 'B较有意向', value: 'B较有意向' },
         { text: 'C可跟踪', value: 'C可跟踪' },
         { text: 'D无意向', value: 'D无意向' }
       ],
-      option3: [
+      search_model: [
         { text: '喜好户型', value: '喜好户型' },
         { text: '平层户型', value: '平层户型' },
         { text: '跃层户型', value: '跃层户型' },
@@ -159,18 +161,9 @@ export default {
       url: '/magnate/saler/search',
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
-      // console.log(res)
+      this.isLoading = false
       this.list = res.data
     })
-
-    // this.$axios({
-    //   method: 'GET',
-    //   url: '/magnate/saler/search',
-    //   headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-    //   query: { 'created_at': 'away_month' }
-    // }).then((data) => {
-    //   console.log(data)
-    // })
   },
   methods: {
     search () {
@@ -180,8 +173,10 @@ export default {
         headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
         params: { 'customer_key': this.namePhone, 'customer_name': this.customer_name }
       }).then((res) => {
-        console.log(res)
+        this.isLoading = false
         this.list = res.data
+      }).catch(() => {
+        this.$toast('搜索失败')
       })
     }
   }
@@ -192,6 +187,11 @@ export default {
 .footer {
   height: 50px;
 }
+
+.loading {
+  margin-top: 50px;
+}
+
 .content {
   width: 88%;
   margin: 0 auto;
