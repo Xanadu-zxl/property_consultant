@@ -30,66 +30,78 @@
   content: "\e100";
   font-size: 25px;
   color: #fff;
-  line-height: 1.5;
+  height: 42px;
+  line-height: 42px;
 }
 .icon-Info-Icon-Type:before {
   content: "\e101";
   font-size: 25px;
   color: #fff;
-  line-height: 1.5;
+  height: 42px;
+  line-height: 42px;
 }
 .icon-Info-Icon-Structure:before {
   content: "\e102";
   font-size: 25px;
   color: #fff;
-  line-height: 1.5;
+  height: 42px;
+  line-height: 42px;
 }
 .icon-Info-Icon-Star:before {
   content: "\e103";
   font-size: 25px;
   color: #fff;
-  line-height: 1.5;
+  height: 42px;
+  line-height: 42px;
 }
 .icon-Info-Icon-Region:before {
   content: "\e104";
   font-size: 25px;
   color: #fff;
-  line-height: 1.5;
+  height: 42px;
+  line-height: 42px;
 }
 .icon-Info-Icon-Question:before {
   content: "\e105";
   font-size: 25px;
   color: #fff;
-  line-height: 1.5;
+  height: 42px;
+  line-height: 42px;
 }
 .icon-Info-Icon-Price:before {
   content: "\e106";
   font-size: 25px;
   color: #fff;
-  line-height: 1.5;
+  height: 42px;
+  line-height: 42px;
 }
 .icon-Info-Icon-link:before {
   content: "\e108";
   font-size: 25px;
   color: #fff;
-  line-height: 1.5;
+  height: 42px;
+  line-height: 42px;
 }
 .icon-Info-Icon-Foot:before {
   content: "\e109";
   font-size: 25px;
   color: #fff;
-  line-height: 1.5;
+  height: 42px;
+  line-height: 42px;
 }
 .icon-Info-Icon-File:before {
   content: "\e10a";
   font-size: 25px;
   color: #fff;
-  line-height: 1.5;
+  height: 42px;
+  line-height: 42px;
 }
 .icon-Info-Icon-Phone:before {
   content: "\e107";
   color: #00a862;
   font-size: 20px;
+  height: 36px;
+  line-height: 36px;
 }
 .icon-Info-Icon-Edit:before {
   content: "\e10b";
