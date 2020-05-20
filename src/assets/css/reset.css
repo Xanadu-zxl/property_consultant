@@ -95,3 +95,8 @@ blockquote:before,
 blockquote:after {
   content: ””;
 }
+
+.van-picker__cancel,
+.van-picker__confirm {
+  color: #00a862;
+}

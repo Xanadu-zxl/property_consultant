@@ -64,6 +64,7 @@
             @click="showPicker = true"
             autocomplete="off"
             clickable
+            readonly="readonly"
             name="datetimePicker"
             placeholder="点击选择时间"
           />
