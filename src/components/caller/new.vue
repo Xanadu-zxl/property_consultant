@@ -25,7 +25,7 @@
               autocomplete="off"
               placeholder="请输入"
               required
-              type="text"
+              type="number"
               v-model="field.value"
             />
           </p>
@@ -66,6 +66,7 @@
             clickable
             name="datetimePicker"
             placeholder="点击选择时间"
+            readonly="readonly"
           />
           <van-popup position="bottom" round v-model="showPicker">
             <van-datetime-picker
