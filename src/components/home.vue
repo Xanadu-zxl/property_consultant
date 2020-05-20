@@ -9,7 +9,14 @@
             <span>性别</span>
             <span>首次来访时间</span>
           </p>
-          <p :key="item.id" class="content-header-content" v-for="item in visit">
+          <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
+
+          <p
+            :key="item.id"
+            class="content-header-content"
+            v-for="item in visit"
+            v-show="!isLoading"
+          >
             <span>{{item.customer_name}}</span>
             <span>{{item.customer_gender}}</span>
             <span>{{item.dataTime}}</span>
@@ -74,6 +81,7 @@ export default {
     return {
       activeName: '1',
       remind: '0 条新提醒',
+      isLoading: true,
       overdue: '0 个',
       collection: '0 位',
       messages: '',
@@ -119,6 +127,7 @@ export default {
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
       this.visit = res.data
+      this.isLoading = false
       // 格式化时间
       for (let i = 0; i < res.data.length; i++) {
         let dataTime = res.data[i].planed_visit_time
@@ -148,6 +157,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.loading {
+  margin-top: 10px;
+}
 .content {
   margin-top: 35px;
 }

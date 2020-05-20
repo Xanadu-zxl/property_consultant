@@ -1,55 +1,58 @@
 <template>
   <div>
     <customer-tabbar :title="title" />
-    <aside class="revisit_aside">
-      <van-field class="revist_aside_visit_header" label="意向等级" name="intention">
-        <template #input>
-          <van-radio-group direction="horizontal" v-model="intention">
-            <van-radio checked-color="#00A862" name="A很有意向">A很有意向</van-radio>
-            <van-radio checked-color="#00A862" name="B较有意向">B较有意向</van-radio>
-            <van-radio checked-color="#00A862" name="C可跟踪">C可跟踪</van-radio>
-            <van-radio checked-color="#00A862" name="D无意向">D无意向</van-radio>
-          </van-radio-group>
-        </template>
-      </van-field>
+    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
+    <div v-show="!isLoading">
+      <aside class="revisit_aside">
+        <van-field class="revist_aside_visit_header" label="意向等级" name="intention">
+          <template #input>
+            <van-radio-group direction="horizontal" v-model="intention">
+              <van-radio checked-color="#00A862" name="A很有意向">A很有意向</van-radio>
+              <van-radio checked-color="#00A862" name="B较有意向">B较有意向</van-radio>
+              <van-radio checked-color="#00A862" name="C可跟踪">C可跟踪</van-radio>
+              <van-radio checked-color="#00A862" name="D无意向">D无意向</van-radio>
+            </van-radio-group>
+          </template>
+        </van-field>
 
-      <div class="revist_aside_visit">
-        <div class="revist_aside_visit_left">
-          <h2 class="revist_aside_visit_h2">回访记录</h2>
+        <div class="revist_aside_visit">
+          <div class="revist_aside_visit_left">
+            <h2 class="revist_aside_visit_h2">回访记录</h2>
+          </div>
+          <div class="revist_aside_visit_right">
+            <router-link
+              :to="{ name:'record',query:{customer_phone:customer_phone,response_id:response_id}}"
+              class="revist_aside_visit_right_h3"
+            >新增</router-link>
+          </div>
         </div>
-        <div class="revist_aside_visit_right">
-          <router-link
-            :to="{ name:'record',query:{customer_phone:customer_phone,response_id:response_id}}"
-            class="revist_aside_visit_right_h3"
-          >新增</router-link>
+        <div class="revist_aside_visit_body">
+          <div class="revist_aside_visit-content">
+            <p>
+              <em>{{visit_count}}</em> 次
+            </p>
+            <p>现场回访</p>
+          </div>
+          <div class="revist_aside_visit-content">
+            <p>
+              <em>{{call_count}}</em>次
+            </p>
+            <p>电话回访</p>
+          </div>
         </div>
-      </div>
-      <div class="revist_aside_visit_body">
-        <div class="revist_aside_visit-content">
-          <p>
-            <em>{{visit_count}}</em> 次
-          </p>
-          <p>现场回访</p>
+        <h3 class="revist_aside_visit_h3">详情记录</h3>
+        <p class="revist_aside_content-header">
+          <span>回访方式</span>
+          <span>时间</span>
+          <span>回访内容</span>
+        </p>
+        <div :key="item.id" class="revist_aside_content-header-content" v-for="item in revisit">
+          <span>{{item.return_type}}</span>
+          <span>{{item.DataTime}}</span>
+          <span>{{item.return_remark}}</span>
         </div>
-        <div class="revist_aside_visit-content">
-          <p>
-            <em>{{call_count}}</em>次
-          </p>
-          <p>电话回访</p>
-        </div>
-      </div>
-      <h3 class="revist_aside_visit_h3">详情记录</h3>
-      <p class="revist_aside_content-header">
-        <span>回访方式</span>
-        <span>时间</span>
-        <span>回访内容</span>
-      </p>
-      <div :key="item.id" class="revist_aside_content-header-content" v-for="item in revisit">
-        <span>{{item.return_type}}</span>
-        <span>{{item.lastDataTime}}</span>
-        <span>{{item.return_remark}}</span>
-      </div>
-    </aside>
+      </aside>
+    </div>
   </div>
 </template>
 
@@ -59,6 +62,7 @@ export default {
   data () {
     return {
       title: '置业跟踪',
+      isLoading: true,
       intention: '',
       revisit: [],
       id: '',
@@ -97,12 +101,17 @@ export default {
       url: '/magnate/saler/return_visit_records/current_user_return_records?customer_phone=' + this.customer_phone,
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
+      console.log(res)
+      this.isLoading = false
       // 格式化时间
       this.revisit = res.data
       for (let i = 0; i < res.data.length; i++) {
-        let lastDataTime = res.data[i].revisit_date
-        lastDataTime = lastDataTime.slice(0, 10)
-        this.revisit[i].lastDataTime = lastDataTime
+        let DataTime = res.data[i].created_at
+        let firstDataTime = DataTime.slice(0, 10)
+        let lastDataTime = DataTime.slice(11, 16)
+        DataTime = firstDataTime + '-' + lastDataTime
+
+        this.revisit[i].DataTime = DataTime
       }
       // 回访次数
       let data = res.data
@@ -116,11 +125,13 @@ export default {
       }
     })
   }
-
 }
 </script>
 
 <style lang="scss" scoped>
+.loading {
+  margin-top: 100px;
+}
 /deep/ .revisit_aside {
   width: 82%;
   margin: 0 auto;

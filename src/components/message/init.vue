@@ -1,89 +1,92 @@
 <template>
   <div>
     <customer-tabbar :title="title" />
+    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
+    <div v-show="!isLoading">
+      <header class="table_header">
+        <img alt class="img" src="@/assets/img/Avator-Man.png" />
+      </header>
+      <aside class="table_aside">
+        <div :key="field.identity_key" v-for="field in formData">
+          <div v-if="field.type === 'Field::TextField'">
+            <p v-if="field.identity_key == 'customer_name'">
+              <van-field
+                :id="field.identity_key"
+                :label="field.title"
+                autocomplete="off"
+                placeholder="请输入"
+                type="text"
+                v-model="field.value"
+              />
+            </p>
+            <p v-else-if="field.identity_key == 'customer_phone'">
+              <van-field
+                :id="field.identity_key"
+                :label="field.title"
+                autocomplete="off"
+                disabled
+                placeholder="请输入"
+                type="text"
+                v-model="field.value"
+              />
+            </p>
 
-    <header class="table_header">
-      <img alt class="img" src="@/assets/img/Avator-Man.png" />
-    </header>
-    <aside class="table_aside">
-      <div :key="field.identity_key" v-for="field in formData">
-        <div v-if="field.type === 'Field::TextField'">
-          <p v-if="field.identity_key == 'customer_name'">
-            <van-field
-              :id="field.identity_key"
-              :label="field.title"
-              autocomplete="off"
-              placeholder="请输入"
-              type="text"
-              v-model="field.value"
-            />
+            <p v-else-if="field.identity_key">
+              <van-field
+                :id="field.identity_key"
+                :label="field.title"
+                autocomplete="off"
+                placeholder="请输入"
+                type="text"
+                v-model="field.value"
+              />
+            </p>
+          </div>
+          <p v-else-if="field['type'] === 'Field::RadioButton'">
+            <van-field :label="field['title']">
+              <template #input>
+                <van-radio-group
+                  :id="field['identity_key']"
+                  direction="horizontal"
+                  v-model="field['option_id']"
+                >
+                  <div :key="option.id" v-for="option in field.options">
+                    <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
+                  </div>
+                </van-radio-group>
+              </template>
+            </van-field>
           </p>
-          <p v-else-if="field.identity_key == 'customer_phone'">
+          <p v-else-if="field['type'] === 'Field::DateTime'">
             <van-field
-              :id="field.identity_key"
-              :label="field.title"
+              :id="field['identity_key']"
+              :label="field['title']"
+              :value="newTime"
+              @click="showPicker = true"
               autocomplete="off"
-              disabled
-              placeholder="请输入"
-              type="text"
-              v-model="field.value"
+              clickable
+              name="datetimePicker"
+              placeholder="点击选择时间"
+              readonly="readonly"
             />
-          </p>
-
-          <p v-else-if="field.identity_key">
-            <van-field
-              :id="field.identity_key"
-              :label="field.title"
-              autocomplete="off"
-              placeholder="请输入"
-              type="text"
-              v-model="field.value"
-            />
+            <van-popup position="bottom" round v-model="showPicker">
+              <van-datetime-picker
+                :max-date="maxDate"
+                :min-date="minDate"
+                @cancel="showPicker = false"
+                @confirm="onConfirm"
+                title="选择年月日"
+                type="date"
+                v-model="currentDate"
+              />
+            </van-popup>
           </p>
         </div>
-        <p v-else-if="field['type'] === 'Field::RadioButton'">
-          <van-field :label="field['title']">
-            <template #input>
-              <van-radio-group
-                :id="field['identity_key']"
-                direction="horizontal"
-                v-model="field['option_id']"
-              >
-                <div :key="option.id" v-for="option in field.options">
-                  <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
-                </div>
-              </van-radio-group>
-            </template>
-          </van-field>
-        </p>
-        <p v-else-if="field['type'] === 'Field::DateTime'">
-          <van-field
-            :id="field['identity_key']"
-            :label="field['title']"
-            :value="newTime"
-            @click="showPicker = true"
-            autocomplete="off"
-            clickable
-            readonly="readonly"
-            name="datetimePicker"
-            placeholder="点击选择时间"
-          />
-          <van-popup position="bottom" round v-model="showPicker">
-            <van-datetime-picker
-              :max-date="maxDate"
-              :min-date="minDate"
-              @cancel="showPicker = false"
-              @confirm="onConfirm"
-              title="选择年月日"
-              type="date"
-              v-model="currentDate"
-            />
-          </van-popup>
-        </p>
-      </div>
 
-      <div class="footer"></div>
-    </aside>
+        <div class="footer"></div>
+      </aside>
+    </div>
+
     <footer class="table_footer">
       <div @click="newTable">保存</div>
     </footer>
@@ -97,6 +100,7 @@ export default {
   data () {
     return {
       title: '客户基础信息',
+      isLoading: true,
       fields: [],
       orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'living_area'],
       formData: [],
@@ -128,7 +132,6 @@ export default {
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
       this.fields = res.data.fields
-
       this.orderFieldList.forEach(element => {
         let field = this.fields.find(field => field.identity_key === element)
         if (field) {
@@ -154,6 +157,7 @@ export default {
         headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
       }).then((res) => {
         this.entries = res.data.entries
+        this.isLoading = false
 
         Object.keys(res.data.mapped_values).forEach(element => {
           if (res.data.mapped_values[element]['text_value']) {
@@ -261,6 +265,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.loading {
+  margin-top: 100px;
+}
 .table_header {
   width: 4.0625rem;
   margin: 0.8125rem auto 1.0625rem;
