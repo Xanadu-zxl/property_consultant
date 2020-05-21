@@ -1,120 +1,123 @@
 <template>
   <div>
     <customer-tabbar :title="title" />
+    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
+    <div v-show="!isLoading">
+      <header class="table_header">
+        <img alt class="img" src="@/assets/img/Avator-Man.png" />
+      </header>
+      <aside class="table_aside">
+        <div :key="field.identity_key" v-for="field in formData">
+          <div v-if="field.type === 'Field::TextField'">
+            <p v-if="field.identity_key == 'customer_name'">
+              <van-field
+                :id="field.identity_key"
+                :label="field.title"
+                autocomplete="off"
+                placeholder="请输入"
+                required
+                type="text"
+                v-model="field.value"
+              />
+            </p>
+            <p v-else-if="field.identity_key == 'customer_phone'">
+              <van-field
+                :id="field.identity_key"
+                :label="field.title"
+                @blur="telBlur(field)"
+                autocomplete="off"
+                placeholder="请输入"
+                required
+                type="digit"
+                v-model="field.value"
+              />
+            </p>
 
-    <header class="table_header">
-      <img alt class="img" src="@/assets/img/Avator-Man.png" />
-    </header>
-    <aside class="table_aside">
-      <div :key="field.identity_key" v-for="field in formData">
-        <div v-if="field.type === 'Field::TextField'">
-          <p v-if="field.identity_key == 'customer_name'">
+            <p v-else-if="field.identity_key">
+              <van-field
+                :id="field.identity_key"
+                :label="field.title"
+                autocomplete="off"
+                placeholder="请输入"
+                type="text"
+                v-model="field.value"
+              />
+            </p>
+          </div>
+          <div v-else-if="field['type'] === 'Field::RadioButton'">
+            <div v-if="field.identity_key === 'intention'">
+              <van-field :label="field['title']">
+                <template #input>
+                  <van-radio-group
+                    :id="field['identity_key']"
+                    direction="horizontal"
+                    v-model="field['option_id']"
+                  >
+                    <div :key="option.id" v-for="option in field.options">
+                      <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
+                    </div>
+                  </van-radio-group>
+                </template>
+              </van-field>
+            </div>
+            <div v-else-if="field.identity_key !== ''">
+              <van-field :label="field['title']">
+                <template #input>
+                  <van-radio-group
+                    :id="field['identity_key']"
+                    direction="horizontal"
+                    v-model="field['option_id']"
+                  >
+                    <div :key="option.id" v-for="option in field.options">
+                      <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
+                    </div>
+                  </van-radio-group>
+                </template>
+              </van-field>
+            </div>
+          </div>
+          <p v-else-if="field['type'] === 'Field::DateTime'">
             <van-field
-              :id="field.identity_key"
-              :label="field.title"
+              :id="field['identity_key']"
+              :label="field['title']"
+              :value="newTime"
+              @click="showPicker = true"
               autocomplete="off"
-              placeholder="请输入"
-              required
-              type="text"
-              v-model="field.value"
+              clickable
+              name="datetimePicker"
+              placeholder="点击选择时间"
+              readonly
             />
-          </p>
-          <p v-else-if="field.identity_key == 'customer_phone'">
-            <van-field
-              :id="field.identity_key"
-              :label="field.title"
-              @blur="telBlur(field)"
-              autocomplete="off"
-              placeholder="请输入"
-              required
-              type="digit"
-              v-model="field.value"
-            />
-          </p>
-
-          <p v-else-if="field.identity_key">
-            <van-field
-              :id="field.identity_key"
-              :label="field.title"
-              autocomplete="off"
-              placeholder="请输入"
-              type="text"
-              v-model="field.value"
-            />
+            <van-popup position="bottom" round v-model="showPicker">
+              <van-datetime-picker
+                :max-date="maxDate"
+                :min-date="minDate"
+                @cancel="showPicker = false"
+                @confirm="onConfirm"
+                title="选择年月日"
+                type="date"
+                v-model="currentDate"
+              />
+            </van-popup>
           </p>
         </div>
-        <div v-else-if="field['type'] === 'Field::RadioButton'">
-          <div v-if="field.identity_key === 'intention'">
-            <van-field :label="field['title']">
-              <template #input>
-                <van-radio-group
-                  :id="field['identity_key']"
-                  direction="horizontal"
-                  v-model="field['option_id']"
-                >
-                  <div :key="option.id" v-for="option in field.options">
-                    <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
-                  </div>
-                </van-radio-group>
-              </template>
-            </van-field>
-          </div>
-          <div v-else-if="field.identity_key !== ''">
-            <van-field :label="field['title']">
-              <template #input>
-                <van-radio-group
-                  :id="field['identity_key']"
-                  direction="horizontal"
-                  v-model="field['option_id']"
-                >
-                  <div :key="option.id" v-for="option in field.options">
-                    <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
-                  </div>
-                </van-radio-group>
-              </template>
-            </van-field>
+        <!-- 手机号遮罩层 -->
+        <div @click="show = false" class="show" v-show="show">
+          <div class="show_main">
+            <h1>提示</h1>
+            <h2>客户已存在，请重新输入手机号</h2>
+            <div class="show_footer">
+              <p>置业顾问：{{user_name}}</p>
+              <p>客户姓名：{{customer_name}}</p>
+              <p>首次到访时间：{{created_at}}</p>
+            </div>
           </div>
         </div>
-        <p v-else-if="field['type'] === 'Field::DateTime'">
-          <van-field
-            :id="field['identity_key']"
-            :label="field['title']"
-            :value="newTime"
-            @click="showPicker = true"
-            autocomplete="off"
-            clickable
-            readonly
-            name="datetimePicker"
-            placeholder="点击选择时间"
-          />
-          <van-popup position="bottom" round v-model="showPicker">
-            <van-datetime-picker
-              :max-date="maxDate"
-              :min-date="minDate"
-              @cancel="showPicker = false"
-              @confirm="onConfirm"
-              title="选择年月日"
-              type="date"
-              v-model="currentDate"
-            />
-          </van-popup>
-        </p>
-      </div>
-      <!-- 手机号遮罩层 -->
-      <div @click="show = false" class="show" v-show="show">
-        <div class="show_main">
-          <h1>提示</h1>
-          <h2>客户已存在，请重新输入手机号</h2>
-          <div class="show_footer">
-            <p>置业顾问：{{user_name}}</p>
-            <p>客户姓名：{{customer_name}}</p>
-            <p>首次到访时间：{{created_at}}</p>
-          </div>
-        </div>
-      </div>
 
-      <div class="footer"></div>
-    </aside>
+        <div class="footer"></div>
+      </aside>
+    </div>
+
     <footer class="table_footer">
       <div @click="newTable">新建客户</div>
     </footer>
@@ -141,7 +144,8 @@ export default {
       show: false,
       created_at: '',
       customer_name: '',
-      user_name: ''
+      user_name: '',
+      isLoading: true
     }
   },
   components: {
@@ -158,6 +162,7 @@ export default {
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
       this.fields = res.data.fields
+      this.isLoading = false
       this.orderFieldList.forEach(element => {
         let field = this.fields.find(field => field.identity_key === element)
         if (field) {
@@ -269,6 +274,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.loading {
+  margin-top: 100px;
+}
+
 .table_header {
   width: 4.0625rem;
   margin: 0.8125rem auto 1.0625rem;
@@ -312,6 +321,9 @@ export default {
   margin: 4px;
 }
 
+.van-radio-group--horizontal {
+  flex-direction: column;
+}
 .van-picker__confirm {
   color: #00a862;
   font-size: 15px;

@@ -1,5 +1,7 @@
 <template>
   <div>
+    <van-loading class="loading" size="27px" type="spinner" v-show="Loading">加载中...</van-loading>
+
     <van-list
       :finished="finished"
       :immediate-check="immediate_check"
@@ -7,6 +9,7 @@
       finished-text="没有更多了"
       offset="1"
       v-model="loading"
+      v-show="!Loading"
     >
       <div :key="item.customer_phone" class="content" v-for="item in list">
         <div class="information-left">
@@ -41,7 +44,8 @@ export default {
       loading: false,
       finished: false,
       isLoading: true,
-      loadNum: 1
+      loadNum: 1,
+      Loading: true
     }
   },
   mounted () {
@@ -59,6 +63,7 @@ export default {
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
       this.list = res.data
+      this.Loading = false
       for (let i = 0; i < res.data.length; i++) {
         let dataTime = res.data[i].planed_visit_time
         this.dataTime = dataTime.substr(0, 10)
@@ -90,11 +95,14 @@ export default {
       })
     }
   }
-
 }
 </script>
 
 <style lang="scss" scoped>
+.loading {
+  margin-top: 100px;
+}
+
 .content {
   width: 88%;
   margin: 0 auto;
