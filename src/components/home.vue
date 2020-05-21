@@ -142,8 +142,6 @@ export default {
     }).then((res) => {
       this.overdues = res.data
       // 格式化时间
-      console.log(res)
-
       for (let i = 0; i < res.data.length; i++) {
         let lastDataTime = res.data[i].last_revisit_date
         lastDataTime = lastDataTime.slice(0, 10)
