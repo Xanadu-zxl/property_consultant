@@ -76,7 +76,7 @@ export default {
       title: '回访详情',
       isLoading: true,
       fields: [],
-      orderFieldList: ['return_type', 'revisit_date', 'return_remark'],
+      orderFieldList: ['return_type', 'return_remark'],
       formData: [],
       showPicker: false,
       minDate: new Date(1900, 0, 1),
@@ -112,7 +112,6 @@ export default {
         if (field) {
           switch (field.type) {
             case 'Field::RadioButton': {
-              // eslint-disable-next-line standard/object-curly-even-spacing
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, option_id: '', options: field.options })
               break
             }
@@ -121,7 +120,6 @@ export default {
               break
             }
             default: {
-              // eslint-disable-next-line standard/object-curly-even-spacing
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
             }
           }
@@ -133,8 +131,9 @@ export default {
         url: '/magnate/saler/return_visit_records/' + this.response_id,
         headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
       }).then((res) => {
-        console.log(res)
-
+        if (res.data.mapped_values.customer_name) {
+          this.customer_name = res.data.mapped_values.customer_name.value[0]
+        }
         this.entries = res.data.entries
         Object.keys(res.data.mapped_values).forEach(element => {
           if (res.data.mapped_values[element]['text_value']) {
@@ -185,7 +184,6 @@ export default {
               if (entry && entry.option_id !== field.option_id) {
                 payload.response.entries_attributes.push({ id: entry.id, option_id: field.option_id })
               } else if (entry) {
-
               } else {
                 payload.response.entries_attributes.push({ field_id: field.field_id, option_id: field.option_id })
               }
@@ -216,12 +214,16 @@ export default {
           }
         }
       })
-
+      // 默认写入的值
       payload.user_id = this.$cookies.get('CURRENT-USER-ID')
       let salerField = this.fields.find(element => element.identity_key === 'saler')
       payload.response.entries_attributes.push({ field_id: salerField.id, value: this.$cookies.get('CURRENT-NAME') })
       let salerPhoneField = this.fields.find(element => element.identity_key === 'saler_phone')
       payload.response.entries_attributes.push({ field_id: salerPhoneField.id, value: this.$cookies.get('CURRENT-USER-PHONE') })
+      let customerName = this.fields.find(element => element.identity_key === 'customer_name')
+      payload.response.entries_attributes.push({ field_id: customerName.id, value: this.customer_name })
+      let customerPhone = this.fields.find(element => element.identity_key === 'customer_phone')
+      payload.response.entries_attributes.push({ field_id: customerPhone.id, value: this.customer_phone })
 
       this.$axios({
         method: 'POST',

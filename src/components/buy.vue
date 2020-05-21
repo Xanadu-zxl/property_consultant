@@ -8,27 +8,37 @@
       <van-dropdown-item :options="search_model" v-model="preferred_apartment" />
     </van-dropdown-menu>
     <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
-    <div :key="item.id" class="buy-link" v-for="item in list">
-      <div class="content" v-show="!isLoading">
-        <router-link
-          :to="{ name:'buy_message', query: {customer_phone:item.customer_phone,response_id:item.response_id }}"
-        >
-          <div class="information-left">
-            <div class="information-left-head">
-              <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
+    <van-list
+      :finished="finished"
+      :immediate-check="immediate_check"
+      @load="onLoad"
+      finished-text="没有更多了"
+      offset="1"
+      v-model="loading"
+    >
+      <div :key="item.id" class="buy-link" v-for="item in list">
+        <div class="content" v-show="!isLoading">
+          <router-link
+            :to="{ name:'buy_message', query: {customer_phone:item.customer_phone,response_id:item.response_id }}"
+          >
+            <div class="information-left">
+              <div class="information-left-head">
+                <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
+              </div>
+              <div class="information-left-matter">
+                <h2>{{item.customer_name}}</h2>
+                <p>电话：{{item.customer_phone}}</p>
+                <p>意向：{{item.intention}}</p>
+              </div>
             </div>
-            <div class="information-left-matter">
-              <h2>{{item.customer_name}}</h2>
-              <p>电话：{{item.customer_phone}}</p>
-              <p>意向：{{item.intention}}</p>
-            </div>
-          </div>
-        </router-link>
-        <a :href="'tel:'+ item.customer_phone" class="information-right">
-          <i class="icon-Info-Icon-Phone"></i>
-        </a>
+          </router-link>
+          <a :href="'tel:'+ item.customer_phone" class="information-right">
+            <i class="icon-Info-Icon-Phone"></i>
+          </a>
+        </div>
       </div>
-    </div>
+    </van-list>
+
     <footer class="footer"></footer>
     <home-nav></home-nav>
   </div>
@@ -46,7 +56,9 @@ export default {
       id: '',
       phone: '',
       namePhone: '',
+      immediate_check: false,
       isLoading: true,
+      loadNum: 1,
       created_at: '时间',
       intention: '意向',
       preferred_apartment: '喜好户型',
@@ -70,13 +82,9 @@ export default {
         { text: '错层户型', value: '错层户型' },
         { text: '复式户型', value: '复式户型' }
       ],
-      list: [{
-        customer_name: 'xxx',
-        customer_phone: 'xxx',
-        intention: 'xxx',
-        customer_gender: 'xxx'
-      }
-      ]
+      list: [],
+      loading: false,
+      finished: false
     }
   },
   watch: {
@@ -88,7 +96,6 @@ export default {
           url: '/magnate/saler/search',
           headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
         }).then((res) => {
-          // console.log(res)
           this.list = res.data
         })
       } else {
@@ -118,7 +125,6 @@ export default {
           headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
           params: { 'search_type': 'intention', 'search_key': newQuestion }
         }).then((res) => {
-          console.log(res)
           this.list = res.data
         })
       }
@@ -139,8 +145,6 @@ export default {
           headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
           params: { 'search_type': 'preferred_apartment', 'search_key': newQuestion }
         }).then((res) => {
-          console.log(res)
-
           this.list = res.data
         })
       }
@@ -177,6 +181,29 @@ export default {
         this.list = res.data
       }).catch(() => {
         this.$toast('搜索失败')
+      })
+    },
+
+    // 分页加载
+    onLoad () {
+      this.loading = true
+      this.loadNum++
+      this.$axios({
+        method: 'GET',
+        url: '/magnate/saler/search',
+        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+        params: { 'page': this.loadNum, 'per_page': '10' }
+      }).then((res) => {
+        this.loading = false
+        let oldList = this.list
+        let newList = res.data
+        this.list = [...oldList, ...newList]
+        // 加载状态结束
+        // 数据全部加载完成
+        if (!res.data.length) {
+          this.loading = false
+          this.finished = true
+        }
       })
     }
   }

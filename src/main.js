@@ -14,7 +14,6 @@ Vue.prototype.$axios = axios
 
 Vue.use(VueCookies)
 Vue.use(DropdownMenu)
-
 Vue.use(Toast)
 Vue.use(Search)
 Vue.use(Icon)

@@ -1,23 +1,32 @@
 <template>
   <div>
-    <div :key="item.customer_phone" class="content" v-for="item in list">
-      <div class="information-left">
-        <div class="information-left-head">
-          <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
+    <van-list
+      :finished="finished"
+      :immediate-check="immediate_check"
+      @load="onLoad"
+      finished-text="没有更多了"
+      offset="1"
+      v-model="loading"
+    >
+      <div :key="item.customer_phone" class="content" v-for="item in list">
+        <div class="information-left">
+          <div class="information-left-head">
+            <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
+          </div>
+          <router-link
+            :to="{ name:'caller_buy_message', query: {customer_phone:item.customer_phone,response_id:item.response_id }}"
+            class="information-left-matter"
+          >
+            <h2>{{item.customer_name}}</h2>
+            <p>电话：{{item.customer_phone}}</p>
+            <p>来访时间：{{item.dataTime}}</p>
+          </router-link>
         </div>
-        <router-link
-          :to="{ name:'caller_buy_message', query: {customer_phone:item.customer_phone,response_id:item.response_id }}"
-          class="information-left-matter"
-        >
-          <h2>{{item.customer_name}}</h2>
-          <p>电话：{{item.customer_phone}}</p>
-          <p>来访时间：{{item.dataTime}}</p>
-        </router-link>
+        <a :href="'tel:'+ item.customer_phone" class="information-right">
+          <i class="icon-Info-Icon-Phone"></i>
+        </a>
       </div>
-      <a :href="'tel:'+ item.customer_phone" class="information-right">
-        <i class="icon-Info-Icon-Phone"></i>
-      </a>
-    </div>
+    </van-list>
   </div>
 </template>
 
@@ -28,10 +37,11 @@ export default {
       id: '',
       phone: '',
       response_id: '',
-      list: [{
-        customer_name: '张先生',
-        customer_phone: 'xxx'
-      }]
+      list: [],
+      loading: false,
+      finished: false,
+      isLoading: true,
+      loadNum: 1
     }
   },
   mounted () {
@@ -48,8 +58,6 @@ export default {
       url: '/magnate/saler/callers',
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
-      console.log(res)
-
       this.list = res.data
       for (let i = 0; i < res.data.length; i++) {
         let dataTime = res.data[i].planed_visit_time
@@ -57,6 +65,30 @@ export default {
         this.list[i].dataTime = dataTime
       }
     })
+  },
+  methods: {
+    // 分页加载
+    onLoad () {
+      this.loading = true
+      this.loadNum++
+      this.$axios({
+        method: 'GET',
+        url: '/magnate/saler/search',
+        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+        params: { 'page': this.loadNum, 'per_page': '10' }
+      }).then((res) => {
+        this.loading = false
+        let oldList = this.list
+        let newList = res.data
+        this.list = [...oldList, ...newList]
+        // 加载状态结束
+        // 数据全部加载完成
+        if (!res.data.length) {
+          this.loading = false
+          this.finished = true
+        }
+      })
+    }
   }
 
 }
