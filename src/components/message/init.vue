@@ -102,7 +102,7 @@ export default {
       title: '客户基础信息',
       isLoading: true,
       fields: [],
-      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'living_area'],
+      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'living_area', 'payment_method', 'entitlement', 'draw_batch'],
       formData: [],
       showPicker: false,
       minDate: new Date(1900, 0, 1),
@@ -297,6 +297,10 @@ export default {
 .van-field__body {
   margin-top: 15px;
   font-size: 15px;
+}
+
+.van-radio-group--horizontal {
+  flex-direction: column;
 }
 
 .van-field__control {
