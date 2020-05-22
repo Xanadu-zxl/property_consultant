@@ -7,7 +7,7 @@
       </header>
       <aside class="table_aside">
         <div :key="field.identity_key" v-for="field in formData">
-          <div v-if="field.type === 'Field::TextField'">
+          <div class="input_text" v-if="field.type === 'Field::TextField'">
             <p v-if="field.identity_key == 'customer_name'">
               <van-field
                 :id="field.identity_key"
@@ -288,6 +288,11 @@ export default {
   }
 }
 
+.input_text {
+  /deep/ .van-field__control {
+    border-bottom: 1px solid #e4e4e4;
+  }
+}
 .van-field__body {
   margin-top: 15px;
   font-size: 15px;

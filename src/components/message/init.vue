@@ -8,7 +8,8 @@
       </header>
       <aside class="table_aside">
         <div :key="field.identity_key" v-for="field in formData">
-          <div v-if="field.type === 'Field::TextField'">
+          <!-- text -->
+          <div class="input_text" v-if="field.type === 'Field::TextField'">
             <p v-if="field.identity_key == 'customer_name'">
               <van-field
                 :id="field.identity_key"
@@ -30,8 +31,10 @@
                 v-model="field.value"
               />
             </p>
+            <p v-else-if="field.identity_key == 'reason'" />
+            <p v-else-if="field.identity_key == 'lottery_results'" />
 
-            <p v-else-if="field.identity_key">
+            <p v-else>
               <van-field
                 :id="field.identity_key"
                 :label="field.title"
@@ -42,21 +45,28 @@
               />
             </p>
           </div>
-          <p v-else-if="field['type'] === 'Field::RadioButton'">
-            <van-field :label="field['title']">
-              <template #input>
-                <van-radio-group
-                  :id="field['identity_key']"
-                  direction="horizontal"
-                  v-model="field['option_id']"
-                >
-                  <div :key="option.id" v-for="option in field.options">
-                    <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
-                  </div>
-                </van-radio-group>
-              </template>
-            </van-field>
-          </p>
+          <!-- button -->
+          <div v-else-if="field['type'] === 'Field::RadioButton'">
+            <div v-if="field.identity_key === 'entitlement'" />
+            <div v-else-if="field.identity_key === 'lottery'" />
+
+            <div v-else>
+              <van-field :label="field['title']">
+                <template #input>
+                  <van-radio-group
+                    :id="field['identity_key']"
+                    direction="horizontal"
+                    v-model="field['option_id']"
+                  >
+                    <div :key="option.id" v-for="option in field.options">
+                      <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
+                    </div>
+                  </van-radio-group>
+                </template>
+              </van-field>
+            </div>
+          </div>
+          <!-- DataTime -->
           <p v-else-if="field['type'] === 'Field::DateTime'">
             <van-field
               :id="field['identity_key']"
@@ -83,6 +93,74 @@
           </p>
         </div>
 
+        <!-- button_text -->
+        <div class="button_text">
+          <div :key="field.identity_key" v-for="field in formData">
+            <div v-if="field.identity_key === 'entitlement'">
+              <van-field :label="field.title">
+                <template #input>
+                  <van-radio-group
+                    :id="field.identity_key"
+                    direction="horizontal"
+                    v-model="field.option_id"
+                  >
+                    <div :key="option.id" v-for="option in field.options">
+                      <van-radio
+                        :name="option.id"
+                        @click="buy(option)"
+                        checked-color="#00A862"
+                      >{{ option.value }}</van-radio>
+                    </div>
+                  </van-radio-group>
+                </template>
+              </van-field>
+            </div>
+            <div class="input_text" v-if="field.identity_key === 'reason'" v-show="reason">
+              <van-field
+                :id="field.identity_key"
+                autocomplete="off"
+                class="reason"
+                placeholder="备注："
+                type="text"
+                v-model="field.value"
+              />
+            </div>
+            <div v-if="field.identity_key === 'lottery'">
+              <van-field :label="field.title">
+                <template #input>
+                  <van-radio-group
+                    :id="field.identity_key"
+                    direction="horizontal"
+                    v-model="field.option_id"
+                  >
+                    <div :key="option.id" v-for="option in field.options">
+                      <van-radio
+                        :name="option.id"
+                        @click="lottery(option)"
+                        checked-color="#00A862"
+                      >{{ option.value }}</van-radio>
+                    </div>
+                  </van-radio-group>
+                </template>
+              </van-field>
+            </div>
+            <div
+              class="input_text"
+              v-if="field.identity_key === 'lottery_results'"
+              v-show="lottery_results"
+            >
+              <van-field
+                :id="field.identity_key"
+                autocomplete="off"
+                class="reason"
+                placeholder="请输入摇号号码："
+                type="text"
+                v-model="field.value"
+              />
+            </div>
+          </div>
+        </div>
+
         <div class="footer"></div>
       </aside>
     </div>
@@ -102,7 +180,7 @@ export default {
       title: '客户基础信息',
       isLoading: true,
       fields: [],
-      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'living_area', 'payment_method', 'entitlement', 'draw_batch'],
+      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'living_area', 'payment_method', 'lottery', 'lottery_results', 'unicon_test'],
       formData: [],
       showPicker: false,
       minDate: new Date(1900, 0, 1),
@@ -113,7 +191,9 @@ export default {
       phone: '',
       id: '',
       newTime: '',
-      ebtries: []
+      ebtries: [],
+      reason: true,
+      lottery_results: true
     }
   },
   components: {
@@ -125,7 +205,7 @@ export default {
     // 读取cookie
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-    // 渲染数据
+    // 拉去表项
     this.$axios({
       method: 'GET',
       url: '/magnate/saler/arrive_visitors/new',
@@ -151,6 +231,7 @@ export default {
         }
       })
     }).then(() => {
+      // 渲染表单数据
       this.$axios({
         method: 'GET',
         url: '/magnate/saler/arrive_visitors/' + this.response_id,
@@ -186,6 +267,23 @@ export default {
     })
   },
   methods: {
+    // 是否显示购房资格备注
+    buy (option) {
+      if (option.value === '否') {
+        this.reason = true
+      } else {
+        this.reason = false
+      }
+    },
+    // 是否显示摇号结果
+    lottery (option) {
+      if (option.value) {
+        this.lottery_results = true
+      } else {
+        this.lottery_results = false
+      }
+    },
+    // 时间选择器 赋值
     onConfirm (currentDate) {
       this.dataTime = this.formatDate(currentDate)
       this.newTime = this.dataTime
@@ -198,7 +296,7 @@ export default {
       return s < 10 ? '0' + s : s
     },
 
-    // 发送数据
+    // 动态生成表项
     newTable () {
       let payload = { response: { entries_attributes: [] } }
 
@@ -278,8 +376,9 @@ export default {
 }
 
 .table_aside {
-  width: 84%;
+  width: 87%;
   margin: 0 auto;
+  overflow: hidden;
 }
 
 /deep/ .van-field {
@@ -291,6 +390,16 @@ export default {
     color: #222222;
     font-size: 17px;
     width: 190px;
+  }
+}
+.reason {
+  margin-top: -45px;
+  margin-left: 4.375rem;
+}
+
+.input_text {
+  /deep/ .van-field__control {
+    border-bottom: 1px solid #e4e4e4;
   }
 }
 
