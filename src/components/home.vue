@@ -79,7 +79,7 @@ import HomeNav from './pages/nav'
 export default {
   data () {
     return {
-      activeName: '1',
+      activeName: '',
       remind: '0 条新提醒',
       isLoading: true,
       overdue: '0 个',
@@ -93,8 +93,8 @@ export default {
         message: '测试数据'
       }
       ],
-      visit: [{}],
-      overdues: [{}]
+      visit: [],
+      overdues: []
 
     }
   },

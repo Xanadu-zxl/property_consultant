@@ -45,6 +45,7 @@ export default {
       finished: false,
       isLoading: true,
       loadNum: 1,
+      immediate_check: false,
       Loading: true
     }
   },
@@ -62,11 +63,15 @@ export default {
       url: '/magnate/saler/callers',
       headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
     }).then((res) => {
-      this.list = res.data
+      console.log(res)
+
       this.Loading = false
+      this.list = res.data
       for (let i = 0; i < res.data.length; i++) {
         let dataTime = res.data[i].planed_visit_time
-        this.dataTime = dataTime.substr(0, 10)
+        if (dataTime) {
+          dataTime = dataTime.substr(0, 10)
+        }
         this.list[i].dataTime = dataTime
       }
     })
