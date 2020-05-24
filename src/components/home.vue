@@ -42,7 +42,7 @@
         </van-collapse-item>
         <van-collapse-item icon=" icon-Index-Icon-Statistics" name="5" title="本月业绩" value>
           <div class="content-Statistics">
-            <div class="content-Statistics-content">
+            <!--   <div class="content-Statistics-content">
               <p>
                 <em>7</em> 套
               </p>
@@ -61,7 +61,7 @@
                 <sup>2</sup>
               </p>
               <p>已售面积</p>
-            </div>
+            </div>-->
           </div>
         </van-collapse-item>
       </van-collapse>
@@ -90,7 +90,7 @@ export default {
       name: '苏凯',
       message: [{
         id: '1',
-        message: '测试数据'
+        message: ' '
       }
       ],
       visit: [],
