@@ -38,7 +38,6 @@
         </div>
       </div>
     </van-list>
-
     <footer class="footer"></footer>
     <home-nav></home-nav>
   </div>
@@ -90,6 +89,8 @@ export default {
   watch: {
     // tab 切换
     created_at: function (newQuestion, oldQuestion) {
+      this.finished = false
+      this.loadNum = 1
       if (newQuestion === '时间') {
         this.$axios({
           method: 'GET',
@@ -110,6 +111,8 @@ export default {
       }
     },
     intention: function (newQuestion, oldQuestion) {
+      this.finished = false
+      this.loadNum = 1
       if (newQuestion === '意向') {
         this.$axios({
           method: 'GET',
@@ -187,24 +190,90 @@ export default {
     // 分页加载
     onLoad () {
       this.loading = true
-      this.loadNum++
-      this.$axios({
-        method: 'GET',
-        url: '/magnate/saler/search',
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-        params: { 'page': this.loadNum, 'per_page': '10' }
-      }).then((res) => {
-        this.loading = false
-        let oldList = this.list
-        let newList = res.data
-        this.list = [...oldList, ...newList]
-        // 加载状态结束
-        // 数据全部加载完成
-        if (!res.data.length) {
+      if (this.created_at !== '时间') {
+        this.loadNum++
+        this.$axios({
+          method: 'GET',
+          url: '/magnate/saler/search',
+          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+          params: { 'search_type': 'created_at', 'search_key': this.created_at, 'page': this.loadNum, 'per_page': '10' }
+
+        }).then((res) => {
           this.loading = false
-          this.finished = true
-        }
-      })
+          let oldList = this.list
+          let newList = res.data
+          this.list = [...oldList, ...newList]
+
+          // 加载状态结束
+          // 数据全部加载完成
+          if (!res.data.length) {
+            this.loading = false
+            this.finished = true
+          }
+        })
+      } else if (this.intention !== '意向') {
+        this.loadNum++
+        this.$axios({
+          method: 'GET',
+          url: '/magnate/saler/search',
+          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+          params: { 'search_type': 'intention', 'search_key': this.intention, 'page': this.loadNum, 'per_page': '10' }
+
+        }).then((res) => {
+          this.loading = false
+          let oldList = this.list
+          let newList = res.data
+          this.list = [...oldList, ...newList]
+
+          // 加载状态结束
+          // 数据全部加载完成
+          if (!res.data.length) {
+            this.loading = false
+            this.finished = true
+          }
+        })
+      } else if (this.preferred_apartment !== '喜好户型') {
+        this.loadNum++
+        this.$axios({
+          method: 'GET',
+          url: '/magnate/saler/search',
+          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+          params: { 'search_type': 'preferred_apartment', 'search_key': this.preferred_apartment, 'page': this.loadNum, 'per_page': '10' }
+
+        }).then((res) => {
+          this.loading = false
+          let oldList = this.list
+          let newList = res.data
+          this.list = [...oldList, ...newList]
+
+          // 加载状态结束
+          // 数据全部加载完成
+          if (!res.data.length) {
+            this.loading = false
+            this.finished = true
+          }
+        })
+      } else {
+        this.loadNum++
+        this.$axios({
+          method: 'GET',
+          url: '/magnate/saler/search',
+          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
+          params: { 'page': this.loadNum, 'per_page': '10' }
+        }).then((res) => {
+          this.loading = false
+          let oldList = this.list
+          let newList = res.data
+          this.list = [...oldList, ...newList]
+          // 加载状态结束
+          // 数据全部加载完成
+
+          if (!res.data.length) {
+            this.loading = false
+            this.finished = true
+          }
+        })
+      }
     }
   }
 }
