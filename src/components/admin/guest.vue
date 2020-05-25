@@ -110,6 +110,7 @@ export default {
       font-size: 20px;
     }
   }
+
   .van-search__content {
     padding: 0rem;
   }
