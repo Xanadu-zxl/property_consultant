@@ -10,7 +10,6 @@
             <span>首次来访时间</span>
           </p>
           <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
-
           <p
             :key="item.id"
             class="content-header-content"
@@ -75,7 +74,6 @@
 import HomeHeader from './pages/header'
 import HomeNav from './pages/nav'
 // import unit from '../unit/index'
-
 export default {
   data () {
     return {
@@ -95,7 +93,6 @@ export default {
       ],
       visit: [],
       overdues: []
-
     }
   },
   components: {
@@ -110,7 +107,6 @@ export default {
     // 读取cookie
     // this.id = this.$cookies.get('CURRENT-USER-ID')
     // this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-
     this.$axios({
       method: 'GET',
       url: '/magnate/saler/welcome',
@@ -120,7 +116,6 @@ export default {
       this.remind = data.data.caller_planed_visit_today_count + ' 条新提醒'
       this.overdue = data.data.overdued_return_visit_record_count + ' 个'
     })
-
     this.$axios({
       method: 'GET',
       url: '/magnate/saler/callers/arrive_today',
@@ -130,7 +125,7 @@ export default {
       this.isLoading = false
       // 格式化时间
       for (let i = 0; i < res.data.length; i++) {
-        let dataTime = res.data[i].planed_visit_time
+        let dataTime = res.data[i].created_at
         dataTime = dataTime.substr(0, 10)
         this.visit[i].dataTime = dataTime
       }
@@ -151,7 +146,6 @@ export default {
     })
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -161,7 +155,6 @@ export default {
 .content {
   margin-top: 35px;
 }
-
 .van-hairline--top:last-child {
   margin-bottom: 40px;
 }
@@ -171,7 +164,6 @@ export default {
   font-weight: 600;
   font-size: 0.75rem;
 }
-
 .van-cell__value {
   padding-right: 10px;
   font-size: 0.75rem;
@@ -180,7 +172,6 @@ export default {
 .van-cell {
   padding: 13.5px 16px;
 }
-
 .van-cell__right-icon {
   font-size: 12px;
   height: 12px;
@@ -189,7 +180,6 @@ export default {
 .van-collapse-item__content {
   padding: 0;
 }
-
 .content-header {
   height: 25px;
   line-height: 25px;
@@ -200,7 +190,6 @@ export default {
   justify-content: space-between;
   background: rgba(0, 168, 98, 0.08);
 }
-
 .content-header-content {
   height: 30px;
   line-height: 30px;
