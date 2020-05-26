@@ -107,7 +107,7 @@ export default {
     return {
       title: '来电客户',
       fields: [],
-      orderFieldList: ['customer_name', 'customer_phone', 'customer_gender', 'channel', 'focus', 'motivation', 'planed_visit_time', 'demand_floor', 'travel_mode', 'call_area'],
+      orderFieldList: ['customer_name', 'customer_phone', 'customer_gender', 'channel', 'focus', 'motivation', 'planed_visit_time', 'demand_floor', 'travel_mode', 'call_area', 'remark', 'intention_area', 'intention_product'],
       formData: [],
       showPicker: false,
       minDate: new Date(1900, 0, 1),
@@ -348,6 +348,10 @@ export default {
 }
 .van-radio--horizontal {
   margin: 4px;
+}
+
+.van-radio-group--horizontal {
+  flex-direction: column;
 }
 
 .van-picker__confirm {
