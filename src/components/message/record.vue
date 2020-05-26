@@ -233,12 +233,14 @@ export default {
       }).then((res) => {
         if (res.status === 201) {
           this.$toast('新建成功✨')
-          // this.$router.push({ name: 'revisit', query: { response_id: this.response_id, customer_phone: this.customer_phone } })
+          setTimeout(() => {
+            // 延迟跳转
+            this.$router.push({ name: 'revisit', query: { response_id: this.response_id, customer_phone: this.customer_phone } })
+          }, 2000)
         }
       })
     }
   }
-
 }
 </script>
 
