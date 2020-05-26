@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import api from '@/api/api'
 export default {
   data () {
     return {
@@ -59,11 +60,7 @@ export default {
   methods: {
     onSearch () {
       if (this.number) {
-        this.$axios({
-          method: 'GET',
-          url: '/magnate/saler/arrive_visitors/valid_phone?customer_phone=' + this.number,
-          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-        }).then((res) => {
+        api.getListAPI(this.number).then(res => {
           this.showResult = true
           if (res.data.customer_phone) {
             this.created_at = res.data.created_at.slice(0, 10)
