@@ -109,6 +109,11 @@ export default [
     ]
   },
   {
+    path: '/real_estate/saler/admin/ranking_list',
+    name: 'ranking_list',
+    component: () => import(/* webpackChunkName:'ranking_list' */'@/components/admin/ranking_list')
+  },
+  {
     path: '*',
     name: '404',
     component: () => import('@/components/home')
