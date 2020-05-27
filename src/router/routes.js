@@ -94,11 +94,11 @@ export default [
   },
   // admin
   {
-    path: '/real_estate/saler/guest',
+    path: '/real_estate/saler/admin/guest',
     name: 'guest',
     component: () => import(/* webpackChunkName:'guest' */'@/components/admin/guest')
   },
-    {
+  {
     path: '/real_estate/saler/admin/today_details',
     component: () => import(/* webpackChunkName:'today_details' */'@/components/admin/today_details'),
     children: [{
