@@ -54,6 +54,7 @@ export default [
     name: 'arrive_visitors',
     component: () => import(/* webpackChunkName:'visit' */'@/components/arrive_visitors')
   },
+  // 来电客户录入表
   {
     path: '/real_estate/saler/caller',
     name: 'caller',
@@ -96,6 +97,26 @@ export default [
     path: '/real_estate/saler/guest',
     name: 'guest',
     component: () => import(/* webpackChunkName:'guest' */'@/components/admin/guest')
+  },
+    {
+    path: '/real_estate/saler/admin/today_details',
+    component: () => import(/* webpackChunkName:'today_details' */'@/components/admin/today_details'),
+    children: [{
+      path: '/',
+      name: 'today',
+      component: () => import(/* webpackChunkName:'today' */'@/components/admin/today.vue')
+    },
+    {
+      path: '/real_estate/saler/admin/custom_time',
+      name: 'custom_time',
+      component: () => import(/* webpackChunkName:'custom_time' */'@/components/admin/custom_time')
+    }
+    ]
+  },
+  {
+    path: '/real_estate/saler/admin/ranking_list',
+    name: 'ranking_list',
+    component: () => import(/* webpackChunkName:'ranking_list' */'@/components/admin/ranking_list')
   },
   {
     path: '*',
