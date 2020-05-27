@@ -91,6 +91,12 @@ export default [
     name: 'record',
     component: () => import(/* webpackChunkName:'record' */'@/components/message/record')
   },
+  // admin
+  {
+    path: '/real_estate/saler/guest',
+    name: 'guest',
+    component: () => import(/* webpackChunkName:'guest' */'@/components/admin/guest')
+  },
   {
     path: '*',
     name: '404',
