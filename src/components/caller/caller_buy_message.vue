@@ -259,22 +259,6 @@ export default {
         }
       })
     }
-
-    // telBlur () {
-    //   // 去重
-    //   this.$axios({
-    //     method: 'GET',
-    //     url: '/magnate/saler/arrive_visitors/valid_phone?customer_phone=' + this.response.entries_attributes[2].value,
-    //     headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
-    //   }).then((res) => {
-    //     console.log(res)
-    //     if (res.data.customer_phone) {
-    //       this.$toast('手机号重复✨')
-    //     } else {
-    //       this.$toast('手机号bubububuubu✨')
-    //     }
-    //   })
-    // }
   }
 
 }

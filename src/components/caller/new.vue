@@ -146,7 +146,6 @@ export default {
         if (field) {
           switch (field.type) {
             case 'Field::RadioButton': {
-              // eslint-disable-next-line standard/object-curly-even-spacing
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, option_id: '', options: field.options })
               break
             }
@@ -154,7 +153,6 @@ export default {
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
               break
             }
-            // eslint-disable-next-line no-fallthrough
             default: {
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
             }
