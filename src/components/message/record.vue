@@ -69,7 +69,7 @@
 
 <script>
 import CustomerTabbar from '../pages/tabbar'
-
+import api from '@/api/api'
 export default {
   data () {
     return {
@@ -100,37 +100,31 @@ export default {
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
     // 新增数据
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/return_visit_records/new',
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((res) => {
-      this.isLoading = false
-      this.fields = res.data.fields
-      this.orderFieldList.forEach(element => {
-        let field = this.fields.find(field => field.identity_key === element)
-        if (field) {
-          switch (field.type) {
-            case 'Field::RadioButton': {
-              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, option_id: '', options: field.options })
-              break
-            }
-            case 'Field::DateTime': {
-              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: this.newTime })
-              break
-            }
-            default: {
-              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
+    api.getSalerReturnVisitrRecordsNewAPI().then(res => {
+      if (res.status === 200) {
+        this.isLoading = false
+        this.fields = res.data.fields
+        this.orderFieldList.forEach(element => {
+          let field = this.fields.find(field => field.identity_key === element)
+          if (field) {
+            switch (field.type) {
+              case 'Field::RadioButton': {
+                this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, option_id: '', options: field.options })
+                break
+              }
+              case 'Field::DateTime': {
+                this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: this.newTime })
+                break
+              }
+              default: {
+                this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
+              }
             }
           }
-        }
-      })
+        })
+      }
     }).then(() => {
-      this.$axios({
-        method: 'GET',
-        url: '/magnate/saler/return_visit_records/' + this.response_id,
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-      }).then((res) => {
+      api.getSalerReturnVisitrRecordsAPI(this.response_id).then(res => {
         if (res.data.mapped_values.customer_name) {
           this.customer_name = res.data.mapped_values.customer_name.value[0]
         }
@@ -190,17 +184,17 @@ export default {
             }
             break
           }
-          case 'Field::DateTime': {
-            if (this.newTime) {
-              if (entry && entry.value !== field.value) {
-                payload.response.entries_attributes.push({ id: entry.id, value: this.newTime })
-              } else if (entry) {
-              } else {
-                payload.response.entries_attributes.push({ field_id: field.field_id, value: this.newTime })
-              }
-            }
-            break
-          }
+          // case 'Field::DateTime': {
+          //   if (this.newTime) {
+          //     if (entry && entry.value !== field.value) {
+          //       payload.response.entries_attributes.push({ id: entry.id, value: this.newTime })
+          //     } else if (entry) {
+          //     } else {
+          //       payload.response.entries_attributes.push({ field_id: field.field_id, value: this.newTime })
+          //     }
+          //   }
+          //   break
+          // }
           default: {
             if (field.value) {
               if (entry && entry.value !== field.value) {
@@ -225,18 +219,13 @@ export default {
       let customerPhone = this.fields.find(element => element.identity_key === 'customer_phone')
       payload.response.entries_attributes.push({ field_id: customerPhone.id, value: this.customer_phone })
 
-      this.$axios({
-        method: 'POST',
-        url: '/magnate/saler/return_visit_records',
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-        data: payload
-      }).then((res) => {
+      api.postSalerReturnVisitrRecordsAPI(payload).then(res => {
         if (res.status === 201) {
           this.$toast('新建成功✨')
           setTimeout(() => {
             // 延迟跳转
             this.$router.push({ name: 'revisit', query: { response_id: this.response_id, customer_phone: this.customer_phone } })
-          }, 2000)
+          }, 2500)
         }
       })
     }

@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import api from '@/api/api'
 export default {
   data () {
     return {
@@ -58,13 +59,7 @@ export default {
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
     // 来电列表view
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/callers',
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((res) => {
-      console.log(res)
-
+    api.getSaleraCallersAPI().then(res => {
       this.Loading = false
       this.list = res.data
       for (let i = 0; i < res.data.length; i++) {
@@ -81,12 +76,8 @@ export default {
     onLoad () {
       this.loading = true
       this.loadNum++
-      this.$axios({
-        method: 'GET',
-        url: '/magnate/saler/search',
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-        params: { 'page': this.loadNum, 'per_page': '10' }
-      }).then((res) => {
+      let params = { 'page': this.loadNum, 'per_page': '10' }
+      api.getSaleraCallersSearchAPI(params).then(res => {
         this.loading = false
         let oldList = this.list
         let newList = res.data

@@ -47,7 +47,7 @@
 import HomeHeader from './pages/header'
 import HomeNav from './pages/nav'
 import BuyTabbar from './pages/tabbar'
-
+import api from '@/api/api'
 export default {
   data () {
     return {
@@ -92,20 +92,12 @@ export default {
       this.finished = false
       this.loadNum = 1
       if (newQuestion === '时间') {
-        this.$axios({
-          method: 'GET',
-          url: '/magnate/saler/search',
-          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-        }).then((res) => {
+        api.getSalerSearchAPI().then(res => {
           this.list = res.data
         })
       } else {
-        this.$axios({
-          method: 'GET',
-          url: '/magnate/saler/search',
-          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-          params: { 'search_type': 'created_at', 'search_key': newQuestion }
-        }).then((res) => {
+        let params = { 'search_type': 'created_at', 'search_key': newQuestion }
+        api.getSalerSearchAPI(params).then(res => {
           this.list = res.data
         })
       }
@@ -114,40 +106,24 @@ export default {
       this.finished = false
       this.loadNum = 1
       if (newQuestion === '意向') {
-        this.$axios({
-          method: 'GET',
-          url: '/magnate/saler/search',
-          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-        }).then((res) => {
+        api.getSalerSearchAPI().then(res => {
           this.list = res.data
         })
       } else {
-        this.$axios({
-          method: 'GET',
-          url: '/magnate/saler/search',
-          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-          params: { 'search_type': 'intention', 'search_key': newQuestion }
-        }).then((res) => {
+        let params = { 'search_type': 'intention', 'search_key': newQuestion }
+        api.getSalerSearchAPI(params).then(res => {
           this.list = res.data
         })
       }
     },
     preferred_apartment: function (newQuestion, oldQuestion) {
       if (newQuestion === '喜好户型') {
-        this.$axios({
-          method: 'GET',
-          url: '/magnate/saler/search',
-          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-        }).then((res) => {
+        api.getSalerSearchAPI().then(res => {
           this.list = res.data
         })
       } else {
-        this.$axios({
-          method: 'GET',
-          url: '/magnate/saler/search',
-          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-          params: { 'search_type': 'preferred_apartment', 'search_key': newQuestion }
-        }).then((res) => {
+        let params = { 'search_type': 'preferred_apartment', 'search_key': newQuestion }
+        api.getSalerSearchAPI(params).then(res => {
           this.list = res.data
         })
       }
@@ -162,24 +138,16 @@ export default {
     // 读取cookie
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/search',
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((res) => {
+    // 拉取搜索列表
+    api.getSalerSearchAPI().then(res => {
       this.isLoading = false
       this.list = res.data
     })
   },
   methods: {
     search () {
-      this.$axios({
-        method: 'GET',
-        url: '/magnate/saler/search',
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-        params: { 'customer_key': this.namePhone, 'customer_name': this.customer_name }
-      }).then((res) => {
+      let params = { 'customer_key': this.namePhone, 'customer_name': this.customer_name }
+      api.getSalerSearchAPI(params).then(res => {
         this.isLoading = false
         this.list = res.data
       }).catch(() => {
@@ -192,13 +160,8 @@ export default {
       this.loading = true
       if (this.created_at !== '时间') {
         this.loadNum++
-        this.$axios({
-          method: 'GET',
-          url: '/magnate/saler/search',
-          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-          params: { 'search_type': 'created_at', 'search_key': this.created_at, 'page': this.loadNum, 'per_page': '10' }
-
-        }).then((res) => {
+        let params = { 'search_type': 'created_at', 'search_key': this.created_at, 'page': this.loadNum, 'per_page': '10' }
+        api.getSalerSearchAPI(params).then(res => {
           this.loading = false
           let oldList = this.list
           let newList = res.data
@@ -213,13 +176,8 @@ export default {
         })
       } else if (this.intention !== '意向') {
         this.loadNum++
-        this.$axios({
-          method: 'GET',
-          url: '/magnate/saler/search',
-          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-          params: { 'search_type': 'intention', 'search_key': this.intention, 'page': this.loadNum, 'per_page': '10' }
-
-        }).then((res) => {
+        let params = { 'search_type': 'intention', 'search_key': this.intention, 'page': this.loadNum, 'per_page': '10' }
+        api.getSalerSearchAPI(params).then(res => {
           this.loading = false
           let oldList = this.list
           let newList = res.data
@@ -234,13 +192,8 @@ export default {
         })
       } else if (this.preferred_apartment !== '喜好户型') {
         this.loadNum++
-        this.$axios({
-          method: 'GET',
-          url: '/magnate/saler/search',
-          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-          params: { 'search_type': 'preferred_apartment', 'search_key': this.preferred_apartment, 'page': this.loadNum, 'per_page': '10' }
-
-        }).then((res) => {
+        let params = { 'search_type': 'preferred_apartment', 'search_key': this.preferred_apartment, 'page': this.loadNum, 'per_page': '10' }
+        api.getSalerSearchAPI(params).then(res => {
           this.loading = false
           let oldList = this.list
           let newList = res.data
@@ -255,12 +208,8 @@ export default {
         })
       } else {
         this.loadNum++
-        this.$axios({
-          method: 'GET',
-          url: '/magnate/saler/search',
-          headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-          params: { 'page': this.loadNum, 'per_page': '10' }
-        }).then((res) => {
+        let params = { 'page': this.loadNum, 'per_page': '10' }
+        api.getSalerSearchAPI(params).then(res => {
           this.loading = false
           let oldList = this.list
           let newList = res.data

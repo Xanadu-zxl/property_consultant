@@ -58,6 +58,7 @@
 
 <script>
 import CustomerTabbar from '../pages/tabbar'
+import api from '@/api/api'
 export default {
   data () {
     return {
@@ -84,11 +85,7 @@ export default {
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
     // 来访
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/arrive_visitors/' + this.response_id,
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((res) => {
+    api.getSalerArriveVisitorsResponseIdAPI(this.response_id).then(res => {
       // console.log(res)
       let mappedValues = res.data.mapped_values
       if (mappedValues.intention) {
@@ -96,17 +93,12 @@ export default {
       }
     })
     // 回访
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/return_visit_records/current_user_return_records?customer_phone=' + this.customer_phone,
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((res) => {
-      console.log(res)
+    api.getSalerCurrentUserReturnRecordsAPI(this.customer_phone).then(res => {
       this.isLoading = false
       // 格式化时间
       this.revisit = res.data
-      for (let i = 0; i < res.data.length; i++) {
-        let DataTime = res.data[i].created_at
+      for (let i = 0; i < this.revisit.length; i++) {
+        let DataTime = this.revisit[i].created_at
         let firstDataTime = DataTime.slice(0, 10)
         let lastDataTime = DataTime.slice(11, 16)
         DataTime = firstDataTime + '-' + lastDataTime
@@ -116,12 +108,9 @@ export default {
       // 回访次数
       let data = res.data
       for (let i = 0; i < data.length; i++) {
-        if (data[i].return_type === '电话回访') {
-          this.call_count++
-        }
-        if (data[i].return_type === '现场回访') {
-          this.visit_count++
-        }
+        data[i].return_type === '电话回访'
+          ? this.call_count++
+          : this.visit_count++
       }
     })
   }

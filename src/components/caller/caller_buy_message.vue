@@ -101,7 +101,7 @@
 
 <script>
 import BuyMessageTabbar from '../pages/tabbar'
-
+import api from '@/api/api'
 export default {
   data () {
     return {
@@ -134,11 +134,7 @@ export default {
     // 读取cookie
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/callers/new',
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((res) => {
+    api.getSaleraCallersNewAPI().then(res => {
       this.fields = res.data.fields
       this.orderFieldList.forEach(element => {
         let field = this.fields.find(field => field.identity_key === element)
@@ -160,22 +156,15 @@ export default {
       })
     }).then(() => {
       // 新增数据
-      this.$axios({
-        method: 'GET',
-        url: '/magnate/saler/callers/' + this.response_id,
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-      }).then((res) => {
+      api.getSalerCallersResponseIdAPI(this.response_id).then(res => {
         // 头部信息
-        // console.log(res)
         this.isLoading = false
-
         if (res.data.mapped_values.customer_name) {
           this.customer_name = res.data.mapped_values.customer_name.text_value[0]
         }
         if (res.data.mapped_values.planed_visit_time) {
           this.planed_visit_time = res.data.mapped_values.planed_visit_time.text_value[0]
         }
-
         this.entries = res.data.entries
 
         Object.keys(res.data.mapped_values).forEach(element => {
@@ -264,13 +253,7 @@ export default {
       })
 
       payload.user_id = this.$cookies.get('CURRENT-USER-ID')
-
-      this.$axios({
-        method: 'PUT',
-        url: '/magnate/saler/callers/' + this.response_id,
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-        data: payload
-      }).then((res) => {
+      api.putSalerCallersResponseIdAPI(this.response_id, payload).then(res => {
         if (res.status === 200) {
           this.$toast('更新成功✨')
         }
@@ -282,7 +265,7 @@ export default {
     //   this.$axios({
     //     method: 'GET',
     //     url: '/magnate/saler/arrive_visitors/valid_phone?customer_phone=' + this.response.entries_attributes[2].value,
-    //     headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
+    //     headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
     //   }).then((res) => {
     //     console.log(res)
     //     if (res.data.customer_phone) {

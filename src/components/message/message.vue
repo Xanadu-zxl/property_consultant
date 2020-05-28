@@ -51,7 +51,7 @@
 <script>
 import CustomerTabbar from '@/components/pages/tabbar'
 import MessageNav from '@/components/pages/nav'
-
+import api from '@/api/api'
 export default {
   data () {
     return {
@@ -76,22 +76,19 @@ export default {
     // 读取cookie
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/arrive_visitors/' + this.response_id,
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((res) => {
-      this.isLoading = false
-      let mappedValues = res.data.mapped_values
-      if (mappedValues.customer_name) {
-        this.customer_name = mappedValues.customer_name.text_value[0]
-      }
-      if (mappedValues.preferred_apartment) {
-        this.preferred_apartment = mappedValues.preferred_apartment.text_value[0]
-      }
-      if (mappedValues.planed_visit_time) {
-        this.planed_visit_time = mappedValues.planed_visit_time.text_value[0]
+    api.getSalerArriveVisitorsResponseIdAPI(this.response_id).then(res => {
+      if (res.status === 200) {
+        this.isLoading = false
+        let mappedValues = res.data.mapped_values
+        if (mappedValues.customer_name) {
+          this.customer_name = mappedValues.customer_name.text_value[0]
+        }
+        if (mappedValues.preferred_apartment) {
+          this.preferred_apartment = mappedValues.preferred_apartment.text_value[0]
+        }
+        if (mappedValues.planed_visit_time) {
+          this.planed_visit_time = mappedValues.planed_visit_time.text_value[0]
+        }
       }
     })
   },
