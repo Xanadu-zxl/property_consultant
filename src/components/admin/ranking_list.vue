@@ -3,7 +3,7 @@
     <header class="ranking_list_header">置业顾问排行</header>
     <div class="ranking_list_main">
       <van-dropdown-menu active-color="#00a862">
-        <van-dropdown-item :options="types" v-model="type" />
+        <van-dropdown-item :options="types" @change="change" v-model="type" />
         <van-dropdown-item disabled title="不限组织" />
         <van-dropdown-item :value="date" @open="open" title="时间段筛选" />
       </van-dropdown-menu>
@@ -23,9 +23,9 @@
         <span>客户数量(人)</span>
         <span>排名</span>
       </p>
-      <p class="ranking_list_content_body">
-        <span>xxx</span>
-        <span>-</span>
+      <p :key="item.id" class="ranking_list_content_body" v-for="item in list">
+        <span>{{item.saler}}</span>
+        <span>{{item.count}}</span>
         <span>-</span>
       </p>
     </div>
@@ -33,22 +33,35 @@
 </template>
 
 <script>
+import api from '@/api/api'
 export default {
   data () {
     return {
-      type: '来电客户',
-      date: '',
+      type: '到访客户',
+      customer_type: 'arrive_visitor',
+      date: '2020/5/15 - 2021/5/15',
       show: false,
+      startDate: '2020/5/15',
+      endDate: '2021/5/15',
       minDate: new Date(2010, 0, 1),
       maxDate: new Date(2100, 0, 31),
       types: [
         { text: '来电客户', value: '来电客户' },
         { text: '到访客户', value: '到访客户' }
-      ]
+      ],
+      list: []
     }
   },
   created () {
     document.title = '置业顾问排行'
+  },
+  mounted () {
+    // 数据初始化
+    let params = { 'customer_type': 'arrive_visitor', 'start_date': this.startDate, 'end_date': this.endDate }
+    api.getAdminSalerTopAPI(params).then(res => {
+      console.log(res)
+      this.list = res.data.query_top
+    })
   },
   methods: {
     formatDate (date) {
@@ -58,10 +71,26 @@ export default {
       const [start, end] = date
       this.show = false
       this.date = `${this.formatDate(start)} - ${this.formatDate(end)}`
+      this.startDate = this.formatDate(start)
+      this.endDate = this.formatDate(end)
+      // 时间change
+      let params = { 'customer_type': 'arrive_visitor', 'start_date': this.startDate, 'end_date': this.endDate }
+      api.getAdminSalerTopAPI(params).then(res => {
+        console.log(res)
+        this.list = res.data.query_top
+      })
     },
     open () {
       this.show = true
       this.overlay = false
+    },
+    change () {
+      // 类型change
+      this.type === '到访客户' ? this.customer_type = 'arrive_visitor' : this.customer_type = 'caller'
+      let params = { 'customer_type': this.customer_type, 'start_date': this.startDate, 'end_date': this.endDate }
+      api.getAdminSalerTopAPI(params).then(res => {
+        this.list = res.data.query_top
+      })
     }
   }
 }
