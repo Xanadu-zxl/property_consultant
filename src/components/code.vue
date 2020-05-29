@@ -47,13 +47,11 @@ export default {
           redirect_uri: 'http://localhost:8080/real_estate/saler/code'
         }
       }).then((res) => {
-        console.log(res)
         this.token = res.data.access_token
         this.$axios({
           method: 'GET',
           url: '/api/v1/user?access_token=' + this.token
         }).then((res) => {
-          console.log(res)
           this.id = res.data.id
           this.name = res.data.name
           this.phone = res.data.phone

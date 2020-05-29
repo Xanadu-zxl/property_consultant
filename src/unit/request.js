@@ -22,8 +22,6 @@ const service = axios.create({
 service.interceptors.request.use(config => {
   // 发请求前做的一些处理，数据转化，配置请求头，设置token,设置loading等
   // const sss = this.$cookies.get('CURRENT-NAME')
-  // console.log(sss)
-  // console.log(config)
   // const token = getCookie('名称');注意使用的时候需要引入cookie方法，推荐js-cookie
   // config.data = JSON.stringify(config.data)
   // config.headers = {

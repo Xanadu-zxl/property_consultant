@@ -59,7 +59,6 @@ export default {
     // 数据初始化
     let params = { 'customer_type': 'arrive_visitor', 'start_date': this.startDate, 'end_date': this.endDate }
     api.getAdminSalerTopAPI(params).then(res => {
-      console.log(res)
       this.list = res.data.query_top
     })
   },
@@ -76,7 +75,6 @@ export default {
       // 时间change
       let params = { 'customer_type': 'arrive_visitor', 'start_date': this.startDate, 'end_date': this.endDate }
       api.getAdminSalerTopAPI(params).then(res => {
-        console.log(res)
         this.list = res.data.query_top
       })
     },

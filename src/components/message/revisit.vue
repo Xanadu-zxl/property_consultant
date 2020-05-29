@@ -86,7 +86,6 @@ export default {
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
     // 来访
     api.getSalerArriveVisitorsResponseIdAPI(this.response_id).then(res => {
-      // console.log(res)
       let mappedValues = res.data.mapped_values
       if (mappedValues.intention) {
         this.intention = mappedValues.intention.text_value[0]

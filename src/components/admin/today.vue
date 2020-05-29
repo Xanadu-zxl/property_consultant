@@ -53,7 +53,6 @@ export default {
     // 请求结果
     let params = { 'search_day': this.nowDate }
     api.getAdminOneDayAPI(params).then(res => {
-      // console.log(res)
       let data = res.data
       this.arrive_visitor_count = data.arrive_visitor_count
       this.caller_count = data.caller_count
@@ -85,7 +84,6 @@ export default {
       this.nowDate = y + '-' + m + '-' + d
       let params = { 'search_day': this.nowDate }
       api.getAdminOneDayAPI(params).then(res => {
-        // console.log(res)
         let data = res.data
         this.arrive_visitor_count = data.arrive_visitor_count
         this.caller_count = data.caller_count

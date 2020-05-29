@@ -140,7 +140,6 @@ export default {
       // 自动填充值
       payload.user_id = this.$cookies.get('CURRENT-USER-ID')
       api.postAdminQueryCustomerAPI(payload).then(res => {
-        console.log(res)
       })
     },
     onSearch () {
