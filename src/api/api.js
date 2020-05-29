@@ -75,7 +75,10 @@ export default {
   // 到访客户
   // 动态生成表单
   getSaleraArriveVisitorsNewAPI () {
-    return http.get('/magnate/saler/arrive_visitors/new')
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
+    return http.get('/magnate/saler/arrive_visitors/new', '', headers)
   },
   getPhoneRepeatAPI (num) {
     let id = cookie.get('CURRENT-USER-ID')
