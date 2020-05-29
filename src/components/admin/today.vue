@@ -47,6 +47,13 @@ export default {
     }
   },
   mounted () {
+    // 是否有权限
+    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
+    if (!this.phone) {
+      sessionStorage.setItem('return', this.$route.name)
+      this.$router.push({ name: 'login' })
+    }
+
     // 获取今天时间
     let date = new Date()
     this.dateFormat(date)

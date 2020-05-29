@@ -74,7 +74,6 @@
 import HomeHeader from './pages/header'
 import HomeNav from './pages/nav'
 import api from '@/api/api'
-// import unit from '../unit/index'
 export default {
   data () {
     return {
@@ -104,10 +103,12 @@ export default {
     // 读取cookie
     this.name = this.$cookies.get('CURRENT-NAME')
     this.id = this.$cookies.get('CURRENT-USER-ID')
+    // 是否有权限
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-    this.phone
-      ? console.log(this.phone)
-      : this.$router.push({ name: 'login' })
+    if (!this.phone) {
+      sessionStorage.setItem('return', this.$route.name)
+      this.$router.push({ name: 'login' })
+    }
 
     api.getSalerWelcomeAPI().then(res => {
       if (res.status === 200) {

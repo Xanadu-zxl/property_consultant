@@ -52,7 +52,14 @@ export default {
       search_day_caller_count: '-'
     }
   },
-
+  mounted () {
+    // 是否有权限
+    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
+    if (!this.phone) {
+      sessionStorage.setItem('return', this.$route.name)
+      this.$router.push({ name: 'login' })
+    }
+  },
   methods: {
     formatDate (date) {
       return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`

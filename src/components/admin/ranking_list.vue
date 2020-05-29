@@ -56,6 +56,12 @@ export default {
     document.title = '置业顾问排行'
   },
   mounted () {
+    // 是否有权限
+    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
+    if (!this.phone) {
+      sessionStorage.setItem('return', this.$route.name)
+      this.$router.push({ name: 'login' })
+    }
     // 数据初始化
     let params = { 'customer_type': 'arrive_visitor', 'start_date': this.startDate, 'end_date': this.endDate }
     api.getAdminSalerTopAPI(params).then(res => {
