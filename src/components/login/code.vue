@@ -19,6 +19,8 @@ export default {
   },
   mounted () {
     this.code = this.$route.query.code
+    this.path = sessionStorage.getItem('return')
+
     this.$axios({
       method: 'get',
       url: '/magnate/oauth'
@@ -44,16 +46,13 @@ export default {
           method: 'GET',
           url: '/api/v1/user?access_token=' + this.token
         }).then((res) => {
-          console.log(res)
-
           this.id = res.data.id
           this.name = res.data.name
           this.phone = res.data.phone
           this.$cookies.set('CURRENT-USER-ID', res.data.id)
           this.$cookies.set('CURRENT-USER-PHONE', res.data.phone)
           this.$cookies.set('CURRENT-NAME', res.data.name)
-          window.location.href = 'http://shandenabian.skylarkly.com/real_estate/saler/home'
-          // window.location.href = 'http://localhost:8080/real_estate/saler/home'
+          this.$router.push({ name: this.path })
         })
       })
     })

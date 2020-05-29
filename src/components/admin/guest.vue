@@ -89,6 +89,12 @@ export default {
     document.title = '判客岗'
   },
   mounted () {
+    // 是否有权限
+    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
+    if (!this.phone) {
+      sessionStorage.setItem('return', this.$route.name)
+      this.$router.push({ name: 'login' })
+    }
     api.getAdminQueryCustomerNewAPI().then(res => {
       this.fields = res.data.fields
       this.orderFieldList.forEach(element => {
