@@ -101,13 +101,10 @@ export default {
     HomeNav
   },
   mounted () {
-    // 设置cookie
-    this.$cookies.set('CURRENT-USER-ID', this.id)
-    this.$cookies.set('CURRENT-USER-PHONE', this.phone)
-    this.$cookies.set('CURRENT-NAME', this.name)
     // 读取cookie
-    // this.id = this.$cookies.get('CURRENT-USER-ID')
-    // this.phone = this.$cookies.get('CURRENT-USER-PHONE')
+    this.name = this.$cookies.get('CURRENT-NAME')
+    this.id = this.$cookies.get('CURRENT-USER-ID')
+    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
     api.getSalerWelcomeAPI().then(res => {
       if (res.status === 200) {
         this.remind = res.data.caller_planed_visit_today_count + ' 条新提醒'

@@ -2,7 +2,6 @@
 // 导入axios
 import axios from 'axios'
 import Vue from 'vue'
-// import cookie from 'js-cookie'
 import { Toast } from 'vant'
 
 Vue.use(Toast)
@@ -21,15 +20,9 @@ const service = axios.create({
 // 2.请求拦截器
 service.interceptors.request.use(config => {
   // 发请求前做的一些处理，数据转化，配置请求头，设置token,设置loading等
-  // const sss = this.$cookies.get('CURRENT-NAME')
-  // const token = getCookie('名称');注意使用的时候需要引入cookie方法，推荐js-cookie
-  // config.data = JSON.stringify(config.data)
-  // config.headers = {
-  //   'wqeq': 'qwe'
-  // }
   return config
 }, error => {
-  Promise.reject(error)
+  return Promise.reject(error)
 })
 
 // 3.响应拦截器

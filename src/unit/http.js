@@ -3,14 +3,14 @@
 import request from './request'
 
 const http = {
-
   /**
    * methods: 请求
    * @param url 请求地址
    * @param params 请求参数
    * @headers headers 请求参数
    */
-  get (url, params, headers = { 'CURRENT-USER-ID': '73', 'CURRENT-USER-PHONE': '18980807092', 'CURRENT-USER-TAGS': 'magnate_saler' }) {
+
+  get (url, params, headers) {
     const config = {
       method: 'get',
       url: url,
@@ -20,7 +20,7 @@ const http = {
     // if (params) config.params = params
     return request(config)
   },
-  post (url, params, headers = { 'CURRENT-USER-ID': '73', 'CURRENT-USER-PHONE': '18980807092', 'CURRENT-USER-TAGS': 'magnate_saler' }) {
+  post (url, params, headers) {
     const config = {
       method: 'post',
       url: url,
@@ -30,7 +30,7 @@ const http = {
     if (params) config.data = params
     return request(config)
   },
-  put (url, params, headers = { 'CURRENT-USER-ID': '73', 'CURRENT-USER-PHONE': '18980807092', 'CURRENT-USER-TAGS': 'magnate_saler' }) {
+  put (url, params, headers) {
     const config = {
       method: 'put',
       url: url,
