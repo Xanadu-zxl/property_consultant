@@ -94,16 +94,16 @@ export default [
     component: () => import(/* webpackChunkName:'record' */'@/components/message/record')
   },
   // admin
-  // {
-  //   path: '/real_estate/saler/admin/login',
-  //   name: 'adminLogin',
-  //   component: () => import(/* webpackChunkName:'adminLogin' */'@/components/admin/login')
-  // },
-  // {
-  //   path: '/real_estate/saler/admin/code',
-  //   name: 'adminCode',
-  //   component: () => import(/* webpackChunkName:'adminCode' */'@/components/admin/code')
-  // },
+  {
+    path: '/real_estate/saler/admin/login',
+    name: 'adminLogin',
+    component: () => import(/* webpackChunkName:'adminLogin' */'@/components/admin/login')
+  },
+  {
+    path: '/real_estate/saler/admin/code',
+    name: 'adminCode',
+    component: () => import(/* webpackChunkName:'adminCode' */'@/components/admin/code')
+  },
   {
     path: '/real_estate/saler/admin/guest',
     name: 'guest',

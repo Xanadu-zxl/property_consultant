@@ -35,7 +35,7 @@ export default {
           client_secret: this.client_secret,
           code: this.code,
           grant_type: 'authorization_code',
-          redirect_uri: 'http://shandenabian.skylarkly.com/real_estate/saler/code'
+          redirect_uri: 'http://shandenabian.skylarkly.com/real_estate/saler/admin/code'
         }
       }).then((res) => {
         this.token = res.data.access_token
@@ -51,7 +51,8 @@ export default {
           this.$cookies.set('CURRENT-USER-ID', res.data.id)
           this.$cookies.set('CURRENT-USER-PHONE', res.data.phone)
           this.$cookies.set('CURRENT-NAME', res.data.name)
-          window.location.href = 'http://shandenabian.skylarkly.com/real_estate/saler/home'
+          // window.location.href = '/'
+          window.location.href = 'http://shandenabian.skylarkly.com/real_estate/saler/admin/ranking_list'
         })
       })
     })
