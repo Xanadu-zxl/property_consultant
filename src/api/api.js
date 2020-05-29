@@ -1,48 +1,75 @@
 import http from '../unit/http'
+import cookie from 'js-cookie'
 
 // admin
 export default {
+  // 登录
   // 判客岗
+  getMagnateOauthAPI () {
+    return http.get('/magnate/oauth')
+  },
   // 号码效验
   getAdminPhoneRepeatAPI (num) {
-    let headers = { 'CURRENT-USER-ID': '73', 'CURRENT-USER-PHONE': '18980807092', 'CURRENT-USER-TAGS': 'magnate_admin' }
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_admin' }
     return http.get(`/magnate/admin/query_customer/search_customer_phone?customer_phone=` + num, '', headers)
   },
   // 动态表单
-  getAdminQueryCustomerAPI () {
-    let headers = { 'CURRENT-USER-ID': '73', 'CURRENT-USER-PHONE': '18980807092', 'CURRENT-USER-TAGS': 'magnate_admin' }
+  getAdminQueryCustomerNewAPI () {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_admin' }
     return http.get(`/magnate/admin/query_customer/new`, '', headers)
   },
   // 表单发送
   postAdminQueryCustomerAPI (params) {
-    let headers = { 'CURRENT-USER-ID': '73', 'CURRENT-USER-PHONE': '18980807092', 'CURRENT-USER-TAGS': 'magnate_admin' }
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_admin' }
     return http.post(`/magnate/admin/query_customer`, params, headers)
   },
 
   // 今日详情
   getAdminOneDayAPI (params) {
-    let headers = { 'CURRENT-USER-ID': '73', 'CURRENT-USER-PHONE': '18980807092', 'CURRENT-USER-TAGS': 'magnate_admin' }
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_admin' }
     return http.get(`/magnate/admin/details/one_day`, params, headers)
   },
   getAdminCustomDatelineAPI (params) {
-    let headers = { 'CURRENT-USER-ID': '73', 'CURRENT-USER-PHONE': '18980807092', 'CURRENT-USER-TAGS': 'magnate_admin' }
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_admin' }
     return http.get(`/magnate/admin/details/custom_dateline`, params, headers)
   },
 
   // 排行榜
   getAdminSalerTopAPI (params) {
-    let headers = { 'CURRENT-USER-ID': '73', 'CURRENT-USER-PHONE': '18980807092', 'CURRENT-USER-TAGS': 'magnate_admin' }
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_admin' }
     return http.get(`/magnate/admin/saler_top`, params, headers)
   },
 
   // home
-  getSalerWelcomeAPI (headers) {
+  getSalerWelcomeAPI () {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
     return http.get('/magnate/saler/welcome', '', headers)
   },
-  getSalerArriveTodayAPI (headers) {
+  getSalerArriveTodayAPI () {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
     return http.get('/magnate/saler/callers/arrive_today', '', headers)
   },
-  getSalerOverduedReturnVisitRecordsAPI (headers) {
+  // 回访逾期
+  getSalerOverduedReturnVisitRecordsAPI () {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
     return http.get('/magnate/saler/arrive_visitors/overdued_return_visit_records', '', headers)
   },
   // 到访客户
@@ -50,71 +77,116 @@ export default {
   getSaleraArriveVisitorsNewAPI () {
     return http.get('/magnate/saler/arrive_visitors/new')
   },
-  getPhoneRepeatAPI (num, headers) {
+  getPhoneRepeatAPI (num) {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
     return http.get(`/magnate/saler/arrive_visitors/valid_phone?customer_phone=` + num, '', headers)
   },
   // 到访表单提交
-  postSalerArriveVisitorsAPI (params, header) {
-    return http.post(`/magnate/saler/arrive_visitors`, params, header)
+  postSalerArriveVisitorsAPI (params) {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
+    return http.post(`/magnate/saler/arrive_visitors`, params, headers)
   },
 
   // 来电客户
   getSaleraCallersNewAPI () {
-    return http.get('/magnate/saler/callers/new')
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
+    return http.get('/magnate/saler/callers/new', '', headers)
   },
   // 发送来电客户数据
-  postSalerCallersAPI (params, header) {
-    return http.post(`/magnate/saler/callers`, params, header)
+  postSalerCallersAPI (params) {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
+    return http.post(`/magnate/saler/callers`, params, headers)
   },
 
   // 查看来电客户数据
   getSaleraCallersAPI () {
-    return http.get('/magnate/saler/callers')
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
+    return http.get('/magnate/saler/callers', '', headers)
   },
   // 分页
   getSaleraCallersSearchAPI (params) {
-    return http.get('/magnate/saler/search', params)
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
+    return http.get('/magnate/saler/search', params, headers)
   },
   // 获取caller表单以填写数据
   getSalerCallersResponseIdAPI (responseId) {
-    return http.get(`/magnate/saler/callers/` + responseId)
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
+    return http.get(`/magnate/saler/callers/` + responseId, '', headers)
   },
   // 来电数据修改
   putSalerCallersResponseIdAPI (responseId, params) {
-    return http.put(`/magnate/saler/callers/` + responseId, params)
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
+    return http.put(`/magnate/saler/callers/` + responseId, params, headers)
   },
 
   // init
   // 表单修改
   // buy_message
   putSalerArriveVisitorsAPI (responseId, params) {
-    return http.put(`/magnate/saler/arrive_visitors/` + responseId, params)
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
+    return http.put(`/magnate/saler/arrive_visitors/` + responseId, params, headers)
   },
 
   // message
   // 获取表单以填写数据
-  getSalerArriveVisitorsResponseIdAPI (responseId, headers) {
+  getSalerArriveVisitorsResponseIdAPI (responseId) {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
     return http.get(`/magnate/saler/arrive_visitors/` + responseId, '', headers)
   },
 
   // 回访
-  getSalerCurrentUserReturnRecordsAPI (customerPhone, headers) {
+  getSalerCurrentUserReturnRecordsAPI (customerPhone) {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
     return http.get(`/magnate/saler/return_visit_records/current_user_return_records?customer_phone=` + customerPhone, '', headers)
   },
-  getSalerReturnVisitrRecordsNewAPI (headers) {
-    return http.get(`/magnate/saler/return_visit_records/new`, headers)
+  getSalerReturnVisitrRecordsNewAPI () {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
+    return http.get(`/magnate/saler/return_visit_records/new`, '', headers)
   },
   // 回访修改
-  getSalerReturnVisitrRecordsAPI (responseId, headers) {
-    return http.get(`/magnate/saler/return_visit_records/` + responseId, headers)
+  getSalerReturnVisitrRecordsAPI (responseId) {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
+    return http.get(`/magnate/saler/return_visit_records/` + responseId, '', headers)
   },
   // 回访提交
   postSalerReturnVisitrRecordsAPI (params) {
-    return http.post(`/magnate/saler/return_visit_records`, params)
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
+    return http.post(`/magnate/saler/return_visit_records`, params, headers)
   },
 
   // 搜索
-  getSalerSearchAPI (params, headers) {
+  getSalerSearchAPI (params) {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_saler' }
     return http.get(`/magnate/saler/search`, params, headers)
   }
 }
