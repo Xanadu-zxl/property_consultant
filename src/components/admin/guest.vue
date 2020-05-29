@@ -12,15 +12,15 @@
         v-model="number"
       >
         <template #action>
-          <div @click="onSearch" class="guest_search_title">搜索</div>
+          <div @click="onSearch(),newTable()" class="guest_search_title">搜索</div>
         </template>
       </van-search>
     </article>
 
-    <aside class="table_aside">
+    <aside class="table_aside" v-show="false">
       <div :key="field.identity_key" v-for="field in formData">
         <!-- text -->
-        <div class="input_text" v-if="field.type === 'Field::TextField'">
+        <div class="input_text" v-if="field.identity_key === 'customer_phone'">
           <van-field
             :id="field.identity_key"
             :label="field.title"
@@ -30,21 +30,15 @@
             v-model="field.value"
           />
         </div>
-        <!-- button -->
-        <div v-else-if="field['type'] === 'Field::RadioButton'">
-          <van-field :label="field['title']">
-            <template #input>
-              <van-radio-group
-                :id="field['identity_key']"
-                direction="horizontal"
-                v-model="field['option_id']"
-              >
-                <div :key="option.id" v-for="option in field.options">
-                  <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
-                </div>
-              </van-radio-group>
-            </template>
-          </van-field>
+        <div class="input_text" v-if="field.identity_key === 'is_new'">
+          <van-field
+            :id="field.identity_key"
+            :label="field.title"
+            autocomplete="off"
+            placeholder="请输入"
+            type="text"
+            v-model="field.value"
+          />
         </div>
       </div>
     </aside>
@@ -73,9 +67,6 @@
         <img alt class="guest_footer_img" src="@/assets/img/Judgement-Img.png" />
       </section>
     </footer>
-    <footer class="table_footer">
-      <div @click="newTable">保存</div>
-    </footer>
   </div>
 </template>
 
@@ -98,20 +89,12 @@ export default {
     document.title = '判客岗'
   },
   mounted () {
-    api.getAdminQueryCustomerAPI().then(res => {
+    api.getAdminQueryCustomerNewAPI().then(res => {
       this.fields = res.data.fields
       this.orderFieldList.forEach(element => {
         let field = this.fields.find(field => field.identity_key === element)
         if (field) {
-          switch (field.type) {
-            case 'Field::RadioButton': {
-              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, option_id: '', options: field.options })
-              break
-            }
-            default: {
-              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
-            }
-          }
+          this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
         }
       })
     })
@@ -121,13 +104,17 @@ export default {
     newTable () {
       let payload = { response: { entries_attributes: [] } }
       this.formData.forEach(element => {
-        switch (element.type) {
-          case 'Field::RadioButton': {
-            if (element.option_id !== '' && element) {
-              if (this.show) {
-                payload.response.entries_attributes.push({ field_id: element.field_id, option_id: element.option_id })
-              }
+        switch (element.identity_key) {
+          case 'customer_phone': {
+            if (this.number) {
+              payload.response.entries_attributes.push({ field_id: element.field_id, value: this.number })
             }
+            break
+          }
+          case 'is_new': {
+            this.show
+              ? payload.response.entries_attributes.push({ field_id: element.field_id, value: '新客户' })
+              : payload.response.entries_attributes.push({ field_id: element.field_id, value: '老客户' })
             break
           }
           default: {
@@ -137,7 +124,7 @@ export default {
           }
         }
       })
-      // 自动填充值
+      // 自动填充值user_id
       payload.user_id = this.$cookies.get('CURRENT-USER-ID')
       api.postAdminQueryCustomerAPI(payload).then(res => {
       })
