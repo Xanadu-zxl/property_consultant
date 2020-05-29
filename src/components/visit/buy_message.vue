@@ -98,6 +98,7 @@
 
 <script>
 import BuyMessageTabbar from '../pages/tabbar'
+import api from '@/api/api'
 export default {
   data () {
     return {
@@ -130,12 +131,7 @@ export default {
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
 
     // 来访
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/arrive_visitors/' + this.response_id,
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((res) => {
-      // console.log(res)
+    api.putSalerArriveVisitorsAPI(this.response_id).then(res => {
       this.isLoading = false
       let mappedValues = res.data.mapped_values
       if (mappedValues.customer_name) {

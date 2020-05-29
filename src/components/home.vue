@@ -18,7 +18,7 @@
           >
             <span>{{item.customer_name}}</span>
             <span>{{item.customer_gender}}</span>
-            <span>{{item.dataTime}}</span>
+            <span>{{item.dateTime}}</span>
           </p>
         </van-collapse-item>
         <van-collapse-item :value="overdue" icon=" icon-Index-Icon-Warning" name="2" title="回访逾期">
@@ -32,7 +32,7 @@
             <span>{{item.customer_name}}</span>
             <span>{{item.intention}}</span>
             <span>{{item.overdued_days}}</span>
-            <span>{{item.lastDataTime}}</span>
+            <span>{{item.lastDateTime}}</span>
           </p>
         </van-collapse-item>
         <van-collapse-item :value="collection" icon=" icon-Index-Icon-File" name="3" title="资料催收"></van-collapse-item>
@@ -73,6 +73,7 @@
 <script>
 import HomeHeader from './pages/header'
 import HomeNav from './pages/nav'
+import api from '@/api/api'
 // import unit from '../unit/index'
 export default {
   data () {
@@ -107,42 +108,34 @@ export default {
     // 读取cookie
     // this.id = this.$cookies.get('CURRENT-USER-ID')
     // this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/welcome',
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((data) => {
-      // console.log(data.data.caller_planed_visit_today_count)
-      this.remind = data.data.caller_planed_visit_today_count + ' 条新提醒'
-      this.overdue = data.data.overdued_return_visit_record_count + ' 个'
-    })
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/callers/arrive_today',
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((res) => {
-      this.visit = res.data
-      this.isLoading = false
-      // 格式化时间
-      for (let i = 0; i < res.data.length; i++) {
-        let dataTime = res.data[i].created_at
-        dataTime = dataTime.substr(0, 10)
-        this.visit[i].dataTime = dataTime
+    api.getSalerWelcomeAPI().then(res => {
+      if (res.status === 200) {
+        this.remind = res.data.caller_planed_visit_today_count + ' 条新提醒'
+        this.overdue = res.data.overdued_return_visit_record_count + ' 个'
       }
     })
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/arrive_visitors/overdued_return_visit_records',
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((res) => {
-      this.overdues = res.data
-      // 格式化时间
-      for (let i = 0; i < res.data.length; i++) {
-        let lastDataTime = res.data[i].last_revisit_date
-        lastDataTime = lastDataTime.slice(0, 10)
-        this.overdues[i].lastDataTime = lastDataTime
+    api.getSalerArriveTodayAPI().then(res => {
+      if (res.status === 200) {
+        this.isLoading = false
+        this.visit = res.data
+        // 格式化时间
+        for (let i = 0; i < this.visit.length; i++) {
+          let dateTime = this.visit[i].created_at + ''
+          dateTime = dateTime.substr(0, 10)
+          this.visit[i].dateTime = dateTime
+        }
       }
-      // console.log(this.overdues)
+    })
+    api.getSalerOverduedReturnVisitRecordsAPI().then(res => {
+      if (res.status === 200) {
+        this.overdues = res.data
+        // 格式化时间
+        for (let i = 0; i < this.overdues.length; i++) {
+          let lastDateTime = this.overdues[i].last_revisit_date
+          lastDateTime = lastDateTime.slice(0, 10)
+          this.overdues[i].lastDateTime = lastDateTime
+        }
+      }
     })
   }
 }

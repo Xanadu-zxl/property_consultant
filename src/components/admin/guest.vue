@@ -3,7 +3,6 @@
     <header class="guest_header">判客岗</header>
     <article class="guest_search">
       <van-search
-        @blur="onSearch"
         @search="onSearch"
         autofocus
         maxlength="11"
@@ -17,6 +16,39 @@
         </template>
       </van-search>
     </article>
+
+    <aside class="table_aside">
+      <div :key="field.identity_key" v-for="field in formData">
+        <!-- text -->
+        <div class="input_text" v-if="field.type === 'Field::TextField'">
+          <van-field
+            :id="field.identity_key"
+            :label="field.title"
+            autocomplete="off"
+            placeholder="请输入"
+            type="text"
+            v-model="field.value"
+          />
+        </div>
+        <!-- button -->
+        <div v-else-if="field['type'] === 'Field::RadioButton'">
+          <van-field :label="field['title']">
+            <template #input>
+              <van-radio-group
+                :id="field['identity_key']"
+                direction="horizontal"
+                v-model="field['option_id']"
+              >
+                <div :key="option.id" v-for="option in field.options">
+                  <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
+                </div>
+              </van-radio-group>
+            </template>
+          </van-field>
+        </div>
+      </div>
+    </aside>
+
     <footer class="guest_footer">
       <section class="guesst_footer_hint" v-show="showResult">
         <div class="guesst_footer_hint_fail" v-show="show">
@@ -41,6 +73,9 @@
         <img alt class="guest_footer_img" src="@/assets/img/Judgement-Img.png" />
       </section>
     </footer>
+    <footer class="table_footer">
+      <div @click="newTable">保存</div>
+    </footer>
   </div>
 </template>
 
@@ -54,21 +89,73 @@ export default {
       customer_name: '',
       user_name: '',
       showResult: false,
-      show: true
+      show: true,
+      formData: [],
+      orderFieldList: ['customer_phone', 'is_new']
     }
   },
+  created () {
+    document.title = '判客岗'
+  },
+  mounted () {
+    api.getAdminQueryCustomerAPI().then(res => {
+      this.fields = res.data.fields
+      this.orderFieldList.forEach(element => {
+        let field = this.fields.find(field => field.identity_key === element)
+        if (field) {
+          switch (field.type) {
+            case 'Field::RadioButton': {
+              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, option_id: '', options: field.options })
+              break
+            }
+            default: {
+              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
+            }
+          }
+        }
+      })
+    })
+  },
   methods: {
+    // 传值
+    newTable () {
+      let payload = { response: { entries_attributes: [] } }
+      this.formData.forEach(element => {
+        switch (element.type) {
+          case 'Field::RadioButton': {
+            if (element.option_id !== '' && element) {
+              if (this.show) {
+                payload.response.entries_attributes.push({ field_id: element.field_id, option_id: element.option_id })
+              }
+            }
+            break
+          }
+          default: {
+            if (element.value !== '' && element) {
+              payload.response.entries_attributes.push({ field_id: element.field_id, value: element.value })
+            }
+          }
+        }
+      })
+      // 自动填充值
+      payload.user_id = this.$cookies.get('CURRENT-USER-ID')
+      api.postAdminQueryCustomerAPI(payload).then(res => {
+      })
+    },
     onSearch () {
+      // 手机号校验
       if (this.number) {
-        api.getPhoneRepeatAPI(this.number).then(res => {
-          this.showResult = true
-          if (res.data.customer_phone) {
-            this.created_at = res.data.created_at.slice(0, 10)
-            this.customer_name = res.data.customer_name
-            this.user_name = res.data.user_name
-            this.show = true
-          } else {
+        api.getAdminPhoneRepeatAPI(this.number).then(res => {
+          res.status === 200
+            ? this.showResult = true
+            : this.showResult = false
+          if (!res.data.customer) {
             this.show = false
+          } else {
+            this.created_at = res.data.customer.created_at.slice(0, 10)
+            this.customer_name = res.data.customer.customer_name
+            this.user_name = res.data.customer.user_name
+            this.show = true
           }
         })
       } else {
@@ -214,5 +301,21 @@ export default {
       }
     }
   }
+}
+
+.table_footer {
+  margin-top: 30px;
+  bottom: 0px;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  background: #00a862;
+  color: #fff;
+}
+
+a {
+  color: #fff;
 }
 </style>

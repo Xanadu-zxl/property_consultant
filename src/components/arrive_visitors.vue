@@ -187,13 +187,13 @@
 
 <script>
 import CustomerTabbar from './pages/tabbar'
-
+import api from '@/api/api'
 export default {
   data () {
     return {
       title: '到访客户',
       fields: [],
-      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'age', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'price_range', 'intention', 'remark', 'working_area', 'living_area', 'payment_method', 'lottery', 'lottery_results', 'unicon_test', 'customer_resistance'],
+      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'age', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'price_range', 'remark', 'working_area', 'living_area', 'payment_method', 'lottery', 'lottery_results', 'unicon_test', 'customer_resistance'],
       formData: [],
       showPicker: false,
       minDate: new Date(1900, 0, 1),
@@ -220,13 +220,7 @@ export default {
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
     // 新增数据
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/arrive_visitors/new',
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((res) => {
-      console.log(res)
-
+    api.getSaleraArriveVisitorsNewAPI().then(res => {
       this.fields = res.data.fields
       this.isLoading = false
       this.orderFieldList.forEach(element => {
@@ -255,21 +249,12 @@ export default {
   methods: {
     // 是否有购房资格触发
     buy (option) {
-      if (option.value === '否') {
-        this.reason = true
-      } else {
-        this.reason = false
-      }
+      option.value === '否' ? this.reason = true : this.reason = false
     },
     // 是否有购房资格触发
     lottery (option) {
-      if (option.value) {
-        this.lottery_results = true
-      } else {
-        this.lottery_results = false
-      }
+      option.value ? this.lottery_results = true : this.lottery_results = false
     },
-
     // 时间选择器 赋值
     onConfirm (currentDate) {
       this.dataTime = this.formatDate(currentDate)
@@ -285,7 +270,6 @@ export default {
     // 动态生成表项
     newTable () {
       let payload = { response: { entries_attributes: [] } }
-
       this.formData.forEach(element => {
         switch (element.type) {
           case 'Field::RadioButton': {
@@ -316,17 +300,13 @@ export default {
       let salerPhoneField = this.fields.find(element => element.identity_key === 'saler_phone')
       payload.response.entries_attributes.push({ value: this.$cookies.get('CURRENT-USER-PHONE'), field_id: salerPhoneField.id })
 
-      this.$axios({
-        method: 'POST',
-        url: '/magnate/saler/arrive_visitors',
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-        data: payload
-      }).then((res) => {
-        this.$toast('新建成功 ✨')
-        this.$router.push({ name: 'message', query: { response_id: res.data.id } })
-      }).catch(() => {
-        // console.log(err)
-        this.$toast('新建失败 >_<')
+      api.postSalerArriveVisitorsAPI(payload).then(res => {
+        if (res.status === 201) {
+          this.$toast('新建成功 ✨')
+          this.$router.push({ name: 'message', query: { response_id: res.data.id } })
+        } else {
+          this.$toast('新建失败 >_<')
+        }
       })
     },
 
@@ -336,13 +316,7 @@ export default {
         this.$toast('手机号位数错误🙅')
         field.value = ''
       }
-      this.$axios({
-        method: 'GET',
-        url: '/magnate/saler/arrive_visitors/valid_phone?customer_phone=' + field.value,
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-      }).then((res) => {
-        // console.log(res)
-
+      api.getPhoneRepeatAPI(field.value).then(res => {
         if (res.data.customer_phone) {
           field.value = ''
           this.created_at = res.data.created_at.slice(0, 10)
@@ -353,7 +327,6 @@ export default {
       })
     }
   }
-
 }
 
 </script>

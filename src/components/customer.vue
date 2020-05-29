@@ -14,35 +14,16 @@
 
 <script>
 import CustomerTabbar from './pages/tabbar'
-import axios from 'axios'
 
 export default {
   data () {
     return {
       title: '新客户'
-
     }
   },
   components: {
     CustomerTabbar
-  },
-  methods: {
-    doRequst () {
-      console.log('111')
-      //   axios.get('http://192.168.2.115:3000/magnate/oauth')
-      axios.get('http://skylark-local.natappvip.cc/magnate/oauth')
-        .then(function (response) {
-          console.log(response)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-    },
-    mounted () {
-      this.doRequst()
-    }
   }
-
 }
 </script>
 

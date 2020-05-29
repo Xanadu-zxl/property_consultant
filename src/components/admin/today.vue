@@ -18,22 +18,32 @@
       <p class="today_content_header">
         <span>类型</span>
         <span>新增</span>
-        <span>总占比数</span>
+        <span>总数</span>
       </p>
       <p class="today_content_body">
         <span>到访客户</span>
-        <span>-</span>
-        <span>-</span>
+        <span>{{search_date_arrive_visitor_count}}</span>
+        <span>{{arrive_visitor_count}}</span>
+      </p>
+      <p class="today_content_body">
+        <span>来电客户</span>
+        <span>{{search_date_caller_count}}</span>
+        <span>{{caller_count}}</span>
       </p>
     </div>
   </div>
 </template>
 
 <script>
+import api from '@/api/api'
 export default {
   data () {
     return {
-      nowDate: '2020-02-20'
+      nowDate: '2020-02-20',
+      arrive_visitor_count: '-',
+      search_date_arrive_visitor_count: '-',
+      caller_count: '-',
+      search_date_caller_count: '-'
     }
   },
   mounted () {
@@ -41,13 +51,14 @@ export default {
     let date = new Date()
     this.dateFormat(date)
     // 请求结果
-    // this.$axios({
-    //   method: 'GET',
-    //   url: '/magnate/saler/search',
-    //   headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    // }).then((res) => {
-    //   this.list = res.data
-    // })
+    let params = { 'search_day': this.nowDate }
+    api.getAdminOneDayAPI(params).then(res => {
+      let data = res.data
+      this.arrive_visitor_count = data.arrive_visitor_count
+      this.caller_count = data.caller_count
+      this.search_date_arrive_visitor_count = data.search_date_arrive_visitor_count
+      this.search_date_caller_count = data.search_date_caller_count
+    })
   },
   methods: {
     getTime (type, date) {
@@ -71,6 +82,14 @@ export default {
         d = '0' + d
       }
       this.nowDate = y + '-' + m + '-' + d
+      let params = { 'search_day': this.nowDate }
+      api.getAdminOneDayAPI(params).then(res => {
+        let data = res.data
+        this.arrive_visitor_count = data.arrive_visitor_count
+        this.caller_count = data.caller_count
+        this.search_date_arrive_visitor_count = data.search_date_arrive_visitor_count
+        this.search_date_caller_count = data.search_date_caller_count
+      })
     }
   }
 }

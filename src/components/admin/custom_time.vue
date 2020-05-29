@@ -23,31 +23,55 @@
       </p>
       <p class="custom_time_content_body">
         <span>到访客户</span>
-        <span>-</span>
-        <span>-</span>
+        <span>{{search_day_arrive_visitor_count}}</span>
+        <span>{{arrive_visitor_count}}</span>
+      </p>
+      <p class="custom_time_content_body">
+        <span>来电客户</span>
+        <span>{{search_day_caller_count}}</span>
+        <span>{{caller_count}}</span>
       </p>
     </div>
   </div>
 </template>
 
 <script>
+import api from '@/api/api'
 export default {
   data () {
     return {
       date: '选择时间段',
+      startDate: '',
+      endDate: '',
       show: false,
       minDate: new Date(2010, 0, 1),
-      maxDate: new Date(2100, 0, 31)
+      maxDate: new Date(2100, 0, 31),
+      arrive_visitor_count: '-',
+      search_day_arrive_visitor_count: '-',
+      caller_count: '-',
+      search_day_caller_count: '-'
     }
   },
+
   methods: {
     formatDate (date) {
-      return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
     },
     onConfirm (date) {
       const [start, end] = date
       this.show = false
-      this.date = `${this.formatDate(start)} - ${this.formatDate(end)}`
+      this.startDate = this.formatDate(start)
+      this.endDate = this.formatDate(end)
+      let params = { 'start_date': this.startDate, 'end_date': this.endDate }
+      api.getAdminCustomDatelineAPI(params).then(res => {
+        let data = res.data
+        this.arrive_visitor_count = data.arrive_visitor_count
+        this.caller_count = data.caller_count
+        this.search_day_arrive_visitor_count = data.search_day_arrive_visitor_count
+        this.search_day_caller_count = data.search_day_caller_count
+      })
+
+      this.date = `${this.formatDate(start)} ~ ${this.formatDate(end)}`
     }
   }
 }

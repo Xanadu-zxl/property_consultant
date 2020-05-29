@@ -25,9 +25,6 @@ export default {
         let data = res.data
         this.client_id = data.client_id
         this.client_secret = data.client_secret
-
-        // console.log(this.client_id)
-        // console.log(this.client_secret)
         if (this.client_id) {
           window.location.href = 'https://beta.skylarkly.com/oauth/authorize?client_id=' + this.client_id + '&redirect_uri=' + this.code + '&response_type=code'
         }

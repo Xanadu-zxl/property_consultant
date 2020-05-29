@@ -107,6 +107,7 @@
 
 <script>
 import CustomerTabbar from '../pages/tabbar'
+import api from '@/api/api'
 
 export default {
   data () {
@@ -137,20 +138,14 @@ export default {
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
     // 新增数据
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/callers/new',
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((res) => {
+    api.getSaleraCallersNewAPI().then(res => {
       this.fields = res.data.fields
       this.isLoading = false
       this.orderFieldList.forEach(element => {
         let field = this.fields.find(field => field.identity_key === element)
-
         if (field) {
           switch (field.type) {
             case 'Field::RadioButton': {
-              // eslint-disable-next-line standard/object-curly-even-spacing
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, option_id: '', options: field.options })
               break
             }
@@ -158,7 +153,6 @@ export default {
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
               break
             }
-            // eslint-disable-next-line no-fallthrough
             default: {
               this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
             }
@@ -215,18 +209,14 @@ export default {
       payload.response.entries_attributes.push({ value: this.$cookies.get('CURRENT-NAME'), field_id: salerField.id })
       let salerPhoneField = this.fields.find(element => element.identity_key === 'saler_phone')
       payload.response.entries_attributes.push({ value: this.$cookies.get('CURRENT-USER-PHONE'), field_id: salerPhoneField.id })
-      this.$axios({
-        method: 'POST',
-        url: '/magnate/saler/callers',
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-        data: payload
-      }).then((res) => {
-        this.$toast('新建成功✨')
-        this.$router.push({ name: 'call_view' })
-      })
-        .catch(() => {
+      api.postSalerCallersAPI(payload).then(res => {
+        if (res.status === 201) {
+          this.$toast('新建成功✨')
+          this.$router.push({ name: 'call_view' })
+        } else {
           this.$toast('数据不完整，新建失败>_<')
-        })
+        }
+      })
     },
 
     // 判定手机号
@@ -235,11 +225,7 @@ export default {
         this.$toast('手机号位数错误🙅')
         field.value = ''
       }
-      this.$axios({
-        method: 'GET',
-        url: '/magnate/saler/arrive_visitors/valid_phone?customer_phone=' + field.value,
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-      }).then((res) => {
+      api.getPhoneRepeatAPI(field.value).then(res => {
         if (res.data.customer_phone) {
           field.value = ''
           this.created_at = res.data.created_at.slice(0, 10)

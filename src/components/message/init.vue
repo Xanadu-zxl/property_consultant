@@ -173,14 +173,14 @@
 
 <script>
 import CustomerTabbar from '../pages/tabbar'
-
+import api from '@/api/api'
 export default {
   data () {
     return {
       title: '客户基础信息',
       isLoading: true,
       fields: [],
-      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'age', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'price_range', 'intention', 'remark', 'working_area', 'living_area', 'payment_method', 'lottery', 'lottery_results', 'unicon_test', 'customer_resistance'],
+      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'age', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'price_range', 'remark', 'working_area', 'living_area', 'payment_method', 'lottery', 'lottery_results', 'unicon_test', 'customer_resistance'],
       formData: [],
       showPicker: false,
       minDate: new Date(1900, 0, 1),
@@ -205,12 +205,8 @@ export default {
     // 读取cookie
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-    // 拉去表项
-    this.$axios({
-      method: 'GET',
-      url: '/magnate/saler/arrive_visitors/new',
-      headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-    }).then((res) => {
+    // 拉取表项
+    api.getSaleraArriveVisitorsNewAPI().then(res => {
       this.fields = res.data.fields
       this.orderFieldList.forEach(element => {
         let field = this.fields.find(field => field.identity_key === element)
@@ -231,12 +227,8 @@ export default {
         }
       })
     }).then(() => {
-      // 渲染表单数据
-      this.$axios({
-        method: 'GET',
-        url: '/magnate/saler/arrive_visitors/' + this.response_id,
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone }
-      }).then((res) => {
+      // 渲染表项
+      api.getSalerArriveVisitorsResponseIdAPI(this.response_id).then(res => {
         this.entries = res.data.entries
         this.isLoading = false
 
@@ -269,19 +261,15 @@ export default {
   methods: {
     // 是否显示购房资格备注
     buy (option) {
-      if (option.value === '否') {
-        this.reason = true
-      } else {
-        this.reason = false
-      }
+      option.value === '否'
+        ? this.reason = true
+        : this.reason = false
     },
     // 是否显示摇号结果
     lottery (option) {
-      if (option.value) {
-        this.lottery_results = true
-      } else {
-        this.lottery_results = false
-      }
+      option.value
+        ? this.lottery_results = true
+        : this.lottery_results = false
     },
     // 时间选择器 赋值
     onConfirm (currentDate) {
@@ -296,7 +284,7 @@ export default {
       return s < 10 ? '0' + s : s
     },
 
-    // 动态生成表项
+    // 发送表单数据
     newTable () {
       let payload = { response: { entries_attributes: [] } }
 
@@ -343,17 +331,12 @@ export default {
       })
 
       payload.user_id = this.$cookies.get('CURRENT-USER-ID')
-
-      this.$axios({
-        method: 'PUT',
-        url: '/magnate/saler/arrive_visitors/' + this.response_id,
-        headers: { 'CURRENT-USER-ID': this.id, 'CURRENT-USER-PHONE': this.phone },
-        data: payload
-      }).then((res) => {
-        console.log(res)
+      api.putSalerArriveVisitorsAPI(this.response_id, payload).then(res => {
         if (res.status === 200) {
-          this.$toast('更新成功✨')
-          this.$router.push({ name: 'message', query: { response_id: this.response_id, customer_phone: this.customer_phone } })
+          this.$toast('更新成功 ✨')
+          this.$router.push({ name: 'message', query: { response_id: res.data.id } })
+        } else {
+          this.$toast('更新失败 >_<')
         }
       })
     }
