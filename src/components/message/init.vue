@@ -334,7 +334,7 @@ export default {
       api.putSalerArriveVisitorsAPI(this.response_id, payload).then(res => {
         if (res.status === 200) {
           this.$toast('更新成功 ✨')
-          this.$router.push({ name: 'message', query: { response_id: res.data.id } })
+          this.$router.push({ name: 'message', query: { customer_phone: this.customer_phone, response_id: res.data.id } })
         } else {
           this.$toast('更新失败 >_<')
         }
