@@ -105,6 +105,10 @@ export default {
     this.name = this.$cookies.get('CURRENT-NAME')
     this.id = this.$cookies.get('CURRENT-USER-ID')
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
+    this.phone
+      ? console.log(this.phone)
+      : this.$router.push({ name: 'login' })
+
     api.getSalerWelcomeAPI().then(res => {
       if (res.status === 200) {
         this.remind = res.data.caller_planed_visit_today_count + ' 条新提醒'
