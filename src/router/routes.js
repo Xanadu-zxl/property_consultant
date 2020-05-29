@@ -7,7 +7,12 @@ export default [
   {
     path: '/real_estate/saler/login',
     name: 'login',
-    component: () => import(/* webpackChunkName:'login' */'@/components/axios/login')
+    component: () => import(/* webpackChunkName:'login' */'@/components/login/login')
+  },
+  {
+    path: '/real_estate/saler/code',
+    name: 'code',
+    component: () => import(/* webpackChunkName:'code' */'@/components/login/code')
   },
   {
     path: '/real_estate/saler/buy',
@@ -44,11 +49,7 @@ export default [
     name: 'customer',
     component: () => import(/* webpackChunkName:'customer' */'@/components/customer')
   },
-  {
-    path: '/real_estate/saler/code',
-    name: 'code',
-    component: () => import(/* webpackChunkName:'code' */'@/components/code')
-  },
+
   {
     path: '/real_estate/saler/arrive_visitors',
     name: 'arrive_visitors',
@@ -93,6 +94,16 @@ export default [
     component: () => import(/* webpackChunkName:'record' */'@/components/message/record')
   },
   // admin
+  // {
+  //   path: '/real_estate/saler/admin/login',
+  //   name: 'adminLogin',
+  //   component: () => import(/* webpackChunkName:'adminLogin' */'@/components/admin/login')
+  // },
+  // {
+  //   path: '/real_estate/saler/admin/code',
+  //   name: 'adminCode',
+  //   component: () => import(/* webpackChunkName:'adminCode' */'@/components/admin/code')
+  // },
   {
     path: '/real_estate/saler/admin/guest',
     name: 'guest',
