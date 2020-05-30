@@ -1,6 +1,6 @@
  <template>
   <div>
-    <p class="p">授权成功</p>
+    <p class="p" v-show="show">授权成功,请等待页面跳转...</p>
   </div>
 </template>
 
@@ -8,6 +8,7 @@
 export default {
   data () {
     return {
+      show: '',
       code: '',
       token: '',
       id: '',
@@ -46,6 +47,7 @@ export default {
           method: 'GET',
           url: '/api/v1/user?access_token=' + this.token
         }).then((res) => {
+          this.show = true
           this.id = res.data.id
           this.name = res.data.name
           this.phone = res.data.phone

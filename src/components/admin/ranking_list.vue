@@ -26,7 +26,7 @@
       <p :key="item.id" class="ranking_list_content_body" v-for="item in list">
         <span>{{item.saler}}</span>
         <span>{{item.count}}</span>
-        <span>-</span>
+        <span>{{item.top}}</span>
       </p>
     </div>
   </div>
@@ -65,7 +65,11 @@ export default {
     // 数据初始化
     let params = { 'customer_type': 'arrive_visitor', 'start_date': this.startDate, 'end_date': this.endDate }
     api.getAdminSalerTopAPI(params).then(res => {
-      this.list = res.data.query_top
+      let list = res.data.query_top
+      for (let i = 0; i < list.length; i++) {
+        list[i].top = i + 1
+      }
+      this.list = list
     })
   },
   methods: {

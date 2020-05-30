@@ -18,17 +18,17 @@
       <p class="today_content_header">
         <span>类型</span>
         <span>新增</span>
-        <span>总数</span>
+        <span>占总数比</span>
       </p>
       <p class="today_content_body">
         <span>到访客户</span>
-        <span>{{search_date_arrive_visitor_count}}</span>
-        <span>{{arrive_visitor_count}}</span>
+        <span>{{newArrive}}</span>
+        <span>{{percentageArrive}}</span>
       </p>
       <p class="today_content_body">
         <span>来电客户</span>
-        <span>{{search_date_caller_count}}</span>
-        <span>{{caller_count}}</span>
+        <span>{{newCaller}}</span>
+        <span>{{percentageCaller}}</span>
       </p>
     </div>
   </div>
@@ -39,11 +39,19 @@ import api from '@/api/api'
 export default {
   data () {
     return {
-      nowDate: '2020-02-20',
-      arrive_visitor_count: '-',
-      search_date_arrive_visitor_count: '-',
-      caller_count: '-',
-      search_date_caller_count: '-'
+      nowDate: 'xxxx-xx-xx',
+      newArrive: 0,
+      totalArrive: 1,
+      newCaller: 0,
+      totalCaller: 1
+    }
+  },
+  computed: {
+    percentageArrive () {
+      return (Math.round(this.newArrive / this.totalArrive * 100)) + '%'
+    },
+    percentageCaller () {
+      return (Math.round(this.newCaller / this.totalCaller * 100)) + '%'
     }
   },
   mounted () {
@@ -61,10 +69,10 @@ export default {
     let params = { 'search_day': this.nowDate }
     api.getAdminOneDayAPI(params).then(res => {
       let data = res.data
-      this.arrive_visitor_count = data.arrive_visitor_count
-      this.caller_count = data.caller_count
-      this.search_date_arrive_visitor_count = data.search_date_arrive_visitor_count
-      this.search_date_caller_count = data.search_date_caller_count
+      this.newArrive = data.search_date_arrive_visitor_count
+      this.totalArrive = data.arrive_visitor_count
+      this.newCaller = data.search_date_caller_count
+      this.totalCaller = data.caller_count
     })
   },
   methods: {
