@@ -30,30 +30,6 @@
       <div class="buy_message_content">
         <div class="buy_message_content_body">
           <div class="buy_message_content_body_left">
-            <span>关注重点</span>
-          </div>
-          <div class="buy_message_content_body_right">
-            <span>{{focus}}</span>
-          </div>
-        </div>
-        <div class="buy_message_content_body">
-          <div class="buy_message_content_body_left">
-            <span>客户特征</span>
-          </div>
-          <div class="buy_message_content_body_right">
-            <span>{{feature}}</span>
-          </div>
-        </div>
-        <div class="buy_message_content_body">
-          <div class="buy_message_content_body_left">
-            <span>到访记录</span>
-          </div>
-          <div class="buy_message_content_body_right">
-            <span>{{planed_visit_time}}</span>
-          </div>
-        </div>
-        <div class="buy_message_content_body">
-          <div class="buy_message_content_body_left">
             <span>知晓途径</span>
           </div>
           <div class="buy_message_content_body_right">
@@ -62,19 +38,10 @@
         </div>
         <div class="buy_message_content_body">
           <div class="buy_message_content_body_left">
-            <span>置业动机</span>
+            <span>置业目的</span>
           </div>
           <div class="buy_message_content_body_right">
             <span>{{motivation}}</span>
-          </div>
-        </div>
-
-        <div class="buy_message_content_body">
-          <div class="buy_message_content_body_left">
-            <span>家庭结构</span>
-          </div>
-          <div class="buy_message_content_body_right">
-            <span>{{family_structure}}</span>
           </div>
         </div>
         <div class="buy_message_content_body">
@@ -85,14 +52,87 @@
             <span>{{preferred_apartment}}</span>
           </div>
         </div>
-      </div>
-      <div class="buy_message_bottom"></div>
-      <footer class="footer">
-        <div class="buy_message_footer">
-          <div @click="prompt" to="/#">认购</div>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>价格区间</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{price_range}}</span>
+          </div>
         </div>
-      </footer>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>付款方式</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{payment_method}}</span>
+          </div>
+        </div>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>有无购房资格</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{entitlement}}</span>
+          </div>
+        </div>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>生活区域</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{living_area}}</span>
+          </div>
+        </div>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>工作区域</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{working_area}}</span>
+          </div>
+        </div>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>摇号批次</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{lottery}}</span>
+          </div>
+        </div>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>摇号结果</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{lottery_results}}</span>
+          </div>
+        </div>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>备注</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{remark}}</span>
+          </div>
+        </div>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>客户主要抗性</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{customer_resistance}}</span>
+          </div>
+        </div>
+
+        <div class="buy_message_bottom"></div>
+      </div>
     </div>
+    <footer class="footer">
+      <div class="buy_message_footer">
+        <div @click="prompt" to="/#">认购</div>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -106,17 +146,22 @@ export default {
       intention: '暂无意向',
       customer_name: ' ',
       customer_phone: '',
-      preferred_apartment: ' ',
       isLoading: true,
       id: ' ',
       phone: ' ',
       response_id: '',
       channel: ' ',
       motivation: ' ',
-      focus: ' ',
-      family_structure: ' ',
-      feature: ' ',
-      planed_visit_time: ' '
+      preferred_apartment: ' ',
+      price_range: '',
+      payment_method: '',
+      entitlement: '',
+      living_area: '',
+      working_area: '',
+      lottery: '',
+      lottery_results: '',
+      remark: '',
+      customer_resistance: ' '
     }
   },
   components: {
@@ -132,34 +177,51 @@ export default {
 
     // 来访
     api.putSalerArriveVisitorsAPI(this.response_id).then(res => {
+      console.log(res)
+
       this.isLoading = false
       let mappedValues = res.data.mapped_values
       if (mappedValues.customer_name) {
         this.customer_name = mappedValues.customer_name.text_value[0]
       }
-      if (mappedValues.channel) {
-        this.channel = mappedValues.channel.text_value[0]
-      }
       if (mappedValues.intention) {
         this.intention = mappedValues.intention.text_value[0]
       }
-      if (mappedValues.preferred_apartment) {
-        this.preferred_apartment = mappedValues.preferred_apartment.text_value[0]
-      }
-      if (mappedValues.focus) {
-        this.focus = mappedValues.focus.text_value[0]
-      }
-      if (mappedValues.family_structure) {
-        this.family_structure = mappedValues.family_structure.text_value[0]
+      if (mappedValues.channel) {
+        this.channel = mappedValues.channel.text_value[0]
       }
       if (mappedValues.motivation) {
         this.motivation = mappedValues.motivation.text_value[0]
       }
-      if (mappedValues.feature) {
-        this.feature = mappedValues.feature.text_value[0]
+      if (mappedValues.preferred_apartment) {
+        this.preferred_apartment = mappedValues.preferred_apartment.text_value[0]
       }
-      if (mappedValues.planed_visit_time) {
-        this.planed_visit_time = mappedValues.planed_visit_time.text_value[0]
+      if (mappedValues.price_range) {
+        this.price_range = mappedValues.price_range.text_value[0]
+      }
+      if (mappedValues.payment_method) {
+        this.payment_method = mappedValues.payment_method.text_value[0]
+      }
+      if (mappedValues.entitlement) {
+        this.entitlement = mappedValues.entitlement.text_value[0]
+      }
+      if (mappedValues.living_area) {
+        this.living_area = mappedValues.living_area.text_value[0]
+      }
+      if (mappedValues.working_area) {
+        this.working_area = mappedValues.working_area.text_value[0]
+      }
+      if (mappedValues.lottery) {
+        this.lottery = mappedValues.lottery.text_value[0]
+      }
+      if (mappedValues.lottery_results) {
+        this.lottery_results = mappedValues.lottery_results.text_value[0]
+      }
+      if (mappedValues.remark) {
+        this.remark = mappedValues.remark.text_value[0]
+      }
+      if (mappedValues.customer_resistance) {
+        this.customer_resistance = mappedValues.customer_resistance.text_value[0]
       }
     })
   },
