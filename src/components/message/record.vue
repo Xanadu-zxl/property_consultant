@@ -5,7 +5,7 @@
     <div v-show="!isLoading">
       <aside class="table_aside">
         <div :key="field.identity_key" v-for="field in formData">
-          <div v-if="field.identity_key === 'return_remark'">
+          <div class="input_text" v-if="field.identity_key === 'return_remark'">
             <van-field
               :id="field.identity_key"
               :label="field.title"
@@ -16,7 +16,7 @@
               v-model="field.value"
             />
           </div>
-          <p v-else-if="field.identity_key === 'return_type'">
+          <p  v-else-if="field.identity_key === 'return_type'">
             <van-field :label="field['title']" required>
               <template #input>
                 <van-radio-group
@@ -184,17 +184,6 @@ export default {
             }
             break
           }
-          // case 'Field::DateTime': {
-          //   if (this.newTime) {
-          //     if (entry && entry.value !== field.value) {
-          //       payload.response.entries_attributes.push({ id: entry.id, value: this.newTime })
-          //     } else if (entry) {
-          //     } else {
-          //       payload.response.entries_attributes.push({ field_id: field.field_id, value: this.newTime })
-          //     }
-          //   }
-          //   break
-          // }
           default: {
             if (field.value) {
               if (entry && entry.value !== field.value) {
@@ -260,6 +249,11 @@ export default {
     color: #222222;
     font-size: 17px;
     width: 190px;
+  }
+}
+.input_text {
+  /deep/ .van-field__control {
+    border-bottom: 1px solid #e4e4e4;
   }
 }
 

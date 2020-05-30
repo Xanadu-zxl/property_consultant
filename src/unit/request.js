@@ -54,6 +54,9 @@ service.interceptors.response.use(response => {
       case 408:
         Toast('请求超时')
         break
+      case 422:
+        Toast('请填写完整信息~')
+        break
       case 500:
         Toast('服务器繁忙')
         break
