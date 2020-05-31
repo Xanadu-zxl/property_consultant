@@ -18,7 +18,7 @@
     >
       <div :key="item.id" class="buy-link" v-for="item in list">
         <div class="content" v-show="!isLoading">
-          <router-link
+          <router-link class="content_href"
             :to="{ name:'buy_message', query: {customer_phone:item.customer_phone,response_id:item.response_id }}"
           >
             <div class="information-left">
@@ -244,6 +244,11 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  .content_href{
+    width: 85%;
+    display: flex;
+  }
 }
 
 .information-left {
