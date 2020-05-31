@@ -261,7 +261,7 @@ export default {
   methods: {
     // 是否显示购房资格备注
     buy (option) {
-      option.value === '否'
+      option.value === '无'
         ? this.reason = true
         : this.reason = false
     },

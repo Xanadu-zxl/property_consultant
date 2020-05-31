@@ -249,7 +249,7 @@ export default {
   methods: {
     // 是否有购房资格触发
     buy (option) {
-      option.value === '否' ? this.reason = true : this.reason = false
+      option.value === '无' ? this.reason = true : this.reason = false
     },
     // 是否有购房资格触发
     lottery (option) {
