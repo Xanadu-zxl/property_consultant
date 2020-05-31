@@ -76,6 +76,14 @@
             <span>{{entitlement}}</span>
           </div>
         </div>
+        <div class="buy_message_content_body" v-show="this.reason">
+          <div class="buy_message_content_body_left">
+            <span>购房资格备注</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{reason}}</span>
+          </div>
+        </div>
         <div class="buy_message_content_body">
           <div class="buy_message_content_body_left">
             <span>生活区域</span>
@@ -156,6 +164,7 @@ export default {
       price_range: '',
       payment_method: '',
       entitlement: '',
+      reason: '',
       living_area: '',
       working_area: '',
       lottery: '',
@@ -204,6 +213,9 @@ export default {
       }
       if (mappedValues.entitlement) {
         this.entitlement = mappedValues.entitlement.text_value[0]
+      }
+      if (mappedValues.reason) {
+        this.reason = mappedValues.reason.text_value[0]
       }
       if (mappedValues.living_area) {
         this.living_area = mappedValues.living_area.text_value[0]
