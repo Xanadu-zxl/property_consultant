@@ -83,7 +83,7 @@ service.interceptors.response.use(response => {
     if (JSON.stringify(error).includes('timeout')) {
       Toast('服务器响应超时，请刷新当前页')
     }
-    Toast('连接服务器失败')
+    Toast('连接服务器失败,请刷新当前页')
   }
 
   // alert(error.message)
