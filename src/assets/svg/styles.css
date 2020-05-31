@@ -100,6 +100,7 @@
   content: "\e107";
   color: #00a862;
   font-size: 20px;
+  display: block;
   height: 36px;
   line-height: 36px;
 }
@@ -107,6 +108,9 @@
   content: "\e10b";
   color: #00a862;
   font-size: 20px;
+  display: block;
+  height: 36px;
+  line-height: 36px;
 }
 /* 11 */
 .icon-Index-Icon-Warning:before {
