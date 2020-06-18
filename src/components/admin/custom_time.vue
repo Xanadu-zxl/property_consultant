@@ -31,6 +31,36 @@
         <span>{{newCaller}}</span>
         <span>{{percentageCaller}}</span>
       </p>
+      <p class="today_content_body">
+        <span>银行放款</span>
+        <span>0</span>
+        <span>0%</span>
+      </p>
+      <p class="today_content_body">
+        <span>换房数量</span>
+        <span>0</span>
+        <span>0%</span>
+      </p>
+      <p class="today_content_body">
+        <span>退房数量</span>
+        <span>0</span>
+        <span>0%</span>
+      </p>
+      <p class="today_content_body">
+        <span>更名数量</span>
+        <span>0</span>
+        <span>0%</span>
+      </p>
+      <p class="today_content_body">
+        <span>预约数量</span>
+        <span>0</span>
+        <span>0%</span>
+      </p>
+      <p class="today_content_body">
+        <span>预约已到访人数</span>
+        <span>0</span>
+        <span>0%</span>
+      </p>
     </div>
   </div>
 </template>
