@@ -44,26 +44,54 @@
     </aside>
 
     <footer class="guest_footer">
-      <section class="guesst_footer_hint" v-show="showResult">
-        <div class="guesst_footer_hint_fail" v-show="show">
+      <section class="guest_footer_hint" v-show="showResult">
+        <div class="guest_footer_hint_fail fail_bg" v-show="show">
+          <van-icon @click="cross()" class="guest_footer_x" name="cross"></van-icon>
           <h1>
-            <van-icon class="guesst_footer_hint_fail_icon" name="fail" />
+            <van-icon class="guest_footer_hint_icon fail_icon" name="fail" />
           </h1>
           <h2>客户已存在</h2>
-          <div class="guesst_footer_hint_fail_message">
+          <div class="guest_footer_hint_message">
             <p>客户姓名：{{customer_name}}</p>
             <p>置业顾问：{{user_name}}</p>
             <p>首次到访时间：{{created_at}}</p>
           </div>
         </div>
-        <div class="guesst_footer_hint_success" v-show="!show">
+        <div class="guest_footer_hint_success success_bg" v-show="!show">
+          <van-icon @click="cross($event)" class="guest_footer_x" name="cross"></van-icon>
+
           <h1>
-            <van-icon class="guesst_footer_hint_success_icon" name="success" />
+            <van-icon class="guest_footer_hint_icon success_icon" name="success" />
           </h1>
-          <h2>该客户为新客户</h2>
+          <h2>客户为新客户</h2>
         </div>
       </section>
-      <section v-show="!showResult">
+
+      <section class="guest_footer_hint" v-show="showResultOrder">
+        <div class="guest_footer_hint_success_order success_bg" v-show="showOrder">
+          <van-icon @click="cross()" class="guest_footer_x" name="cross"></van-icon>
+
+          <h1>
+            <van-icon class="guest_footer_hint_icon success_icon" name="success" />
+          </h1>
+          <h2>客户已预约</h2>
+          <div class="guest_footer_hint_message">
+            <p>客户姓名：{{customer_name}}</p>
+            <p>客户电话：{{user_name}}</p>
+            <p>渠道来源：{{created_at}}</p>
+            <p>预约人：</p>
+          </div>
+        </div>
+        <div class="guest_footer_hint_fail_order fail_bg" v-show="!showOrder">
+          <van-icon @click="cross()" class="guest_footer_x" name="cross"></van-icon>
+
+          <h1>
+            <van-icon class="guest_footer_hint_icon fail_icon" name="fail" />
+          </h1>
+          <h2>客户未预约</h2>
+        </div>
+      </section>
+      <section v-show="!showResult && !showResultOrder">
         <img alt class="guest_footer_img" src="@/assets/img/Judgement-Img.png" />
       </section>
     </footer>
@@ -80,6 +108,8 @@ export default {
       customer_name: '',
       user_name: '',
       showResult: false,
+      showResultOrder: true,
+      showOrder: true,
       show: true,
       formData: [],
       orderFieldList: ['customer_phone', 'is_new']
@@ -106,6 +136,9 @@ export default {
     })
   },
   methods: {
+    cross () {
+      this.showResult = false
+    },
     // 传值
     newTable () {
       let payload = { response: { entries_attributes: [] } }
@@ -214,56 +247,73 @@ export default {
       transform: translateY(-50%);
     }
   }
-  .guesst_footer_hint {
+  .success_bg {
+    position: relative;
+    background: #e9f5ef;
+    .success_icon {
+      background: #00a862;
+    }
+  }
+  .fail_bg {
+    position: relative;
+    background: #f9f1f1;
+    .fail_icon {
+      background: #f74a53;
+    }
+  }
+  .guest_footer_x {
+    position: absolute;
+    right: 13px;
+    top: 13px;
+    color: #b2b2b2;
+    font-size: 22px;
+    line-height: 22px;
+  }
+
+  .guest_footer_hint_icon {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+    margin: 25px auto 11px;
+  }
+
+  .guest_footer_hint_message {
+    padding-top: 10px;
+    width: 80%;
+    border-top: 1px solid #d4d4d4;
+    p {
+      text-align: left;
+      color: #787878;
+      font-size: 12px;
+      line-height: 20px;
+    }
+  }
+
+  .guest_footer_hint {
     margin: 15px auto;
 
-    .guesst_footer_hint_fail {
+    .guest_footer_hint_success_order {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 90%;
       margin: 0 auto;
-      height: 11.375rem;
+      height: 12.375rem;
       border-radius: 6px;
-      background: #f9f1f1;
-
-      .guesst_footer_hint_fail_icon {
-        background: #f74a53;
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        line-height: 30px;
-        text-align: center;
-        color: #fff;
-        font-size: 18px;
-        margin: 25px auto 11px;
-
-        /deep/ .van-icon-fail::before {
-          font-size: 20px;
-          padding: 5px;
-        }
-      }
 
       h2 {
         width: 90%;
         font-size: 14px;
-        color: #f74a53;
+        color: #00a862;
         margin-bottom: 15px;
       }
-
-      .guesst_footer_hint_fail_message {
-        padding-top: 10px;
-        width: 80%;
-        border-top: 1px solid #d4d4d4;
-        p {
-          text-align: left;
-          color: #787878;
-          font-size: 12px;
-          line-height: 20px;
-        }
-      }
     }
-    .guesst_footer_hint_success {
+
+    .guest_footer_hint_fail_order {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -273,19 +323,42 @@ export default {
       margin: 0px auto;
       padding-bottom: 10px;
       border-radius: 6px;
-      background: #e9f5ef;
 
-      .guesst_footer_hint_success_icon {
-        background: #00a862;
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        line-height: 30px;
-        text-align: center;
-        color: #fff;
-        font-size: 18px;
-        margin: 25px auto 11px;
+      h2 {
+        width: 90%;
+        font-size: 14px;
+        color: #f74a53;
+        margin-bottom: 15px;
       }
+    }
+
+    .guest_footer_hint_fail {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 90%;
+      margin: 0 auto;
+      height: 12.375rem;
+      border-radius: 6px;
+
+      h2 {
+        width: 90%;
+        font-size: 14px;
+        color: #f74a53;
+        margin-bottom: 15px;
+      }
+    }
+
+    .guest_footer_hint_success {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 90%;
+      height: 6rem;
+      margin: 0px auto;
+      padding-bottom: 10px;
+      border-radius: 6px;
 
       h2 {
         width: 90%;
