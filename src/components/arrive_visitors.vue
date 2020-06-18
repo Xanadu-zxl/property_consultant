@@ -47,16 +47,14 @@
               />
             </p>
           </div>
-
           <!-- butoon -->
           <div v-else-if="field.type === 'Field::RadioButton'">
             <div v-if="field.identity_key === 'entitlement'" />
             <div v-else-if="field.identity_key === 'lottery'" />
-
             <div v-else>
               <van-field :label="field.title">
                 <template #input>
-                  <van-radio-group
+                  <!-- <van-radio-group
                     :id="field.identity_key"
                     direction="horizontal"
                     v-model="field.option_id"
@@ -64,7 +62,19 @@
                     <div :key="option.id" v-for="option in field.options">
                       <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
                     </div>
-                  </van-radio-group>
+                  </van-radio-group>-->
+                  <select
+                    :id="field.identity_key"
+                    class="table_aside_select"
+                    v-model="field.option_id"
+                  >
+                    <option
+                      :key="option.id"
+                      :value="option.id"
+                      class="table_aside_option"
+                      v-for="option in field.options"
+                    >{{ option.value }}</option>
+                  </select>
                 </template>
               </van-field>
             </div>
@@ -86,7 +96,7 @@
                 :max-date="maxDate"
                 :min-date="minDate"
                 @cancel="showPicker = false"
-                @confirm="onConfirm"
+                @confirm="onConfirmDate"
                 title="选择年月日"
                 type="date"
                 v-model="currentDate"
@@ -188,14 +198,18 @@
 <script>
 import CustomerTabbar from './pages/tabbar'
 import api from '@/api/api'
+import total from '@/api/total'
 export default {
   data () {
     return {
+      value: '',
+      showPicker: false,
+      columns: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+
       title: '到访客户',
       fields: [],
       orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'age', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'price_range', 'remark', 'working_area', 'living_area', 'payment_method', 'lottery', 'lottery_results', 'unicon_test', 'customer_resistance'],
       formData: [],
-      showPicker: false,
       minDate: new Date(1900, 0, 1),
       maxDate: new Date(2220, 10, 1),
       currentDate: new Date(),
@@ -216,37 +230,22 @@ export default {
     CustomerTabbar
   },
   mounted () {
-    // 读取cookie
-    this.id = this.$cookies.get('CURRENT-USER-ID')
-    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
     // 新增数据
     api.getSaleraArriveVisitorsNewAPI().then(res => {
-      this.fields = res.data.fields
       this.isLoading = false
-      this.orderFieldList.forEach(element => {
-        let field = this.fields.find(field => field.identity_key === element)
-        if (field) {
-          switch (field.type) {
-            case 'Field::RadioButton': {
-              // eslint-disable-next-line standard/object-curly-even-spacing
-              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, option_id: '', options: field.options })
-              break
-            }
-            case 'Field::DateTime': {
-              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
-              break
-            }
-            default: {
-              // eslint-disable-next-line standard/object-curly-even-spacing
-              this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
-            }
-          }
-        }
-      })
+      console.log(res)
+      this.fields = res.data.fields
+      // 表单数据处理
+      this.formData = total.tableListData(this.fields, this.orderFieldList)
     })
   },
 
   methods: {
+    // 下拉
+    onConfirm (value) {
+      this.value = value
+      this.showPicker = false
+    },
     // 是否有购房资格触发
     buy (option) {
       option.value === '无' ? this.reason = true : this.reason = false
@@ -256,7 +255,7 @@ export default {
       option.value ? this.lottery_results = true : this.lottery_results = false
     },
     // 时间选择器 赋值
-    onConfirm (currentDate) {
+    onConfirmDate (currentDate) {
       this.dataTime = this.formatDate(currentDate)
       this.newTime = this.dataTime
       this.showPicker = false
@@ -267,28 +266,34 @@ export default {
     p (s) {
       return s < 10 ? '0' + s : s
     },
-    // 动态生成表项
+    // 构建传输值的json格式
     newTable () {
       let payload = { response: { entries_attributes: [] } }
       this.formData.forEach(element => {
         switch (element.type) {
           case 'Field::RadioButton': {
             if (element.option_id !== '' && element) {
-              payload.response.entries_attributes.push({ field_id: element.field_id, option_id: element.option_id })
+              payload.response.entries_attributes.push({
+                field_id: element.field_id,
+                option_id: element.option_id })
             }
             break
           }
           case 'Field::DateTime': {
             if (element.option_id !== '' && element) {
               if (this.newTime) {
-                payload.response.entries_attributes.push({ field_id: element.field_id, value: this.newTime })
+                payload.response.entries_attributes.push({
+                  field_id: element.field_id,
+                  value: this.newTime })
               }
             }
             break
           }
           default: {
             if (element.value !== '' && element) {
-              payload.response.entries_attributes.push({ field_id: element.field_id, value: element.value })
+              payload.response.entries_attributes.push({
+                field_id: element.field_id,
+                value: element.value })
             }
           }
         }
@@ -296,9 +301,16 @@ export default {
       // 自动填充值
       payload.user_id = this.$cookies.get('CURRENT-USER-ID')
       let salerField = this.fields.find(element => element.identity_key === 'saler')
-      payload.response.entries_attributes.push({ value: this.$cookies.get('CURRENT-NAME'), field_id: salerField.id })
+
+      payload.response.entries_attributes.push({
+        value: this.$cookies.get('CURRENT-NAME'),
+        field_id: salerField.id })
+
       let salerPhoneField = this.fields.find(element => element.identity_key === 'saler_phone')
-      payload.response.entries_attributes.push({ value: this.$cookies.get('CURRENT-USER-PHONE'), field_id: salerPhoneField.id })
+
+      payload.response.entries_attributes.push({
+        value: this.$cookies.get('CURRENT-USER-PHONE'),
+        field_id: salerPhoneField.id })
 
       api.postSalerArriveVisitorsAPI(payload).then(res => {
         if (res.status === 201) {
@@ -349,6 +361,18 @@ export default {
   width: 87%;
   margin: 0 auto;
   overflow: hidden;
+
+  .table_aside_select {
+    width: 100%;
+    height: 25px;
+    border: none;
+    background: transparent;
+    outline: medium;
+    border-bottom: 1px solid #dedede;
+  }
+  .table_aside_option {
+    background: transparent;
+  }
 }
 
 /deep/ .van-field {
