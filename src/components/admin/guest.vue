@@ -257,6 +257,8 @@ export default {
             this.customer_source = data.customer_source
             this.visitStatus = data.arrive_visit
             this.responseId = data.response_id
+          } else {
+            this.showOrder = false
           }
         })
       } else {
