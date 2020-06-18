@@ -93,7 +93,7 @@
           <h2>客户已预约</h2>
           <div class="guest_footer_hint_message">
             <p>客户姓名：{{customer_name}}</p>
-            <p>客户电话：{{customer_phone}}</p>
+            <p>客户电话：{{encryption}}</p>
             <p>渠道来源：{{customer_source}}</p>
             <p>预约人：{{order_name}}</p>
 
@@ -151,6 +151,14 @@ export default {
   created () {
     document.title = '判客岗'
   },
+  computed: {
+    encryption () {
+      let phone = this.customer_phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.customer_phone = phone
+      return this.customer_phone
+    }
+  },
   mounted () {
     // 是否有权限
     this.phone = this.$cookies.get('CURRENT-USER-PHONE')
@@ -170,6 +178,7 @@ export default {
     })
   },
   methods: {
+
     // 切换状态
     ToggleState () {
       if (this.visitStatus !== '已到访') {
@@ -265,6 +274,7 @@ export default {
       } else {
         this.$toast('手机号位数错误')
         this.showResult = false
+        this.showResultOrder = false
       }
     }
   }
