@@ -10,6 +10,7 @@
         show-action
         type="number"
         v-model="number"
+        x
       >
         <template #action>
           <div @click="onSearch(),newTable()" class="guest_search_title">搜索</div>
@@ -230,7 +231,7 @@ export default {
     },
     onSearch () {
       // 手机号校验
-      if (this.number) {
+      if (this.number.length === 4) {
         api.getAdminPhoneRepeatAPI(this.number).then(res => {
           res.status === 200
             ? this.showResult = true
@@ -262,6 +263,7 @@ export default {
           }
         })
       } else {
+        this.$toast('手机号位数错误')
         this.showResult = false
       }
     }
