@@ -40,5 +40,13 @@ export default {
       }
     })
     return tableList
+  },
+
+  // 排行榜排序
+  rank (list) {
+    for (let i = 0; i < list.length; i++) {
+      list[i].top = i + 1
+    }
+    return list
   }
 }

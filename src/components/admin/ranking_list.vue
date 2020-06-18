@@ -34,6 +34,7 @@
 
 <script>
 import api from '@/api/api'
+import total from '@/api/total'
 export default {
   data () {
     return {
@@ -47,7 +48,9 @@ export default {
       maxDate: new Date(2100, 0, 31),
       types: [
         { text: '来电客户', value: '来电客户' },
-        { text: '到访客户', value: '到访客户' }
+        { text: '到访客户', value: '到访客户' },
+        { text: '认购客户', value: '认购客户' },
+        { text: '签约客户', value: '签约客户' }
       ],
       list: []
     }
@@ -66,10 +69,7 @@ export default {
     let params = { 'customer_type': 'arrive_visitor', 'start_date': this.startDate, 'end_date': this.endDate }
     api.getAdminSalerTopAPI(params).then(res => {
       let list = res.data.query_top
-      for (let i = 0; i < list.length; i++) {
-        list[i].top = i + 1
-      }
-      this.list = list
+      this.list = total.rank(list)
     })
   },
   methods: {
@@ -85,7 +85,8 @@ export default {
       // 时间change
       let params = { 'customer_type': 'arrive_visitor', 'start_date': this.startDate, 'end_date': this.endDate }
       api.getAdminSalerTopAPI(params).then(res => {
-        this.list = res.data.query_top
+        let list = res.data.query_top
+        this.list = total.rank(list)
       })
     },
     open () {
@@ -97,10 +98,12 @@ export default {
       this.type === '到访客户' ? this.customer_type = 'arrive_visitor' : this.customer_type = 'caller'
       let params = { 'customer_type': this.customer_type, 'start_date': this.startDate, 'end_date': this.endDate }
       api.getAdminSalerTopAPI(params).then(res => {
-        this.list = res.data.query_top
+        let list = res.data.query_top
+        this.list = total.rank(list)
       })
     }
   }
+
 }
 </script>
 <style lang="scss" scoped>
