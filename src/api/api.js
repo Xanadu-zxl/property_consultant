@@ -29,6 +29,27 @@ export default {
     let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'magnate_admin' }
     return http.post(`/magnate/admin/query_customer`, params, headers)
   },
+  // 客户预约表
+  getAdminAppointmentVisitsNewAPI () {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'appointment_visit' }
+    return http.get(`/magnate/admin/appointment_visits/new`, '', headers)
+  },
+  // 客户预约查询
+  getAdminAppointmentVisitsAPI (num) {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'appointment_visit' }
+    return http.get(`/magnate/admin/appointment_visits/query?customer_phone=` + num, '', headers)
+  },
+  // 预约状态修改
+  putAdminAppointmentVisitsIdAPI (responseId, params) {
+    let id = cookie.get('CURRENT-USER-ID')
+    let phone = cookie.get('CURRENT-USER-PHONE')
+    let headers = { 'CURRENT-USER-ID': id, 'CURRENT-USER-PHONE': phone, 'CURRENT-USER-TAGS': 'appointment_visit' }
+    return http.put(`/magnate/admin/appointment_visits/` + responseId, params, headers)
+  },
 
   // 今日详情
   getAdminOneDayAPI (params) {

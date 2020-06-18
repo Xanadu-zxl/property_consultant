@@ -5,8 +5,8 @@
       <van-search
         @search="onSearch"
         autofocus
-        maxlength="11"
-        placeholder="请输入11位手机号"
+        maxlength="4"
+        placeholder="请输入手机号后四位"
         show-action
         type="number"
         v-model="number"
@@ -42,6 +42,21 @@
         </div>
       </div>
     </aside>
+    <aside class="table_aside" v-show="false">
+      <div :key="field.identity_key" v-for="field in statusData">
+        <!-- text -->
+        <div class="input_text" v-if="field.identity_key === 'arrive_visit'">
+          <van-field
+            :id="field.identity_key"
+            :label="field.title"
+            autocomplete="off"
+            placeholder="请输入"
+            type="text"
+            v-model="field.value"
+          />
+        </div>
+      </div>
+    </aside>
 
     <footer class="guest_footer">
       <section class="guest_footer_hint" v-show="showResult">
@@ -52,13 +67,13 @@
           </h1>
           <h2>客户已存在</h2>
           <div class="guest_footer_hint_message">
-            <p>客户姓名：{{customer_name}}</p>
+            <p>客户姓名：{{name}}</p>
             <p>置业顾问：{{user_name}}</p>
             <p>首次到访时间：{{created_at}}</p>
           </div>
         </div>
         <div class="guest_footer_hint_success success_bg" v-show="!show">
-          <van-icon @click="cross($event)" class="guest_footer_x" name="cross"></van-icon>
+          <van-icon @click="cross()" class="guest_footer_x" name="cross"></van-icon>
 
           <h1>
             <van-icon class="guest_footer_hint_icon success_icon" name="success" />
@@ -69,7 +84,7 @@
 
       <section class="guest_footer_hint" v-show="showResultOrder">
         <div class="guest_footer_hint_success_order success_bg" v-show="showOrder">
-          <van-icon @click="cross()" class="guest_footer_x" name="cross"></van-icon>
+          <van-icon @click="orderCross()" class="guest_footer_x" name="cross"></van-icon>
 
           <h1>
             <van-icon class="guest_footer_hint_icon success_icon" name="success" />
@@ -77,13 +92,20 @@
           <h2>客户已预约</h2>
           <div class="guest_footer_hint_message">
             <p>客户姓名：{{customer_name}}</p>
-            <p>客户电话：{{user_name}}</p>
-            <p>渠道来源：{{created_at}}</p>
-            <p>预约人：</p>
+            <p>客户电话：{{customer_phone}}</p>
+            <p>渠道来源：{{customer_source}}</p>
+            <p>预约人：{{order_name}}</p>
+
+            <p class="guest_footer_hint_button">
+              <button
+                :class="[this.visitStatus==='已到访'?'visited':'']"
+                @click="ToggleState"
+              >{{this.visitStatus==='已到访'?'已到访':'确认到访'}}</button>
+            </p>
           </div>
         </div>
         <div class="guest_footer_hint_fail_order fail_bg" v-show="!showOrder">
-          <van-icon @click="cross()" class="guest_footer_x" name="cross"></van-icon>
+          <van-icon @click="orderCross()" class="guest_footer_x" name="cross"></van-icon>
 
           <h1>
             <van-icon class="guest_footer_hint_icon fail_icon" name="fail" />
@@ -100,19 +122,29 @@
 
 <script>
 import api from '@/api/api'
+import total from '@/api/total'
+
 export default {
   data () {
     return {
       number: '',
+      name: '',
+      user_name: '',
       created_at: '',
       customer_name: '',
-      user_name: '',
+      customer_phone: '',
+      order_name: '',
+      visitStatus: '',
+      customer_source: '',
+      responseId: '',
       showResult: false,
-      showResultOrder: true,
-      showOrder: true,
+      showResultOrder: false,
+      showOrder: false,
       show: true,
       formData: [],
-      orderFieldList: ['customer_phone', 'is_new']
+      statusData: [],
+      orderFieldList: ['customer_phone', 'is_new'],
+      statusFieldList: ['arrive_visit']
     }
   },
   created () {
@@ -127,18 +159,46 @@ export default {
     }
     api.getAdminQueryCustomerNewAPI().then(res => {
       this.fields = res.data.fields
-      this.orderFieldList.forEach(element => {
-        let field = this.fields.find(field => field.identity_key === element)
-        if (field) {
-          this.formData.push({ field_id: field.id, identity_key: field.identity_key, type: field.type, title: field.title, value: '' })
-        }
-      })
+      // 表单数据处理
+      this.formData = total.tableListData(this.fields, this.orderFieldList)
+    })
+    api.getAdminAppointmentVisitsNewAPI().then(res => {
+      this.fields = res.data.fields
+      // 表单数据处理
+      this.statusData = total.tableListData(this.fields, this.statusFieldList)
     })
   },
   methods: {
+    // 切换状态
+    ToggleState () {
+      if (this.visitStatus !== '已到访') {
+        let payload = { response: { entries_attributes: [] } }
+        this.statusData.forEach(element => {
+          switch (element.identity_key) {
+            case 'arrive_visit': {
+              payload.response.entries_attributes.push({ field_id: element.field_id, value: '已到访' })
+              break
+            }
+          }
+        })
+        // 自动填充值user_id
+        payload.user_id = this.$cookies.get('CURRENT-USER-ID')
+        api.putAdminAppointmentVisitsIdAPI(this.responseId, payload).then(res => {
+          if (res.status === 200) {
+            // 修改状态
+            this.visitStatus = '已到访'
+          }
+        })
+      }
+    },
+    // 清除提示
     cross () {
       this.showResult = false
     },
+    orderCross () {
+      this.showResultOrder = false
+    },
+
     // 传值
     newTable () {
       let payload = { response: { entries_attributes: [] } }
@@ -178,10 +238,25 @@ export default {
           if (!res.data.customer) {
             this.show = false
           } else {
-            this.created_at = res.data.customer.created_at.slice(0, 10)
-            this.customer_name = res.data.customer.customer_name
             this.user_name = res.data.customer.user_name
+            this.name = res.data.customer.customer_name
+            this.created_at = res.data.customer.created_at.slice(0, 10)
             this.show = true
+          }
+        })
+        // 预约查询
+        api.getAdminAppointmentVisitsAPI(this.number).then(res => {
+          this.showResultOrder = true
+
+          if (res.data.appointment_visit) {
+            this.showOrder = true
+            let data = res.data.appointment_visit
+            this.order_name = data.user_name
+            this.customer_name = data.customer_name
+            this.customer_phone = data.customer_phone
+            this.customer_source = data.customer_source
+            this.visitStatus = data.arrive_visit
+            this.responseId = data.response_id
           }
         })
       } else {
@@ -291,6 +366,23 @@ export default {
       font-size: 12px;
       line-height: 20px;
     }
+    .guest_footer_hint_button {
+      text-align: center;
+      margin: 20px auto 30px;
+    }
+    button {
+      width: 96px;
+      background: #00a862;
+      color: #fff;
+      border-radius: 4px;
+      font-size: 16px;
+      border: none;
+      line-height: 30px;
+      font-weight: 600;
+    }
+    .visited {
+      background: #b2b2b2;
+    }
   }
 
   .guest_footer_hint {
@@ -302,7 +394,6 @@ export default {
       align-items: center;
       width: 90%;
       margin: 0 auto;
-      height: 12.375rem;
       border-radius: 6px;
 
       h2 {
@@ -338,7 +429,6 @@ export default {
       align-items: center;
       width: 90%;
       margin: 0 auto;
-      height: 12.375rem;
       border-radius: 6px;
 
       h2 {
