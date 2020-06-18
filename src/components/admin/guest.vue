@@ -12,7 +12,7 @@
         v-model="number"
       >
         <template #action>
-          <div @click="onSearch()" class="guest_search_title">搜索</div>
+          <div @click="onSearch(),newTable()" class="guest_search_title">搜索</div>
         </template>
       </van-search>
     </article>
@@ -42,7 +42,7 @@
         </div>
       </div>
     </aside>
-    <aside class="table_aside">
+    <aside class="table_aside" v-show="false">
       <div :key="field.identity_key" v-for="field in statusData">
         <!-- text -->
         <div class="input_text" v-if="field.identity_key === 'arrive_visit'">
@@ -157,14 +157,12 @@ export default {
       sessionStorage.setItem('return', this.$route.name)
       this.$router.push({ name: 'login' })
     }
-    // api.getAdminQueryCustomerNewAPI().then(res => {
-    //   this.fields = res.data.fields
-    //   // 表单数据处理
-    //   this.formData = total.tableListData(this.fields, this.orderFieldList)
-    // }),
+    api.getAdminQueryCustomerNewAPI().then(res => {
+      this.fields = res.data.fields
+      // 表单数据处理
+      this.formData = total.tableListData(this.fields, this.orderFieldList)
+    })
     api.getAdminAppointmentVisitsNewAPI().then(res => {
-      console.log(res)
-
       this.fields = res.data.fields
       // 表单数据处理
       this.statusData = total.tableListData(this.fields, this.statusFieldList)
@@ -248,7 +246,6 @@ export default {
         })
         // 预约查询
         api.getAdminAppointmentVisitsAPI(this.number).then(res => {
-          console.log(res)
           this.showResultOrder = true
 
           if (res.data.appointment_visit) {
