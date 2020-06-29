@@ -13,7 +13,7 @@
         x
       >
         <template #action>
-          <div @click="onSearch(),newTable()" class="guest_search_title">搜索</div>
+          <div @click.once="onSearch()" class="guest_search_title">搜索</div>
         </template>
       </van-search>
     </article>
@@ -61,10 +61,10 @@
 
     <footer class="guest_footer">
       <section class="guest_footer_hint" v-show="showResult">
-        <div class="guest_footer_hint_fail fail_bg" v-show="show">
+        <div class="guest_footer_hint_success success_bg" v-show="show">
           <van-icon @click="cross()" class="guest_footer_x" name="cross"></van-icon>
           <h1>
-            <van-icon class="guest_footer_hint_icon fail_icon" name="fail" />
+            <van-icon class="guest_footer_hint_icon success_icon" name="success" />
           </h1>
           <h2>客户已存在</h2>
           <div class="guest_footer_hint_message">
@@ -73,11 +73,10 @@
             <p>首次到访时间：{{created_at}}</p>
           </div>
         </div>
-        <div class="guest_footer_hint_success success_bg" v-show="!show">
+        <div class="guest_footer_hint_fail fail_bg" v-show="!show">
           <van-icon @click="cross()" class="guest_footer_x" name="cross"></van-icon>
-
           <h1>
-            <van-icon class="guest_footer_hint_icon success_icon" name="success" />
+            <van-icon class="guest_footer_hint_icon fail_icon" name="fail" />
           </h1>
           <h2>客户为新客户</h2>
         </div>
@@ -100,7 +99,7 @@
             <p class="guest_footer_hint_button">
               <button
                 :class="[this.visitStatus==='已到访'?'visited':'']"
-                @click="ToggleState"
+                @click.once="ToggleState"
               >{{this.visitStatus==='已到访'?'已到访':'确认到访'}}</button>
             </p>
           </div>
@@ -178,7 +177,6 @@ export default {
     })
   },
   methods: {
-
     // 切换状态
     ToggleState () {
       if (this.visitStatus !== '已到访') {
@@ -208,38 +206,8 @@ export default {
     orderCross () {
       this.showResultOrder = false
     },
-
-    // 传值
-    newTable () {
-      let payload = { response: { entries_attributes: [] } }
-      this.formData.forEach(element => {
-        switch (element.identity_key) {
-          case 'customer_phone': {
-            if (this.number) {
-              payload.response.entries_attributes.push({ field_id: element.field_id, value: this.number })
-            }
-            break
-          }
-          case 'is_new': {
-            this.show
-              ? payload.response.entries_attributes.push({ field_id: element.field_id, value: '新客户' })
-              : payload.response.entries_attributes.push({ field_id: element.field_id, value: '老客户' })
-            break
-          }
-          default: {
-            if (element.value !== '' && element) {
-              payload.response.entries_attributes.push({ field_id: element.field_id, value: element.value })
-            }
-          }
-        }
-      })
-      // 自动填充值user_id
-      payload.user_id = this.$cookies.get('CURRENT-USER-ID')
-      api.postAdminQueryCustomerAPI(payload).then(res => {
-      })
-    },
     onSearch () {
-      // 手机号校验
+      // 用户是否存在
       if (this.number.length === 4) {
         api.getAdminPhoneRepeatAPI(this.number).then(res => {
           res.status === 200
@@ -248,16 +216,16 @@ export default {
           if (!res.data.customer) {
             this.show = false
           } else {
+            this.show = true
             this.user_name = res.data.customer.user_name
             this.name = res.data.customer.customer_name
             this.created_at = res.data.customer.created_at.slice(0, 10)
-            this.show = true
           }
+          this.newTable()
         })
         // 预约查询
         api.getAdminAppointmentVisitsAPI(this.number).then(res => {
           this.showResultOrder = true
-
           if (res.data.appointment_visit) {
             this.showOrder = true
             let data = res.data.appointment_visit
@@ -276,6 +244,36 @@ export default {
         this.showResult = false
         this.showResultOrder = false
       }
+    },
+    // 传值
+    newTable () {
+      let payload = { response: { entries_attributes: [] } }
+      this.formData.forEach(element => {
+        switch (element.identity_key) {
+          case 'customer_phone': {
+            if (this.number) {
+              payload.response.entries_attributes.push({ field_id: element.field_id, value: this.number })
+            }
+            break
+          }
+          case 'is_new': {
+            this.show
+              ? payload.response.entries_attributes.push({ field_id: element.field_id, value: '老客户' })
+              : payload.response.entries_attributes.push({ field_id: element.field_id, value: '新客户' })
+            break
+          }
+          default: {
+            if (element.value !== '' && element) {
+              payload.response.entries_attributes.push({ field_id: element.field_id, value: element.value })
+            }
+          }
+        }
+      })
+
+      // 自动填充值user_id
+      payload.user_id = this.$cookies.get('CURRENT-USER-ID')
+      api.postAdminQueryCustomerAPI(payload).then(res => {
+      })
     }
   }
 }
@@ -300,7 +298,7 @@ export default {
     line-height: 40px;
     border: 1px solid #cbcbcb;
     border-radius: 6px;
-    box-shadow: 0px 1px 7px 1px rgba(206, 206, 206, 1);
+    box-shadow: 0px 1px 7px 1px rgb(206, 206, 206);
   }
 
   /deep/ .van-field__left-icon {
@@ -459,7 +457,6 @@ export default {
       align-items: center;
       justify-content: center;
       width: 90%;
-      height: 6rem;
       margin: 0px auto;
       padding-bottom: 10px;
       border-radius: 6px;

@@ -62,7 +62,7 @@
       </aside>
     </div>
     <footer class="table_footer">
-      <div @click="newTable">保存</div>
+      <div @click.once="newTable">保存</div>
     </footer>
   </div>
 </template>

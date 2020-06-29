@@ -100,7 +100,7 @@
       </aside>
     </div>
     <footer class="table_footer">
-      <div @click="newTable">新建客户</div>
+      <div @click.once="newTable">新建客户</div>
     </footer>
   </div>
 </template>
