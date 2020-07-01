@@ -3,11 +3,11 @@
     <home-header ref="child"></home-header>
     <div class="content">
       <van-collapse accordion v-model="activeName">
-        <van-collapse-item :value="remind" icon=" icon-Index-Icon-Foot" name="1" title="到访提醒">
+        <van-collapse-item :value="remind" icon=" icon-Index-Icon-Foot" name="1" title="预约提醒">
           <p class="content-header">
             <span>姓名</span>
             <span>性别</span>
-            <span>首次来访时间</span>
+            <span>预约时间</span>
           </p>
           <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
           <p

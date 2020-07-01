@@ -13,7 +13,7 @@
         x
       >
         <template #action>
-          <div @click.once="onSearch()" class="guest_search_title">搜索</div>
+          <div @click="onSearch()" class="guest_search_title">搜索</div>
         </template>
       </van-search>
     </article>
@@ -71,6 +71,7 @@
             <p>客户姓名：{{name}}</p>
             <p>置业顾问：{{user_name}}</p>
             <p>首次到访时间：{{created_at}}</p>
+            <p>最近到访时间：{{planed_visit_time}}</p>
           </div>
         </div>
         <div class="guest_footer_hint_fail fail_bg" v-show="!show">
@@ -131,6 +132,7 @@ export default {
       name: '',
       user_name: '',
       created_at: '',
+      planed_visit_time: '',
       customer_name: '',
       customer_phone: '',
       order_name: '',
@@ -235,6 +237,7 @@ export default {
             this.customer_source = data.customer_source
             this.visitStatus = data.arrive_visit
             this.responseId = data.response_id
+            this.planed_visit_time = data.planed_visit_time.slice(0, 10)
           } else {
             this.showOrder = false
           }

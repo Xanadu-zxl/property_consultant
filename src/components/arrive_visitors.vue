@@ -2,7 +2,8 @@
   <div>
     <customer-tabbar :title="title" />
     <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
-    <div v-show="!isLoading">
+    <iframe src="http://shandenabian.skylarkly.com/namespaces/1/forms/1/responses/new" v-show="!isLoading" class="iframe" frameborder="0"></iframe>
+    <div  v-show="false">
       <header class="table_header">
         <img alt class="img" src="@/assets/img/Avator-Man.png" />
       </header>
@@ -189,9 +190,9 @@
       </aside>
     </div>
 
-    <footer class="table_footer">
+    <!-- <footer class="table_footer">
       <div @click="newTable">新建客户</div>
-    </footer>
+    </footer> -->
   </div>
 </template>
 
@@ -204,9 +205,8 @@ export default {
     return {
       value: '',
       showPicker: false,
-      columns: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
 
-      title: '到访客户',
+      title: '新建客户',
       fields: [],
       orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'age', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'price_range', 'remark', 'working_area', 'living_area', 'payment_method', 'lottery', 'lottery_results', 'unicon_test', 'customer_resistance'],
       formData: [],
@@ -233,7 +233,7 @@ export default {
     // 新增数据
     api.getSaleraArriveVisitorsNewAPI().then(res => {
       this.isLoading = false
-      console.log(res)
+      // console.log(res)
       this.fields = res.data.fields
       // 表单数据处理
       this.formData = total.tableListData(this.fields, this.orderFieldList)
@@ -344,6 +344,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.iframe{
+  width: 100%;
+  height: 62.5rem;
+}
+
 .loading {
   margin-top: 100px;
 }
