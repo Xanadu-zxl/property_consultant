@@ -38,8 +38,8 @@ export default {
           client_secret: this.client_secret,
           code: this.code,
           grant_type: 'authorization_code',
-          redirect_uri: 'http://shandenabian.skylarkly.com/real_estate/saler/code'
           // redirect_uri: 'http://localhost:8080/real_estate/saler/code'
+          redirect_uri: 'http://shandenabian.skylarkly.com/real_estate/saler/code'
         }
       }).then((res) => {
         this.token = res.data.access_token
