@@ -1,6 +1,5 @@
 
 // 公用方法
-
 export default {
   // 表单数据处理
   tableListData (fields, orderFieldList) {
@@ -48,5 +47,54 @@ export default {
       list[i].top = i + 1
     }
     return list
+  },
+  // 级联数据渲染
+  cascade (res) {
+    let columns = []
+    res.forEach(el => {
+      // console.log(el)
+      let obj = {}
+      if (!el.parent_id) {
+        obj.text = el.name
+        obj.id = el.id
+        columns.push(obj)
+      }
+    })
+    // 二级级联
+    this.cascadeChildren(columns, res)
+    return columns
+  },
+  cascadeChildren (columns, res) {
+    columns.forEach(columns => {
+      let children = []
+      res.forEach(res => {
+        let obj = {}
+        if (columns.id === res.parent_id) {
+          obj.text = res.name
+          obj.id = res.id
+          if (obj.text) {
+            children.push(obj)
+          }
+        }
+      })
+      columns.children = children
+      this.cascadeChildrenThird(children, res)
+    })
+  },
+  cascadeChildrenThird (children, res) {
+    children.forEach(children => {
+      let childrens = []
+      res.forEach(res => {
+        let obj = {}
+        if (children.id === res.parent_id) {
+          obj.text = res.name
+          obj.id = res.id
+          if (obj.text) {
+            childrens.push(obj)
+          }
+        }
+      })
+      children.children = childrens
+    })
   }
 }

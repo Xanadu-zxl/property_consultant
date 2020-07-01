@@ -36,7 +36,6 @@
             </p>
             <p v-else-if="field.identity_key == 'reason'" />
             <p v-else-if="field.identity_key == 'lottery_results'" />
-
             <p v-else>
               <van-field
                 :id="field.identity_key"
@@ -48,6 +47,26 @@
               />
             </p>
           </div>
+          <!-- 级联 -->
+          <div class="input_text cascade" v-else-if="field.type ==='Field::CascadedSelect'">
+            <van-field
+              :id="field.identity_key"
+              :label="field.title"
+              :value="cascadeValue"
+              @click="showPickerCascade = true"
+              clickable
+              readonly
+            />
+            <van-popup position="bottom" round v-model="showPickerCascade">
+              <van-picker
+                :columns="columns"
+                @cancel="showPickerCascade = false"
+                @confirm="onConfirm"
+                show-toolbar
+              />
+            </van-popup>
+          </div>
+
           <!-- butoon -->
           <div v-else-if="field.type === 'Field::RadioButton'">
             <div v-if="field.identity_key === 'entitlement'" />
@@ -55,15 +74,6 @@
             <div v-else>
               <van-field :label="field.title">
                 <template #input>
-                  <!-- <van-radio-group
-                    :id="field.identity_key"
-                    direction="horizontal"
-                    v-model="field.option_id"
-                  >
-                    <div :key="option.id" v-for="option in field.options">
-                      <van-radio :name="option.id" checked-color="#00A862">{{ option.value }}</van-radio>
-                    </div>
-                  </van-radio-group>-->
                   <select
                     :id="field.identity_key"
                     class="table_aside_select"
@@ -204,11 +214,13 @@ export default {
   data () {
     return {
       value: '',
-      showPicker: false,
-
       title: '新建客户',
       fields: [],
-      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'age', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'price_range', 'remark', 'working_area', 'living_area', 'payment_method', 'lottery', 'lottery_results', 'unicon_test', 'customer_resistance'],
+      cascadeValue: '',
+      showPickerCascade: false,
+      showPicker: false,
+      columns: [],
+      orderFieldList: ['ssx', 'time', 'customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'age', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'price_range', 'remark', 'working_area', 'living_area', 'payment_method', 'lottery', 'lottery_results', 'unicon_test', 'customer_resistance'],
       formData: [],
       minDate: new Date(1900, 0, 1),
       maxDate: new Date(2220, 10, 1),
@@ -223,7 +235,6 @@ export default {
       isLoading: true,
       reason: false,
       lottery_results: false
-
     }
   },
   components: {
@@ -233,7 +244,7 @@ export default {
     // 新增数据
     api.getSaleraArriveVisitorsNewAPI().then(res => {
       this.isLoading = false
-      // console.log(res)
+      this.columns = total.cascade(res.data.fields[22].cascaded_select.choices)
       this.fields = res.data.fields
       // 表单数据处理
       this.formData = total.tableListData(this.fields, this.orderFieldList)
@@ -242,9 +253,11 @@ export default {
 
   methods: {
     // 下拉
-    onConfirm (value) {
-      this.value = value
-      this.showPicker = false
+    onConfirm (cascadeValue) {
+      let cascadeValueStr = `${cascadeValue[0]} - ${cascadeValue[1]} - ${cascadeValue[2]}`
+
+      this.cascadeValue = cascadeValueStr
+      this.showPickerCascade = false
     },
     // 是否有购房资格触发
     buy (option) {
@@ -254,22 +267,23 @@ export default {
     lottery (option) {
       option.value ? this.lottery_results = true : this.lottery_results = false
     },
-    // 时间选择器 赋值
+    // 时间选择器赋值
     onConfirmDate (currentDate) {
       this.dataTime = this.formatDate(currentDate)
       this.newTime = this.dataTime
       this.showPicker = false
     },
-    formatDate: function (d) {
-      return d.getFullYear() + '-' + this.p((d.getMonth() + 1)) + '-' + this.p(d.getDate())
+    // 时间格式处理
+    formatDate: function (date) {
+      return date.getFullYear() + '-' + this.setDate((date.getMonth() + 1)) + '-' + this.setDate(date.getDate())
     },
-    p (s) {
-      return s < 10 ? '0' + s : s
+    setDate (date) {
+      return date < 10 ? '0' + date : date
     },
     // 构建传输值的json格式
-    newTable () {
+    newTable (formData) {
       let payload = { response: { entries_attributes: [] } }
-      this.formData.forEach(element => {
+      formData.forEach(element => {
         switch (element.type) {
           case 'Field::RadioButton': {
             if (element.option_id !== '' && element) {
@@ -289,6 +303,16 @@ export default {
             }
             break
           }
+          case 'Field::CascadedSelect': {
+            if (element.option_id !== '' && element) {
+              if (this.cascadeValue) {
+                payload.response.entries_attributes.push({
+                  field_id: element.field_id,
+                  option_id: 57 })
+              }
+            }
+            break
+          }
           default: {
             if (element.value !== '' && element) {
               payload.response.entries_attributes.push({
@@ -301,18 +325,16 @@ export default {
       // 自动填充值
       payload.user_id = this.$cookies.get('CURRENT-USER-ID')
       let salerField = this.fields.find(element => element.identity_key === 'saler')
-
       payload.response.entries_attributes.push({
         value: this.$cookies.get('CURRENT-NAME'),
         field_id: salerField.id })
-
       let salerPhoneField = this.fields.find(element => element.identity_key === 'saler_phone')
-
       payload.response.entries_attributes.push({
         value: this.$cookies.get('CURRENT-USER-PHONE'),
         field_id: salerPhoneField.id })
-
       api.postSalerArriveVisitorsAPI(payload).then(res => {
+        console.log(payload)
+
         if (res.status === 201) {
           this.$toast('新建成功 ✨')
           this.$router.push({ name: 'message', query: { response_id: res.data.id } })

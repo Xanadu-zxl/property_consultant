@@ -1,14 +1,10 @@
 <template>
   <div>
     <header class="header">
-      <router-link class="box" to="/real_estate/saler/customer">
+      <router-link class="box" to="/real_estate/saler/arrive_visitors">
         <p class="title">新建客户</p>
         <img class="img" src="@/assets/img/Card-Visit.png" />
       </router-link>
-      <!-- <router-link @click.native="prompt" class="box" to="#">
-        <p class="title">工具箱</p>
-        <img class="img" src="@/assets/img/Index-Card-Tool.png" />
-      </router-link> -->
     </header>
   </div>
 </template>
@@ -31,7 +27,7 @@ export default {
 
 <style  scoped>
 .header {
-  width: 88%;
+  width: 90%;
   margin: 60px auto 0px;
   display: flex;
   justify-content: space-around;
