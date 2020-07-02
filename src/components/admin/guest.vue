@@ -59,45 +59,45 @@
       </div>
     </aside>
 
-    <footer class="guest_footer">
-      <section class="guest_footer_hint" v-show="showResult">
-        <div class="guest_footer_hint_success success_bg" v-show="show">
-          <van-icon @click="cross()" class="guest_footer_x" name="cross"></van-icon>
+    <div class="guest_main">
+      <section class="guest_main_hint" v-show="showResult">
+        <div class="guest_main_hint_success success_bg" v-show="show">
+          <van-icon @click="cross()" class="guest_main_x" name="cross"></van-icon>
           <h1>
-            <van-icon class="guest_footer_hint_icon success_icon" name="success" />
+            <van-icon class="guest_main_hint_icon success_icon" name="success" />
           </h1>
           <h2>客户已存在</h2>
-          <div class="guest_footer_hint_message">
+          <div class="guest_main_hint_message">
             <p>客户姓名：{{name}}</p>
             <p>置业顾问：{{user_name}}</p>
             <p>首次到访时间：{{created_at}}</p>
             <p>最近到访时间：{{planed_visit_time}}</p>
           </div>
         </div>
-        <div class="guest_footer_hint_fail fail_bg" v-show="!show">
-          <van-icon @click="cross()" class="guest_footer_x" name="cross"></van-icon>
+        <div class="guest_main_hint_fail fail_bg" v-show="!show">
+          <van-icon @click="cross()" class="guest_main_x" name="cross"></van-icon>
           <h1>
-            <van-icon class="guest_footer_hint_icon fail_icon" name="fail" />
+            <van-icon class="guest_main_hint_icon fail_icon" name="fail" />
           </h1>
           <h2>客户为新客户</h2>
         </div>
       </section>
 
-      <section class="guest_footer_hint" v-show="showResultOrder">
-        <div class="guest_footer_hint_success_order success_bg" v-show="showOrder">
-          <van-icon @click="orderCross()" class="guest_footer_x" name="cross"></van-icon>
+      <section class="guest_main_hint" v-show="showResultOrder">
+        <div class="guest_main_hint_success_order success_bg" v-show="showOrder">
+          <van-icon @click="orderCross()" class="guest_main_x" name="cross"></van-icon>
 
           <h1>
-            <van-icon class="guest_footer_hint_icon success_icon" name="success" />
+            <van-icon class="guest_main_hint_icon success_icon" name="success" />
           </h1>
           <h2>客户已预约</h2>
-          <div class="guest_footer_hint_message">
+          <div class="guest_main_hint_message">
             <p>客户姓名：{{customer_name}}</p>
             <p>客户电话：{{encryption}}</p>
             <p>渠道来源：{{customer_source}}</p>
             <p>预约人：{{order_name}}</p>
 
-            <p class="guest_footer_hint_button">
+            <p class="guest_main_hint_button">
               <button
                 :class="[this.visitStatus==='已到访'?'visited':'']"
                 @click.once="ToggleState"
@@ -105,18 +105,33 @@
             </p>
           </div>
         </div>
-        <div class="guest_footer_hint_fail_order fail_bg" v-show="!showOrder">
-          <van-icon @click="orderCross()" class="guest_footer_x" name="cross"></van-icon>
+        <div class="guest_main_hint_fail_order fail_bg" v-show="!showOrder">
+          <van-icon @click="orderCross()" class="guest_main_x" name="cross"></van-icon>
 
           <h1>
-            <van-icon class="guest_footer_hint_icon fail_icon" name="fail" />
+            <van-icon class="guest_main_hint_icon fail_icon" name="fail" />
           </h1>
           <h2>客户未预约</h2>
         </div>
       </section>
       <section v-show="!showResult && !showResultOrder">
-        <img alt class="guest_footer_img" src="@/assets/img/Judgement-Img.png" />
+        <img alt class="guest_main_img" src="@/assets/img/Judgement-Img.png" />
       </section>
+    </div>
+    <footer class="guest_footer">
+      <p class="content-header">
+        <span>置业顾问</span>
+        <span>顾问电话</span>
+        <span>状态</span>
+      </p>
+
+      <p :key="item.id" class="content-header-content" v-for="item in visit">
+        <span>{{item.name}}</span>
+        <span>{{item.phone}}</span>
+        <span>
+          <van-switch active-color="#00a862" inactive-color="#fff" size="20" v-model="item.checked" />
+        </span>
+      </p>
     </footer>
   </div>
 </template>
@@ -128,6 +143,28 @@ import total from '@/api/total'
 export default {
   data () {
     return {
+      visit: [
+        {
+          name: '史蒂文',
+          phone: 12345677654,
+          checked: false
+        },
+        {
+          name: '史蒂文1',
+          phone: 12345677654,
+          checked: false
+        },
+        {
+          name: '史蒂文2',
+          phone: 12345677654,
+          checked: false
+        },
+        {
+          name: '史蒂文3',
+          phone: 12345677654,
+          checked: false
+        }
+      ],
       number: '',
       name: '',
       user_name: '',
@@ -327,9 +364,9 @@ export default {
     font-weight: 500;
   }
 
-  .guest_footer {
+  .guest_main {
     height: 100%;
-    .guest_footer_img {
+    .guest_main_img {
       width: 11.5625rem;
       height: 10.28125rem;
       margin: 0 auto;
@@ -351,7 +388,7 @@ export default {
       background: #f74a53;
     }
   }
-  .guest_footer_x {
+  .guest_main_x {
     position: absolute;
     right: 13px;
     top: 13px;
@@ -360,7 +397,7 @@ export default {
     line-height: 22px;
   }
 
-  .guest_footer_hint_icon {
+  .guest_main_hint_icon {
     border-radius: 50%;
     width: 30px;
     height: 30px;
@@ -371,7 +408,7 @@ export default {
     margin: 25px auto 11px;
   }
 
-  .guest_footer_hint_message {
+  .guest_main_hint_message {
     padding-top: 10px;
     width: 80%;
     border-top: 1px solid #d4d4d4;
@@ -381,7 +418,7 @@ export default {
       font-size: 12px;
       line-height: 20px;
     }
-    .guest_footer_hint_button {
+    .guest_main_hint_button {
       text-align: center;
       margin: 20px auto 30px;
     }
@@ -400,10 +437,10 @@ export default {
     }
   }
 
-  .guest_footer_hint {
+  .guest_main_hint {
     margin: 15px auto;
 
-    .guest_footer_hint_success_order {
+    .guest_main_hint_success_order {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -419,7 +456,7 @@ export default {
       }
     }
 
-    .guest_footer_hint_fail_order {
+    .guest_main_hint_fail_order {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -438,7 +475,7 @@ export default {
       }
     }
 
-    .guest_footer_hint_fail {
+    .guest_main_hint_fail {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -454,7 +491,7 @@ export default {
       }
     }
 
-    .guest_footer_hint_success {
+    .guest_main_hint_success {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -487,5 +524,30 @@ export default {
 
 a {
   color: #fff;
+}
+
+.content-header {
+  height: 25px;
+  line-height: 25px;
+  color: #00a862;
+  font-size: 0.625rem;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  background: rgba(0, 168, 98, 0.08);
+}
+.content-header-content {
+  height: 30px;
+  line-height: 30px;
+  display: flex;
+  color: #787878;
+  justify-content: space-between;
+}
+.content-header span,
+.content-header-content span {
+  width: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
