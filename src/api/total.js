@@ -27,6 +27,15 @@ export default {
             objData.value = ''
             break
           }
+          case 'Field::CascadedSelect': {
+            objData.field_id = field.id
+            objData.identity_key = field.identity_key
+            objData.type = field.type
+            objData.title = field.title
+            objData.value = []
+            objData.columns = this.cascade(field.cascaded_select.choices)
+            break
+          }
           default: {
             objData.field_id = field.id
             objData.identity_key = field.identity_key
@@ -38,6 +47,7 @@ export default {
         tableList.push(objData)
       }
     })
+
     return tableList
   },
 

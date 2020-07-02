@@ -2,8 +2,8 @@
   <div>
     <customer-tabbar :title="title" />
     <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
-    <iframe src="http://shandenabian.skylarkly.com/namespaces/1/forms/1/responses/new" v-show="!isLoading" class="iframe" frameborder="0"></iframe>
-    <div  v-show="false">
+
+    <div v-show="!isLoading">
       <header class="table_header">
         <img alt class="img" src="@/assets/img/Avator-Man.png" />
       </header>
@@ -59,9 +59,9 @@
             />
             <van-popup position="bottom" round v-model="showPickerCascade">
               <van-picker
-                :columns="columns"
+                :columns="field.columns"
                 @cancel="showPickerCascade = false"
-                @confirm="onConfirm"
+                @confirm="onConfirm(field)"
                 show-toolbar
               />
             </van-popup>
@@ -90,30 +90,7 @@
               </van-field>
             </div>
           </div>
-          <p v-else-if="field.type === 'Field::DateTime'">
-            <van-field
-              :id="field.identity_key"
-              :label="field.title"
-              :value="newTime"
-              @click="showPicker = true"
-              autocomplete="off"
-              clickable
-              name="datetimePicker"
-              placeholder="点击选择时间"
-              readonly
-            />
-            <van-popup position="bottom" round v-model="showPicker">
-              <van-datetime-picker
-                :max-date="maxDate"
-                :min-date="minDate"
-                @cancel="showPicker = false"
-                @confirm="onConfirmDate"
-                title="选择年月日"
-                type="date"
-                v-model="currentDate"
-              />
-            </van-popup>
-          </p>
+
           <!-- button + text -->
         </div>
         <div class="button_text">
@@ -180,6 +157,32 @@
                 v-model="field.value"
               />
             </div>
+
+            <!-- 时间 -->
+            <p v-else-if="field.type === 'Field::DateTime'">
+              <van-field
+                :id="field.identity_key"
+                :label="field.title"
+                :value="newTime"
+                @click="showPicker = true"
+                autocomplete="off"
+                clickable
+                name="datetimePicker"
+                placeholder="点击选择时间"
+                readonly
+              />
+              <van-popup position="bottom" round v-model="showPicker">
+                <van-datetime-picker
+                  :max-date="maxDate"
+                  :min-date="minDate"
+                  @cancel="showPicker = false"
+                  @confirm="onConfirmDate"
+                  title="选择年月日"
+                  type="date"
+                  v-model="currentDate"
+                />
+              </van-popup>
+            </p>
           </div>
         </div>
 
@@ -200,9 +203,9 @@
       </aside>
     </div>
 
-    <!-- <footer class="table_footer">
-      <div @click="newTable">新建客户</div>
-    </footer> -->
+    <footer class="table_footer">
+      <div @click="newTable(formData)">新建客户</div>
+    </footer>
   </div>
 </template>
 
@@ -220,7 +223,7 @@ export default {
       showPickerCascade: false,
       showPicker: false,
       columns: [],
-      orderFieldList: ['ssx', 'time', 'customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'age', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'price_range', 'remark', 'working_area', 'living_area', 'payment_method', 'lottery', 'lottery_results', 'unicon_test', 'customer_resistance'],
+      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'age', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'price_range', 'remark', 'working_area', 'living_area', 'payment_method', 'lottery', 'lottery_results', 'unicon_test', 'customer_resistance', 'time', 'call_area'],
       formData: [],
       minDate: new Date(1900, 0, 1),
       maxDate: new Date(2220, 10, 1),
@@ -244,7 +247,6 @@ export default {
     // 新增数据
     api.getSaleraArriveVisitorsNewAPI().then(res => {
       this.isLoading = false
-      this.columns = total.cascade(res.data.fields[22].cascaded_select.choices)
       this.fields = res.data.fields
       // 表单数据处理
       this.formData = total.tableListData(this.fields, this.orderFieldList)
@@ -255,7 +257,6 @@ export default {
     // 下拉
     onConfirm (cascadeValue) {
       let cascadeValueStr = `${cascadeValue[0]} - ${cascadeValue[1]} - ${cascadeValue[2]}`
-
       this.cascadeValue = cascadeValueStr
       this.showPickerCascade = false
     },
@@ -306,9 +307,13 @@ export default {
           case 'Field::CascadedSelect': {
             if (element.option_id !== '' && element) {
               if (this.cascadeValue) {
+                console.log(element)
+
                 payload.response.entries_attributes.push({
                   field_id: element.field_id,
-                  option_id: 57 })
+                  choice_id: element.id,
+                  value: element.name
+                })
               }
             }
             break
@@ -366,7 +371,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.iframe{
+.iframe {
   width: 100%;
   height: 62.5rem;
 }
