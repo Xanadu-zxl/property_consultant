@@ -13,9 +13,7 @@ export default {
       token: '',
       id: '',
       phone: '',
-      name: '',
-      client_id: '',
-      client_secret: ''
+      name: ''
     }
   },
   mounted () {
@@ -26,16 +24,13 @@ export default {
       method: 'get',
       url: '/magnate/oauth'
     }).then((res) => {
-      this.client_id = res.data.client_id
-      this.client_secret = res.data.client_secret
-
       this.$axios({
         method: 'POST',
         url: '/oauth/token',
         headers: { 'Content-Type': 'application/json' },
         params: {
-          client_id: this.client_id,
-          client_secret: this.client_secret,
+          client_id: res.data.client_id,
+          client_secret: res.data.client_secret,
           code: this.code,
           grant_type: 'authorization_code',
           redirect_uri: 'http://localhost:8080/real_estate/saler/code'
