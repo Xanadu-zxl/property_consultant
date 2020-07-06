@@ -42,6 +42,10 @@
           <i class="icon-Info-Icon-Foot message-style-blue"></i>
           <span class="message-project-title">置业跟踪</span>
         </router-link>
+        <a href="http://shandenabian.skylarkly.com/namespaces/1/categories/70" class="message-project">
+          <i class="icon-Info-Icon-Star message-style-blue"></i>
+          <span class="message-project-title">客户预约</span>
+        </a>
       </div>
     </div>
     <message-nav></message-nav>
@@ -63,7 +67,8 @@ export default {
       customer_phone: '',
       isLoading: true,
       id: '',
-      phone: ''
+      phone: '',
+      url: 'http://shandenabian.skylarkly.com/namespaces/1/categories/70'
     }
   },
   components: {
@@ -79,7 +84,9 @@ export default {
     api.getSalerArriveVisitorsResponseIdAPI(this.response_id).then(res => {
       if (res.status === 200) {
         this.isLoading = false
+
         let mappedValues = res.data.mapped_values
+        this.customer_phone = mappedValues.customer_phone.text_value[0]
         if (mappedValues.customer_name) {
           this.customer_name = mappedValues.customer_name.text_value[0]
         }

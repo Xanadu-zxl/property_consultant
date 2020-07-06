@@ -6,7 +6,7 @@ import router from './router'
 import './assets/css/reset.css'
 import './assets/svg/styles.css'
 import './assets/svg/style.css'
-import { Tab, Tabs, Tabbar, TabbarItem, Collapse, CollapseItem, List, Field, Picker, Cell, Popup, RadioGroup, Radio, Calendar, DatetimePicker, DropdownMenu, DropdownItem, Icon, Search, Toast, Loading } from 'vant'
+import { Tab, Tabs, Tabbar, TabbarItem, Collapse, CollapseItem, List, Field, Picker, Cell, Popup, RadioGroup, Radio, Calendar, DatetimePicker, DropdownMenu, DropdownItem, Icon, Search, Toast, Loading, Switch } from 'vant'
 import axios from 'axios'
 import VueCookies from 'vue-cookies'
 
@@ -25,6 +25,7 @@ Vue.use(Tabbar)
 Vue.use(TabbarItem)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
+Vue.use(Switch)
 Vue.use(List)
 Vue.use(Field)
 Vue.use(Popup)
