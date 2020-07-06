@@ -114,14 +114,18 @@
           <h2>客户未预约</h2>
         </div>
       </section>
-      <section v-show="!showResult && !showResultOrder">
+      <!-- <section v-show="!showResult && !showResultOrder">
         <img alt class="guest_main_img" src="@/assets/img/Judgement-Img.png" />
-      </section>
+      </section>-->
     </div>
+    <a
+      class="guest_footer_a"
+      href="http://shandenabian.skylarkly.com/namespaces/1/yet_another_workflow/flows/5/journeys/new"
+    >派单</a>
     <footer class="guest_footer">
       <p class="content-header">
         <span>置业顾问</span>
-        <span>顾问电话</span>
+        <span>接待次数</span>
         <span>状态</span>
       </p>
 
@@ -129,7 +133,13 @@
         <span>{{item.name}}</span>
         <span>{{item.phone}}</span>
         <span>
-          <van-switch active-color="#00a862" inactive-color="#fff" size="20" v-model="item.checked" />
+          <van-switch
+            @change="change(item)"
+            active-color="#00a862"
+            inactive-color="#fff"
+            size="20"
+            v-model="item.checked"
+          />
         </span>
       </p>
     </footer>
@@ -145,23 +155,39 @@ export default {
     return {
       visit: [
         {
-          name: '史蒂文',
-          phone: 12345677654,
+
+          name: '任海涛',
+          phone: 0,
           checked: false
         },
         {
-          name: '史蒂文1',
-          phone: 12345677654,
+          name: '贺亚菲',
+          phone: 0,
           checked: false
         },
         {
-          name: '史蒂文2',
-          phone: 12345677654,
+          name: '李罡皓',
+          phone: 0,
           checked: false
         },
         {
-          name: '史蒂文3',
-          phone: 12345677654,
+          name: '雷洛',
+          phone: 0,
+          checked: false
+        },
+        {
+          name: '鲜原',
+          phone: 0,
+          checked: false
+        },
+        {
+          name: '徐爱玲',
+          phone: 0,
+          checked: false
+        },
+        {
+          name: '刘鑫',
+          phone: 0,
           checked: false
         }
       ],
@@ -216,6 +242,11 @@ export default {
     })
   },
   methods: {
+    change (res) {
+      if (res.checked) {
+        res.phone++
+      }
+    },
     // 切换状态
     ToggleState () {
       if (this.visitStatus !== '已到访') {
@@ -264,6 +295,7 @@ export default {
         })
         // 预约查询
         api.getAdminAppointmentVisitsAPI(this.number).then(res => {
+          this.planed_visit_time = '未到访'
           this.showResultOrder = true
           if (res.data.appointment_visit) {
             this.showOrder = true
@@ -510,22 +542,20 @@ export default {
   }
 }
 
-.table_footer {
-  margin-top: 30px;
-  bottom: 0px;
-  width: 100%;
-  height: 50px;
-  line-height: 50px;
-  font-size: 15px;
-  font-weight: 600;
-  background: #00a862;
+.guest_footer_a {
   color: #fff;
+  font-size: 16px;
+  padding: 2px;
+  border-radius: 3px;
+  width: 98%;
+  margin: 15px auto 0px;
+  display: block;
+  background: #2bcc7d;
 }
 
-a {
-  color: #fff;
+.guest_footer {
+  margin: 20px auto;
 }
-
 .content-header {
   height: 25px;
   line-height: 25px;
