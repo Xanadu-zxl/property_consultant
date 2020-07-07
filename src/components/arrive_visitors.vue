@@ -61,7 +61,7 @@
               <van-picker
                 :columns="field.columns"
                 @cancel="showPickerCascade = false"
-                @confirm="onConfirm(field)"
+                @confirm="onConfirm"
                 show-toolbar
               />
             </van-popup>
@@ -255,8 +255,18 @@ export default {
 
   methods: {
     // 下拉
-    onConfirm (cascadeValue) {
+
+    onConfirm (cascadeValue, index) {
+      this.formData.forEach(element => {
+        if (element.identity_key === 'call_area') {
+          let cascade = element.columns[index[0]].children[index[1]].children[index[2]]
+          element.choice_id = cascade.id
+          element.value = cascade.text
+        }
+      })
+
       let cascadeValueStr = `${cascadeValue[0]} - ${cascadeValue[1]} - ${cascadeValue[2]}`
+
       this.cascadeValue = cascadeValueStr
       this.showPickerCascade = false
     },
@@ -311,8 +321,8 @@ export default {
 
                 payload.response.entries_attributes.push({
                   field_id: element.field_id,
-                  choice_id: element.id,
-                  value: element.name
+                  choice_id: element.choice_id,
+                  value: element.value
                 })
               }
             }
