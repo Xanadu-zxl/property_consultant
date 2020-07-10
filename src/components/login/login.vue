@@ -11,8 +11,8 @@ export default {
     return {
       client_id: '',
       client_secret: '',
-      code: 'http://localhost:8080/real_estate/saler/code'
-      // code: 'http://shandenabian.skylarkly.com/real_estate/saler/code'
+      // code: 'http://localhost:8080/real_estate/saler/code'
+      code: 'http://shandenabian.skylarkly.com/real_estate/saler/code'
     }
   },
   mounted () {
