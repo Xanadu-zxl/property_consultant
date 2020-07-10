@@ -49,22 +49,42 @@
           </div>
           <!-- 级联 -->
           <div class="input_text cascade" v-else-if="field.type ==='Field::CascadedSelect'">
-            <van-field
-              :id="field.identity_key"
-              :label="field.title"
-              :value="cascadeValue"
-              @click="showPickerCascade = true"
-              clickable
-              readonly
-            />
-            <van-popup position="bottom" round v-model="showPickerCascade">
-              <van-picker
-                :columns="field.columns"
-                @cancel="showPickerCascade = false"
-                @confirm="onConfirm"
-                show-toolbar
+            <p v-if="field.identity_key == 'living_area'">
+              <van-field
+                :id="field.identity_key"
+                :label="field.title"
+                :value="cascadeValue"
+                @click="showPickerCascade = true"
+                clickable
+                readonly
               />
-            </van-popup>
+              <van-popup position="bottom" round v-model="showPickerCascade">
+                <van-picker
+                  :columns="field.columns"
+                  @cancel="showPickerCascade = false"
+                  @confirm="onConfirm"
+                  show-toolbar
+                />
+              </van-popup>
+            </p>
+            <p v-if="field.identity_key == 'working_area'">
+              <van-field
+                :id="field.identity_key"
+                :label="field.title"
+                :value="cascadeValue2"
+                @click="showPickerCascade2 = true"
+                clickable
+                readonly
+              />
+              <van-popup position="bottom" round v-model="showPickerCascade2">
+                <van-picker
+                  :columns="field.columnsCe"
+                  @cancel="showPickerCascade2 = false"
+                  @confirm="onConfirm2"
+                  show-toolbar
+                />
+              </van-popup>
+            </p>
           </div>
 
           <!-- butoon -->
@@ -220,10 +240,12 @@ export default {
       title: '新建客户',
       fields: [],
       cascadeValue: '',
+      cascadeValue2: '',
       showPickerCascade: false,
+      showPickerCascade2: false,
       showPicker: false,
       columns: [],
-      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'age', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'price_range', 'remark', 'working_area', 'living_area', 'payment_method', 'lottery', 'lottery_results', 'unicon_test', 'customer_resistance', 'time', 'call_area'],
+      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'age', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'price_range', 'remark', 'payment_method', 'lottery', 'lottery_results', 'unicon_test', 'customer_resistance', 'time', 'working_area', 'living_area'],
       formData: [],
       minDate: new Date(1900, 0, 1),
       maxDate: new Date(2220, 10, 1),
@@ -255,10 +277,9 @@ export default {
 
   methods: {
     // 下拉
-
     onConfirm (cascadeValue, index) {
       this.formData.forEach(element => {
-        if (element.identity_key === 'call_area') {
+        if (element.identity_key === 'living_area') {
           let cascade = element.columns[index[0]].children[index[1]].children[index[2]]
           element.choice_id = cascade.id
           element.value = cascade.text
@@ -269,6 +290,21 @@ export default {
 
       this.cascadeValue = cascadeValueStr
       this.showPickerCascade = false
+    },
+    // 级联2
+    onConfirm2 (cascadeValue, index) {
+      this.formData.forEach(element => {
+        if (element.identity_key === 'working_area') {
+          let cascade = element.columnsCe[index[0]].children[index[1]].children[index[2]]
+          element.choice_id = cascade.id
+          element.value = cascade.text
+        }
+      })
+
+      let cascadeValueStr2 = `${cascadeValue[0]} - ${cascadeValue[1]} - ${cascadeValue[2]}`
+
+      this.cascadeValue2 = cascadeValueStr2
+      this.showPickerCascade2 = false
     },
     // 是否有购房资格触发
     buy (option) {
@@ -317,8 +353,6 @@ export default {
           case 'Field::CascadedSelect': {
             if (element.option_id !== '' && element) {
               if (this.cascadeValue) {
-                console.log(element)
-
                 payload.response.entries_attributes.push({
                   field_id: element.field_id,
                   choice_id: element.choice_id,
@@ -348,8 +382,6 @@ export default {
         value: this.$cookies.get('CURRENT-USER-PHONE'),
         field_id: salerPhoneField.id })
       api.postSalerArriveVisitorsAPI(payload).then(res => {
-        console.log(payload)
-
         if (res.status === 201) {
           this.$toast('新建成功 ✨')
           this.$router.push({ name: 'message', query: { response_id: res.data.id } })
