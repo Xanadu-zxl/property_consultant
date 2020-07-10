@@ -27,13 +27,32 @@ export default {
             objData.value = ''
             break
           }
-          case 'Field::CascadedSelect': {
+
+          default: {
+            objData.field_id = field.id
+            objData.identity_key = field.identity_key
+            objData.type = field.type
+            objData.title = field.title
+            objData.value = ''
+          }
+        }
+        switch (field.identity_key) {
+          case 'living_area': {
             objData.field_id = field.id
             objData.identity_key = field.identity_key
             objData.type = field.type
             objData.title = field.title
             objData.value = []
             objData.columns = this.cascade(field.cascaded_select.choices)
+            break
+          }
+          case 'working_area': {
+            objData.field_id = field.id
+            objData.identity_key = field.identity_key
+            objData.type = field.type
+            objData.title = field.title
+            objData.value = []
+            objData.columnsCe = this.cascade(field.cascaded_select.choices)
             break
           }
           default: {
