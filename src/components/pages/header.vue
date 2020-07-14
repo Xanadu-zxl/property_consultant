@@ -31,13 +31,13 @@ export default {
 
 <style  scoped>
 .header {
-  width: 88%;
+  width: 92%;
   margin: 60px auto 0px;
   display: flex;
   justify-content: space-around;
 }
 .box {
-  width: 47%;
+  width: 42vw;
   position: relative;
   border-radius: 4;
 }
