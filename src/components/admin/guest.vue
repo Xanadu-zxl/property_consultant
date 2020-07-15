@@ -229,17 +229,18 @@ export default {
     if (!this.phone) {
       sessionStorage.setItem('return', this.$route.name)
       this.$router.push({ name: 'login' })
+    } else {
+      api.getAdminQueryCustomerNewAPI().then(res => {
+        this.fields = res.data.fields
+        // 表单数据处理
+        this.formData = total.tableListData(this.fields, this.orderFieldList)
+      })
+      api.getAdminAppointmentVisitsNewAPI().then(res => {
+        this.fields = res.data.fields
+        // 表单数据处理
+        this.statusData = total.tableListData(this.fields, this.statusFieldList)
+      })
     }
-    api.getAdminQueryCustomerNewAPI().then(res => {
-      this.fields = res.data.fields
-      // 表单数据处理
-      this.formData = total.tableListData(this.fields, this.orderFieldList)
-    })
-    api.getAdminAppointmentVisitsNewAPI().then(res => {
-      this.fields = res.data.fields
-      // 表单数据处理
-      this.statusData = total.tableListData(this.fields, this.statusFieldList)
-    })
   },
   methods: {
     change (res) {
