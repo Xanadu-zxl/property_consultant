@@ -16,7 +16,7 @@
         type="range"
         v-model="show"
       />
-      <p class="ranking_list_title">已选：{{type}}｜{{date}}</p>
+      <p class="ranking_list_title">已选：{{ type }}｜{{ date }}</p>
 
       <p class="ranking_list_content_header">
         <span>置业顾问</span>
@@ -24,87 +24,94 @@
         <span>排名</span>
       </p>
       <p :key="item.id" class="ranking_list_content_body" v-for="item in list">
-        <span>{{item.saler}}</span>
-        <span>{{item.count}}</span>
-        <span>{{item.top}}</span>
+        <span>{{ item.saler }}</span>
+        <span>{{ item.count }}</span>
+        <span>{{ item.top }}</span>
       </p>
     </div>
   </div>
 </template>
 
 <script>
-import api from '@/api/api'
-import total from '@/api/total'
+import api from "@/api/api";
+import total from "@/api/total";
 export default {
-  data () {
+  data() {
     return {
-      type: '到访客户',
-      customer_type: 'arrive_visitor',
-      date: '2020/5/15 - 2021/5/15',
+      type: "到访客户",
+      customer_type: "arrive_visitor",
+      date: "2020/5/15 - 2021/5/15",
       show: false,
-      startDate: '2020/5/15',
-      endDate: '2021/5/15',
+      startDate: "2020/5/15",
+      endDate: "2021/5/15",
       minDate: new Date(2010, 0, 1),
       maxDate: new Date(2100, 0, 31),
       types: [
-        { text: '来电客户', value: '来电客户' },
-        { text: '到访客户', value: '到访客户' },
-        { text: '认购客户', value: '认购客户' },
-        { text: '签约客户', value: '签约客户' }
+        { text: "来电客户", value: "来电客户" },
+        { text: "到访客户", value: "到访客户" },
+        { text: "认购客户", value: "认购客户" },
+        { text: "签约客户", value: "签约客户" }
       ],
       list: []
-    }
+    };
   },
-  created () {
-    document.title = '置业顾问排行'
+  created() {
+    document.title = "置业顾问排行";
   },
-  mounted () {
-    // 是否有权限
-    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-    if (!this.phone) {
-      sessionStorage.setItem('return', this.$route.name)
-      this.$router.push({ name: 'login' })
-    }
+  mounted() {
     // 数据初始化
-    let params = { 'customer_type': 'arrive_visitor', 'start_date': this.startDate, 'end_date': this.endDate }
+    let params = {
+      customer_type: "arrive_visitor",
+      start_date: this.startDate,
+      end_date: this.endDate
+    };
     api.getAdminSalerTopAPI(params).then(res => {
-      let list = res.data.query_top
-      this.list = total.rank(list)
-    })
+      let list = res.data.query_top;
+      this.list = total.rank(list);
+    });
   },
   methods: {
-    formatDate (date) {
-      return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
+    formatDate(date) {
+      return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
     },
-    onConfirm (date) {
-      const [start, end] = date
-      this.show = false
-      this.date = `${this.formatDate(start)} - ${this.formatDate(end)}`
-      this.startDate = this.formatDate(start)
-      this.endDate = this.formatDate(end)
+    onConfirm(date) {
+      const [start, end] = date;
+      this.show = false;
+      this.date = `${this.formatDate(start)} - ${this.formatDate(end)}`;
+      this.startDate = this.formatDate(start);
+      this.endDate = this.formatDate(end);
       // 时间change
-      let params = { 'customer_type': 'arrive_visitor', 'start_date': this.startDate, 'end_date': this.endDate }
+      let params = {
+        customer_type: "arrive_visitor",
+        start_date: this.startDate,
+        end_date: this.endDate
+      };
       api.getAdminSalerTopAPI(params).then(res => {
-        let list = res.data.query_top
-        this.list = total.rank(list)
-      })
+        let list = res.data.query_top;
+        this.list = total.rank(list);
+      });
     },
-    open () {
-      this.show = true
-      this.overlay = false
+    open() {
+      this.show = true;
+      this.overlay = false;
     },
-    change () {
+    change() {
       // 类型change
-      this.type === '到访客户' ? this.customer_type = 'arrive_visitor' : this.customer_type = 'caller'
-      let params = { 'customer_type': this.customer_type, 'start_date': this.startDate, 'end_date': this.endDate }
+      this.type === "到访客户"
+        ? (this.customer_type = "arrive_visitor")
+        : (this.customer_type = "caller");
+      let params = {
+        customer_type: this.customer_type,
+        start_date: this.startDate,
+        end_date: this.endDate
+      };
       api.getAdminSalerTopAPI(params).then(res => {
-        let list = res.data.query_top
-        this.list = total.rank(list)
-      })
+        let list = res.data.query_top;
+        this.list = total.rank(list);
+      });
     }
   }
-
-}
+};
 </script>
 <style lang="scss" scoped>
 .ranking_list {

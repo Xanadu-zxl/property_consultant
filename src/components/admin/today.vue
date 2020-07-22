@@ -1,14 +1,13 @@
-
 <template>
   <div>
     <header>
       <p class="today_header">
-        <span @click="getTime(0,nowDate)">
+        <span @click="getTime(0, nowDate)">
           <i class="before"></i>
           <em>前一天</em>
         </span>
-        <span class="today_time">{{nowDate}}</span>
-        <span @click="getTime(1,nowDate)">
+        <span class="today_time">{{ nowDate }}</span>
+        <span @click="getTime(1, nowDate)">
           <em>后一天</em>
           <i class="after"></i>
         </span>
@@ -22,13 +21,13 @@
       </p>
       <p class="today_content_body">
         <span>到访客户</span>
-        <span>{{newArrive}}</span>
-        <span>{{percentageArrive}}</span>
+        <span>{{ newArrive }}</span>
+        <span>{{ percentageArrive }}</span>
       </p>
       <p class="today_content_body">
         <span>来电客户</span>
-        <span>{{newCaller}}</span>
-        <span>{{percentageCaller}}</span>
+        <span>{{ newCaller }}</span>
+        <span>{{ percentageCaller }}</span>
       </p>
       <p class="today_content_body">
         <span>银行放款</span>
@@ -65,79 +64,73 @@
 </template>
 
 <script>
-import api from '@/api/api'
+import api from "@/api/api";
 export default {
-  data () {
+  data() {
     return {
-      nowDate: 'xxxx-xx-xx',
+      nowDate: "xxxx-xx-xx",
       newArrive: 0,
       totalArrive: 1,
       newCaller: 0,
       totalCaller: 1
-    }
+    };
   },
   computed: {
-    percentageArrive () {
-      return (Math.round(this.newArrive / this.totalArrive * 100)) + '%'
+    percentageArrive() {
+      return Math.round((this.newArrive / this.totalArrive) * 100) + "%";
     },
-    percentageCaller () {
-      return (Math.round(this.newCaller / this.totalCaller * 100)) + '%'
+    percentageCaller() {
+      return Math.round((this.newCaller / this.totalCaller) * 100) + "%";
     }
   },
-  mounted () {
-    // 是否有权限
-    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-    if (!this.phone) {
-      sessionStorage.setItem('return', this.$route.name)
-      this.$router.push({ name: 'login' })
-    }
-
+  mounted() {
     // 获取今天时间
-    let date = new Date()
-    this.dateFormat(date)
+    let date = new Date();
+    this.dateFormat(date);
     // 请求结果
-    let params = { 'search_day': this.nowDate }
+    let params = { search_day: this.nowDate };
     api.getAdminOneDayAPI(params).then(res => {
-      let data = res.data
-      this.newArrive = data.search_date_arrive_visitor_count
-      this.totalArrive = data.arrive_visitor_count
-      this.newCaller = data.search_date_caller_count
-      this.totalCaller = data.caller_count
-    })
+      let data = res.data;
+      this.newArrive = data.search_date_arrive_visitor_count;
+      this.totalArrive = data.arrive_visitor_count;
+      this.newCaller = data.search_date_caller_count;
+      this.totalCaller = data.caller_count;
+    });
   },
   methods: {
-    getTime (type, date) {
-      let time = new Date(date) // new Date() 识别 2019/01/02
+    getTime(type, date) {
+      let time = new Date(date); // new Date() 识别 2019/01/02
       if (type === 0) {
-        time = +time - 1000 * 60 * 60 * 24
+        time = +time - 1000 * 60 * 60 * 24;
       } else if (type === 1) {
-        time = +time + 1000 * 60 * 60 * 24 //  +time转换毫秒格式
+        time = +time + 1000 * 60 * 60 * 24; //  +time转换毫秒格式
       }
-      time = new Date(time)
-      return this.dateFormat(time) // 将日期格式
+      time = new Date(time);
+      return this.dateFormat(time); // 将日期格式
     },
-    dateFormat (date) {
-      let y = date.getFullYear()
-      let m = date.getMonth() + 1
-      let d = date.getDate()
+    dateFormat(date) {
+      let y = date.getFullYear();
+      let m = date.getMonth() + 1;
+      let d = date.getDate();
       if (m <= 9) {
-        m = '0' + m
+        m = "0" + m;
       }
       if (d <= 9) {
-        d = '0' + d
+        d = "0" + d;
       }
-      this.nowDate = y + '-' + m + '-' + d
-      let params = { 'search_day': this.nowDate }
+      this.nowDate = y + "-" + m + "-" + d;
+      let params = { search_day: this.nowDate };
       api.getAdminOneDayAPI(params).then(res => {
-        let data = res.data
-        this.arrive_visitor_count = data.arrive_visitor_count
-        this.caller_count = data.caller_count
-        this.search_date_arrive_visitor_count = data.search_date_arrive_visitor_count
-        this.search_date_caller_count = data.search_date_caller_count
-      })
+        let data = res.data;
+        this.arrive_visitor_count = data.arrive_visitor_count;
+        this.caller_count = data.caller_count;
+        this.search_date_arrive_visitor_count =
+          data.search_date_arrive_visitor_count;
+        this.search_date_caller_count = data.search_date_caller_count;
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -178,7 +171,7 @@ span {
   border-bottom: 5px solid transparent;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  content: '';
+  content: "";
   position: relative;
   display: inline-block;
   transform: rotate(90deg);
@@ -190,7 +183,7 @@ span {
   border-bottom: 5px solid transparent;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  content: '';
+  content: "";
   display: inline-block;
   transform: rotate(-90deg);
   position: relative;

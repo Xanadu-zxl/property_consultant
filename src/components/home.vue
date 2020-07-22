@@ -3,65 +3,81 @@
     <home-header ref="child"></home-header>
     <div class="content">
       <van-collapse accordion v-model="activeName">
-        <van-collapse-item :value="remind" icon=" icon-Index-Icon-Foot" name="1" title="预约提醒">
+        <van-collapse-item
+          :value="remind"
+          icon=" icon-Index-Icon-Foot"
+          name="1"
+          title="预约提醒"
+        >
           <p class="content-header">
             <span>姓名</span>
             <span>性别</span>
             <span>预约时间</span>
           </p>
-          <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
+          <van-loading
+            class="loading"
+            size="27px"
+            type="spinner"
+            v-show="isLoading"
+            >加载中...</van-loading
+          >
           <p
             :key="item.id"
             class="content-header-content"
             v-for="item in visit"
             v-show="!isLoading"
           >
-            <span>{{item.customer_name}}</span>
-            <span>{{item.customer_gender}}</span>
-            <span>{{item.dateTime}}</span>
+            <span>{{ item.customer_name }}</span>
+            <span>{{ item.customer_gender }}</span>
+            <span>{{ item.dateTime }}</span>
           </p>
         </van-collapse-item>
-        <van-collapse-item :value="overdue" icon=" icon-Index-Icon-Warning" name="2" title="回访逾期">
+        <van-collapse-item
+          :value="overdue"
+          icon=" icon-Index-Icon-Warning"
+          name="2"
+          title="回访逾期"
+        >
           <p class="content-header">
             <span>姓名</span>
             <span>意向等级</span>
             <span>逾期天数</span>
             <span>回访时间</span>
           </p>
-          <p :key="item.id" class="content-header-content" v-for="item in overdues">
-            <span>{{item.customer_name}}</span>
-            <span>{{item.intention}}</span>
-            <span>{{item.overdued_days}}</span>
-            <span>{{item.lastDateTime}}</span>
+          <p
+            :key="item.id"
+            class="content-header-content"
+            v-for="item in overdues"
+          >
+            <span>{{ item.customer_name }}</span>
+            <span>{{ item.intention }}</span>
+            <span>{{ item.overdued_days }}</span>
+            <span>{{ item.lastDateTime }}</span>
           </p>
         </van-collapse-item>
-        <van-collapse-item :value="collection" icon=" icon-Index-Icon-File" name="3" title="资料催收"></van-collapse-item>
-        <van-collapse-item :value="messages" icon=" icon-Index-Icon-info" name="4" title="未读信息">
-          <p :key="item.id" class="content-message" v-for="item in message">{{item.message}}</p>
+        <van-collapse-item
+          :value="collection"
+          icon=" icon-Index-Icon-File"
+          name="3"
+          title="资料催收"
+        ></van-collapse-item>
+        <van-collapse-item
+          :value="messages"
+          icon=" icon-Index-Icon-info"
+          name="4"
+          title="未读信息"
+        >
+          <p :key="item.id" class="content-message" v-for="item in message">
+            {{ item.message }}
+          </p>
         </van-collapse-item>
-        <van-collapse-item icon=" icon-Index-Icon-Statistics" name="5" title="本月业绩" value>
-          <div class="content-Statistics">
-            <!--   <div class="content-Statistics-content">
-              <p>
-                <em>7</em> 套
-              </p>
-              <p>共售房</p>
-            </div>
-            <div class="content-Statistics-content">
-              <p>
-                <em>777,777</em>元
-              </p>
-              <p>已售金额</p>
-            </div>
-            <div class="content-Statistics-content">
-              <p>
-                <em>1,777</em>
-                <i>m</i>
-                <sup>2</sup>
-              </p>
-              <p>已售面积</p>
-            </div>-->
-          </div>
+        <van-collapse-item
+          icon=" icon-Index-Icon-Statistics"
+          name="5"
+          title="本月业绩"
+          value
+        >
+          <div class="content-Statistics"></div>
         </van-collapse-item>
       </van-collapse>
       <div class="footer"></div>
@@ -71,76 +87,71 @@
 </template>
 
 <script>
-import HomeHeader from './pages/header'
-import HomeNav from './pages/nav'
-import api from '@/api/api'
+import HomeHeader from "./pages/header";
+import HomeNav from "./pages/nav";
+import api from "@/api/api";
 export default {
-  data () {
+  data() {
     return {
-      activeName: '',
-      remind: '0 条新提醒',
+      activeName: "",
+      remind: "0 条新提醒",
       isLoading: true,
-      overdue: '0 个',
-      collection: '0 位',
-      messages: '',
-      id: '73',
-      phone: '18980807092',
-      name: '苏凯',
-      message: [{
-        id: '1',
-        message: ' '
-      }
+      overdue: "0 个",
+      collection: "0 位",
+      messages: "",
+      id: "73",
+      phone: "18980807092",
+      name: "苏凯",
+      message: [
+        {
+          id: "1",
+          message: " "
+        }
       ],
       visit: [],
       overdues: []
-    }
+    };
   },
   components: {
     HomeHeader,
     HomeNav
   },
-  mounted () {
+  mounted() {
     // 读取cookie
-    this.name = this.$cookies.get('CURRENT-NAME')
-    this.id = this.$cookies.get('CURRENT-USER-ID')
-    // 是否有权限
-    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-    if (!this.phone) {
-      sessionStorage.setItem('return', this.$route.name)
-      this.$router.push({ name: 'login' })
-    }
+    this.name = this.$cookies.get("CURRENT-NAME");
+    this.id = this.$cookies.get("CURRENT-USER-ID");
 
     api.getSalerWelcomeAPI().then(res => {
       if (res.status === 200) {
-        this.remind = res.data.caller_planed_visit_today_count + ' 条新提醒'
-        this.overdue = res.data.overdued_return_visit_record_count + ' 个'
+        this.remind = res.data.caller_planed_visit_today_count + " 条新提醒";
+        this.overdue = res.data.overdued_return_visit_record_count + " 个";
       }
-    })
+    });
     api.getSalerArriveTodayAPI().then(res => {
       if (res.status === 200) {
-        this.isLoading = false
-        this.visit = res.data
+        this.isLoading = false;
+        this.visit = res.data;
         // 格式化时间
         for (let i = 0; i < this.visit.length; i++) {
-          let dateTime = this.visit[i].created_at + ''
-          dateTime = dateTime.substr(0, 10)
-          this.visit[i].dateTime = dateTime
+          let dateTime = this.visit[i].created_at + "";
+          dateTime = dateTime.substr(0, 10);
+          this.visit[i].dateTime = dateTime;
         }
       }
-    })
+    });
     api.getSalerOverduedReturnVisitRecordsAPI().then(res => {
       if (res.status === 200) {
-        this.overdues = res.data
+        this.overdues = res.data;
         // 格式化时间
         for (let i = 0; i < this.overdues.length; i++) {
-          let lastDateTime = this.overdues[i].last_revisit_date
-          lastDateTime = lastDateTime.slice(0, 10)
-          this.overdues[i].lastDateTime = lastDateTime
+          let lastDateTime = this.overdues[i].last_revisit_date;
+          lastDateTime = lastDateTime.slice(0, 10);
+          this.overdues[i].lastDateTime = lastDateTime;
         }
       }
-    })
+    });
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
