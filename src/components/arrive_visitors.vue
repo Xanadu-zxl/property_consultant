@@ -1,9 +1,7 @@
 <template>
   <div>
     <customer-tabbar :title="title" />
-    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading"
-      >加载中...</van-loading
-    >
+    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
 
     <div v-show="!isLoading">
       <header class="table_header">
@@ -50,10 +48,7 @@
             </p>
           </div>
           <!-- 级联 -->
-          <div
-            class="input_text cascade"
-            v-else-if="field.type === 'Field::CascadedSelect'"
-          >
+          <div class="input_text cascade" v-else-if="field.type === 'Field::CascadedSelect'">
             <p v-if="field.identity_key == 'living_area'">
               <van-field
                 :id="field.identity_key"
@@ -81,11 +76,7 @@
                 clickable
                 readonly
               />
-              <van-popup
-                position="bottom"
-                round
-                v-model="showPickerCascadeWorking"
-              >
+              <van-popup position="bottom" round v-model="showPickerCascadeWorking">
                 <van-picker
                   :columns="field.columnsCe"
                   @cancel="showPickerCascadeWorking = false"
@@ -112,8 +103,7 @@
                       :value="option.id"
                       class="table_aside_option"
                       v-for="option in field.options"
-                      >{{ option.value }}</option
-                    >
+                    >{{ option.value }}</option>
                   </select>
                 </template>
               </van-field>
@@ -137,18 +127,13 @@
                         :name="option.id"
                         @click="buy(option)"
                         checked-color="#00A862"
-                        >{{ option.value }}</van-radio
-                      >
+                      >{{ option.value }}</van-radio>
                     </div>
                   </van-radio-group>
                 </template>
               </van-field>
             </div>
-            <div
-              class="input_text"
-              v-if="field.identity_key === 'reason'"
-              v-show="reason"
-            >
+            <div class="input_text" v-if="field.identity_key === 'reason'" v-show="reason">
               <van-field
                 :id="field.identity_key"
                 autocomplete="off"
@@ -171,8 +156,7 @@
                         :name="option.id"
                         @click="lottery(option)"
                         checked-color="#00A862"
-                        >{{ option.value }}</van-radio
-                      >
+                      >{{ option.value }}</van-radio>
                     </div>
                   </van-radio-group>
                 </template>
@@ -445,7 +429,7 @@ export default {
         if (res.status === 201) {
           this.$toast("新建成功 ✨");
           this.$router.push({
-            name: "message",
+            name: "buy",
             query: { response_id: res.data.id }
           });
         } else {
