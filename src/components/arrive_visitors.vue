@@ -67,7 +67,7 @@
                 <van-picker
                   :columns="field.columns"
                   @cancel="showPickerCascade = false"
-                  @confirm="onConfirm"
+                  @confirm="onLivingConfirm"
                   show-toolbar
                 />
               </van-popup>
@@ -76,22 +76,25 @@
               <van-field
                 :id="field.identity_key"
                 :label="field.title"
-                :value="cascadeValue2"
-                @click="showPickerCascade2 = true"
+                :value="cascadeWorkingValue"
+                @click="showPickerCascadeWorking = true"
                 clickable
                 readonly
               />
-              <van-popup position="bottom" round v-model="showPickerCascade2">
+              <van-popup
+                position="bottom"
+                round
+                v-model="showPickerCascadeWorking"
+              >
                 <van-picker
                   :columns="field.columnsCe"
-                  @cancel="showPickerCascade2 = false"
-                  @confirm="onConfirm2"
+                  @cancel="showPickerCascadeWorking = false"
+                  @confirm="onWorkingConfirm"
                   show-toolbar
                 />
               </van-popup>
             </p>
           </div>
-
           <!-- butoon -->
           <div v-else-if="field.type === 'Field::RadioButton'">
             <div v-if="field.identity_key === 'entitlement'" />
@@ -252,9 +255,9 @@ export default {
       title: "新建客户",
       fields: [],
       cascadeValue: "",
-      cascadeValue2: "",
+      cascadeWorkingValue: "",
       showPickerCascade: false,
-      showPickerCascade2: false,
+      showPickerCascadeWorking: false,
       showPicker: false,
       columns: [],
       orderFieldList: [
@@ -315,7 +318,7 @@ export default {
 
   methods: {
     // 下拉
-    onConfirm(cascadeValue, index) {
+    onLivingConfirm(cascadeValue, index) {
       this.formData.forEach(element => {
         if (element.identity_key === "living_area") {
           let cascade =
@@ -325,13 +328,13 @@ export default {
         }
       });
 
-      let cascadeValueStr = cascadeValue.join(" - ");
+      let cascadeValueLiving = cascadeValue.join(" - ");
 
-      this.cascadeValue = cascadeValueStr;
+      this.cascadeValue = cascadeValueLiving;
       this.showPickerCascade = false;
     },
     // 级联2
-    onConfirm2(cascadeValue, index) {
+    onWorkingConfirm(cascadeValue, index) {
       this.formData.forEach(element => {
         if (element.identity_key === "working_area") {
           let cascade =
@@ -341,10 +344,10 @@ export default {
         }
       });
 
-      let cascadeValueStr2 = cascadeValue.join(" - ");
+      let cascadeWorkingValue = cascadeValue.join(" - ");
 
-      this.cascadeValue2 = cascadeValueStr2;
-      this.showPickerCascade2 = false;
+      this.cascadeWorkingValue = cascadeWorkingValue;
+      this.showPickerCascadeWorking = false;
     },
     // 是否有购房资格触发
     buy(option) {
