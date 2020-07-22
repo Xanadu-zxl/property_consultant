@@ -13,15 +13,13 @@
 
 <script>
 export default {
-  data () {
-    return {
-
-    }
+  data() {
+    return {};
   },
-  created () {
-    document.title = '今日详情'
+  created() {
+    document.title = "今日详情";
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
