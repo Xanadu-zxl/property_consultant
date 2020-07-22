@@ -1,13 +1,22 @@
 <template>
   <div>
     <buy-tabbar :title="title" />
-    <van-search @blur="search" placeholder="输入姓名/手机号" v-model="namePhone" />
+    <van-search
+      @blur="search"
+      placeholder="输入姓名/手机号"
+      v-model="namePhone"
+    />
     <van-dropdown-menu active-color="#00a862">
       <van-dropdown-item :options="search_time" v-model="created_at" />
       <van-dropdown-item :options="search_intention" v-model="intention" />
-      <van-dropdown-item :options="search_model" v-model="preferred_apartment" />
+      <van-dropdown-item
+        :options="search_model"
+        v-model="preferred_apartment"
+      />
     </van-dropdown-menu>
-    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
+    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading"
+      >加载中...</van-loading
+    >
     <van-list
       :finished="finished"
       :immediate-check="immediate_check"
@@ -18,21 +27,32 @@
     >
       <div :key="item.id" class="buy-link" v-for="item in list">
         <div class="content" v-show="!isLoading">
-          <router-link class="content_href"
-            :to="{ name:'buy_message', query: {customer_phone:item.customer_phone,response_id:item.response_id }}"
+          <router-link
+            :to="{
+              name: 'buy_message',
+              query: {
+                customer_phone: item.customer_phone,
+                response_id: item.response_id
+              }
+            }"
+            class="content_href"
           >
             <div class="information-left">
               <div class="information-left-head">
-                <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
+                <img
+                  class="information-left-img"
+                  src="@/assets/img/Avator-Man.png"
+                />
               </div>
               <div class="information-left-matter">
-                <h2>{{item.customer_name}}</h2>
-                <p>电话：{{item.customer_phone}}</p>
-                <p>意向：{{item.intention}}</p>
+                <h2>{{ item.customer_name }}</h2>
+                <p>电话：{{ item.customer_phone }}</p>
+                <p>备注：{{ item.remark }}</p>
+                <p>客户来源：{{ item.source }}</p>
               </div>
             </div>
           </router-link>
-          <a :href="'tel:'+ item.customer_phone" class="information-right">
+          <a :href="'tel:' + item.customer_phone" class="information-right">
             <i class="icon-Info-Icon-Phone"></i>
           </a>
         </div>
@@ -44,88 +64,91 @@
 </template>
 
 <script>
-import HomeHeader from './pages/header'
-import HomeNav from './pages/nav'
-import BuyTabbar from './pages/tabbar'
-import api from '@/api/api'
+import HomeHeader from "./pages/header";
+import HomeNav from "./pages/nav";
+import BuyTabbar from "./pages/tabbar";
+import api from "@/api/api";
 export default {
-  data () {
+  data() {
     return {
-      title: '认购前客户',
-      id: '',
-      phone: '',
-      namePhone: '',
+      title: "认购前客户",
+      id: "",
+      phone: "",
+      namePhone: "",
       immediate_check: false,
       isLoading: true,
       loadNum: 1,
-      created_at: '时间',
-      intention: '意向',
-      preferred_apartment: '喜好户型',
+      created_at: "时间",
+      intention: "意向",
+      preferred_apartment: "喜好户型",
       search_time: [
-        { text: '时间', value: '时间' },
-        { text: '一周内', value: 'within_week' },
-        { text: '一个月内', value: 'within_month' },
-        { text: '一个月以上', value: 'away_month' }
+        { text: "时间", value: "时间" },
+        { text: "一周内", value: "within_week" },
+        { text: "一个月内", value: "within_month" },
+        { text: "一个月以上", value: "away_month" }
       ],
       search_intention: [
-        { text: '意向', value: '意向' },
-        { text: 'A很有意向', value: 'A很有意向' },
-        { text: 'B较有意向', value: 'B较有意向' },
-        { text: 'C可跟踪', value: 'C可跟踪' },
-        { text: 'D无意向', value: 'D无意向' }
+        { text: "意向", value: "意向" },
+        { text: "A很有意向", value: "A很有意向" },
+        { text: "B较有意向", value: "B较有意向" },
+        { text: "C可跟踪", value: "C可跟踪" },
+        { text: "D无意向", value: "D无意向" }
       ],
       search_model: [
-        { text: '喜好户型', value: '喜好户型' },
-        { text: '平层户型', value: '平层户型' },
-        { text: '跃层户型', value: '跃层户型' },
-        { text: '错层户型', value: '错层户型' },
-        { text: '复式户型', value: '复式户型' }
+        { text: "喜好户型", value: "喜好户型" },
+        { text: "平层户型", value: "平层户型" },
+        { text: "跃层户型", value: "跃层户型" },
+        { text: "错层户型", value: "错层户型" },
+        { text: "复式户型", value: "复式户型" }
       ],
       list: [],
       loading: false,
       finished: false
-    }
+    };
   },
   watch: {
     // tab 切换
-    created_at: function (newQuestion, oldQuestion) {
-      this.finished = false
-      this.loadNum = 1
-      if (newQuestion === '时间') {
+    created_at: function(newQuestion, oldQuestion) {
+      this.finished = false;
+      this.loadNum = 1;
+      if (newQuestion === "时间") {
         api.getSalerSearchAPI().then(res => {
-          this.list = res.data
-        })
+          this.list = res.data;
+        });
       } else {
-        let params = { 'search_type': 'created_at', 'search_key': newQuestion }
+        let params = { search_type: "created_at", search_key: newQuestion };
         api.getSalerSearchAPI(params).then(res => {
-          this.list = res.data
-        })
+          this.list = res.data;
+        });
       }
     },
-    intention: function (newQuestion, oldQuestion) {
-      this.finished = false
-      this.loadNum = 1
-      if (newQuestion === '意向') {
+    intention: function(newQuestion, oldQuestion) {
+      this.finished = false;
+      this.loadNum = 1;
+      if (newQuestion === "意向") {
         api.getSalerSearchAPI().then(res => {
-          this.list = res.data
-        })
+          this.list = res.data;
+        });
       } else {
-        let params = { 'search_type': 'intention', 'search_key': newQuestion }
+        let params = { search_type: "intention", search_key: newQuestion };
         api.getSalerSearchAPI(params).then(res => {
-          this.list = res.data
-        })
+          this.list = res.data;
+        });
       }
     },
-    preferred_apartment: function (newQuestion, oldQuestion) {
-      if (newQuestion === '喜好户型') {
+    preferred_apartment: function(newQuestion, oldQuestion) {
+      if (newQuestion === "喜好户型") {
         api.getSalerSearchAPI().then(res => {
-          this.list = res.data
-        })
+          this.list = res.data;
+        });
       } else {
-        let params = { 'search_type': 'preferred_apartment', 'search_key': newQuestion }
+        let params = {
+          search_type: "preferred_apartment",
+          search_key: newQuestion
+        };
         api.getSalerSearchAPI(params).then(res => {
-          this.list = res.data
-        })
+          this.list = res.data;
+        });
       }
     }
   },
@@ -134,98 +157,119 @@ export default {
     HomeNav,
     BuyTabbar
   },
-  mounted () {
+  mounted() {
     // 读取cookie
-    this.id = this.$cookies.get('CURRENT-USER-ID')
-    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
+    this.id = this.$cookies.get("CURRENT-USER-ID");
+    this.phone = this.$cookies.get("CURRENT-USER-PHONE");
     // 拉取搜索列表
     api.getSalerSearchAPI().then(res => {
-      this.isLoading = false
-      this.list = res.data
-    })
+      this.isLoading = false;
+      this.list = res.data;
+    });
   },
   methods: {
-    search () {
-      let params = { 'customer_key': this.namePhone, 'customer_name': this.customer_name }
-      api.getSalerSearchAPI(params).then(res => {
-        this.isLoading = false
-        this.list = res.data
-      }).catch(() => {
-        this.$toast('搜索失败')
-      })
+    search() {
+      let params = {
+        customer_key: this.namePhone,
+        customer_name: this.customer_name
+      };
+      api
+        .getSalerSearchAPI(params)
+        .then(res => {
+          this.isLoading = false;
+          this.list = res.data;
+        })
+        .catch(() => {
+          this.$toast("搜索失败");
+        });
     },
 
     // 分页加载
-    onLoad () {
-      this.loading = true
-      if (this.created_at !== '时间') {
-        this.loadNum++
-        let params = { 'search_type': 'created_at', 'search_key': this.created_at, 'page': this.loadNum, 'per_page': '10' }
+    onLoad() {
+      this.loading = true;
+      if (this.created_at !== "时间") {
+        this.loadNum++;
+        let params = {
+          search_type: "created_at",
+          search_key: this.created_at,
+          page: this.loadNum,
+          per_page: "10"
+        };
         api.getSalerSearchAPI(params).then(res => {
-          this.loading = false
-          let oldList = this.list
-          let newList = res.data
-          this.list = [...oldList, ...newList]
+          this.loading = false;
+          let oldList = this.list;
+          let newList = res.data;
+          this.list = [...oldList, ...newList];
 
           // 加载状态结束
           // 数据全部加载完成
           if (!res.data.length) {
-            this.loading = false
-            this.finished = true
+            this.loading = false;
+            this.finished = true;
           }
-        })
-      } else if (this.intention !== '意向') {
-        this.loadNum++
-        let params = { 'search_type': 'intention', 'search_key': this.intention, 'page': this.loadNum, 'per_page': '10' }
+        });
+      } else if (this.intention !== "意向") {
+        this.loadNum++;
+        let params = {
+          search_type: "intention",
+          search_key: this.intention,
+          page: this.loadNum,
+          per_page: "10"
+        };
         api.getSalerSearchAPI(params).then(res => {
-          this.loading = false
-          let oldList = this.list
-          let newList = res.data
-          this.list = [...oldList, ...newList]
+          this.loading = false;
+          let oldList = this.list;
+          let newList = res.data;
+          this.list = [...oldList, ...newList];
 
           // 加载状态结束
           // 数据全部加载完成
           if (!res.data.length) {
-            this.loading = false
-            this.finished = true
+            this.loading = false;
+            this.finished = true;
           }
-        })
-      } else if (this.preferred_apartment !== '喜好户型') {
-        this.loadNum++
-        let params = { 'search_type': 'preferred_apartment', 'search_key': this.preferred_apartment, 'page': this.loadNum, 'per_page': '10' }
+        });
+      } else if (this.preferred_apartment !== "喜好户型") {
+        this.loadNum++;
+        let params = {
+          search_type: "preferred_apartment",
+          search_key: this.preferred_apartment,
+          page: this.loadNum,
+          per_page: "10"
+        };
         api.getSalerSearchAPI(params).then(res => {
-          this.loading = false
-          let oldList = this.list
-          let newList = res.data
-          this.list = [...oldList, ...newList]
+          this.loading = false;
+          let oldList = this.list;
+          let newList = res.data;
+          this.list = [...oldList, ...newList];
 
           // 加载状态结束
           // 数据全部加载完成
           if (!res.data.length) {
-            this.loading = false
-            this.finished = true
+            this.loading = false;
+            this.finished = true;
           }
-        })
+        });
       } else {
-        this.loadNum++
-        let params = { 'page': this.loadNum, 'per_page': '10' }
+        this.loadNum++;
+        let params = { page: this.loadNum, per_page: "10" };
         api.getSalerSearchAPI(params).then(res => {
-          this.loading = false
-          let oldList = this.list
-          let newList = res.data
-          this.list = [...oldList, ...newList]
+          this.loading = false;
+          let oldList = this.list;
+          let newList = res.data;
+          this.list = [...oldList, ...newList];
           // 加载状态结束
           // 数据全部加载完成
 
           if (!res.data.length) {
-            this.loading = false
-            this.finished = true
+            this.loading = false;
+            this.finished = true;
           }
-        })
+        });
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -240,12 +284,12 @@ export default {
 .content {
   width: 88%;
   margin: 0 auto;
-  height: 80px;
+  height: 110px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  .content_href{
+  .content_href {
     width: 85%;
     display: flex;
   }

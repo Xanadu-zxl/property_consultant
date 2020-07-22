@@ -1,7 +1,9 @@
 <template>
   <div>
     <customer-tabbar :title="title" />
-    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
+    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading"
+      >加载中...</van-loading
+    >
 
     <div v-show="!isLoading">
       <header class="table_header">
@@ -48,7 +50,10 @@
             </p>
           </div>
           <!-- 级联 -->
-          <div class="input_text cascade" v-else-if="field.type ==='Field::CascadedSelect'">
+          <div
+            class="input_text cascade"
+            v-else-if="field.type === 'Field::CascadedSelect'"
+          >
             <p v-if="field.identity_key == 'living_area'">
               <van-field
                 :id="field.identity_key"
@@ -104,7 +109,8 @@
                       :value="option.id"
                       class="table_aside_option"
                       v-for="option in field.options"
-                    >{{ option.value }}</option>
+                      >{{ option.value }}</option
+                    >
                   </select>
                 </template>
               </van-field>
@@ -128,13 +134,18 @@
                         :name="option.id"
                         @click="buy(option)"
                         checked-color="#00A862"
-                      >{{ option.value }}</van-radio>
+                        >{{ option.value }}</van-radio
+                      >
                     </div>
                   </van-radio-group>
                 </template>
               </van-field>
             </div>
-            <div class="input_text" v-if="field.identity_key === 'reason'" v-show="reason">
+            <div
+              class="input_text"
+              v-if="field.identity_key === 'reason'"
+              v-show="reason"
+            >
               <van-field
                 :id="field.identity_key"
                 autocomplete="off"
@@ -157,7 +168,8 @@
                         :name="option.id"
                         @click="lottery(option)"
                         checked-color="#00A862"
-                      >{{ option.value }}</van-radio>
+                        >{{ option.value }}</van-radio
+                      >
                     </div>
                   </van-radio-group>
                 </template>
@@ -212,9 +224,9 @@
             <h1>提示</h1>
             <h2>客户已存在，请重新输入手机号</h2>
             <div class="show_footer">
-              <p>置业顾问：{{user_name}}</p>
-              <p>客户姓名：{{customer_name}}</p>
-              <p>首次到访时间：{{created_at}}</p>
+              <p>置业顾问：{{ user_name }}</p>
+              <p>客户姓名：{{ customer_name }}</p>
+              <p>首次到访时间：{{ created_at }}</p>
             </div>
           </div>
         </div>
@@ -230,186 +242,233 @@
 </template>
 
 <script>
-import CustomerTabbar from './pages/tabbar'
-import api from '@/api/api'
-import total from '@/api/total'
+import CustomerTabbar from "./pages/tabbar";
+import api from "@/api/api";
+import total from "@/api/total";
 export default {
-  data () {
+  data() {
     return {
-      value: '',
-      title: '新建客户',
+      value: "",
+      title: "新建客户",
       fields: [],
-      cascadeValue: '',
-      cascadeValue2: '',
+      cascadeValue: "",
+      cascadeValue2: "",
       showPickerCascade: false,
       showPickerCascade2: false,
       showPicker: false,
       columns: [],
-      orderFieldList: ['customer_source', 'customer_name', 'customer_phone', 'customer_gender', 'age', 'entitlement', 'reason', 'birthday', 'email', 'intention', 'channel', 'motivation', 'focus', 'preferred_apartment', 'price_range', 'remark', 'payment_method', 'lottery', 'lottery_results', 'unicon_test', 'customer_resistance', 'time', 'working_area', 'living_area'],
+      orderFieldList: [
+        "customer_source",
+        "customer_name",
+        "customer_phone",
+        "customer_gender",
+        "age",
+        "source",
+        "entitlement",
+        "reason",
+        "birthday",
+        "email",
+        "intention",
+        "channel",
+        "motivation",
+        "focus",
+        "preferred_apartment",
+        "price_range",
+        "remark",
+        "payment_method",
+        "lottery",
+        "lottery_results",
+        "unicon_test",
+        "customer_resistance",
+        "time",
+        "working_area",
+        "living_area"
+      ],
       formData: [],
       minDate: new Date(1900, 0, 1),
       maxDate: new Date(2220, 10, 1),
       currentDate: new Date(),
-      newTime: '',
-      id: '',
-      phone: '',
+      newTime: "",
+      id: "",
+      phone: "",
       show: false,
-      created_at: '',
-      customer_name: '',
-      user_name: '',
+      created_at: "",
+      customer_name: "",
+      user_name: "",
       isLoading: true,
       reason: false,
       lottery_results: false
-    }
+    };
   },
   components: {
     CustomerTabbar
   },
-  mounted () {
+  mounted() {
     // 新增数据
     api.getSaleraArriveVisitorsNewAPI().then(res => {
-      this.isLoading = false
-      this.fields = res.data.fields
+      this.isLoading = false;
+      this.fields = res.data.fields;
       // 表单数据处理
-      this.formData = total.tableListData(this.fields, this.orderFieldList)
-    })
+      this.formData = total.tableListData(this.fields, this.orderFieldList);
+    });
   },
 
   methods: {
     // 下拉
-    onConfirm (cascadeValue, index) {
+    onConfirm(cascadeValue, index) {
       this.formData.forEach(element => {
-        if (element.identity_key === 'living_area') {
-          let cascade = element.columns[index[0]].children[index[1]].children[index[2]]
-          element.choice_id = cascade.id
-          element.value = cascade.text
+        if (element.identity_key === "living_area") {
+          let cascade =
+            element.columns[index[0]].children[index[1]].children[index[2]];
+          element.choice_id = cascade.id;
+          element.value = cascade.text;
         }
-      })
+      });
 
-      let cascadeValueStr = `${cascadeValue[0]} - ${cascadeValue[1]} - ${cascadeValue[2]}`
+      let cascadeValueStr = cascadeValue.join(" - ");
 
-      this.cascadeValue = cascadeValueStr
-      this.showPickerCascade = false
+      this.cascadeValue = cascadeValueStr;
+      this.showPickerCascade = false;
     },
     // 级联2
-    onConfirm2 (cascadeValue, index) {
+    onConfirm2(cascadeValue, index) {
       this.formData.forEach(element => {
-        if (element.identity_key === 'working_area') {
-          let cascade = element.columnsCe[index[0]].children[index[1]].children[index[2]]
-          element.choice_id = cascade.id
-          element.value = cascade.text
+        if (element.identity_key === "working_area") {
+          let cascade =
+            element.columnsCe[index[0]].children[index[1]].children[index[2]];
+          element.choice_id = cascade.id;
+          element.value = cascade.text;
         }
-      })
+      });
 
-      let cascadeValueStr2 = `${cascadeValue[0]} - ${cascadeValue[1]} - ${cascadeValue[2]}`
+      let cascadeValueStr2 = cascadeValue.join(" - ");
 
-      this.cascadeValue2 = cascadeValueStr2
-      this.showPickerCascade2 = false
+      this.cascadeValue2 = cascadeValueStr2;
+      this.showPickerCascade2 = false;
     },
     // 是否有购房资格触发
-    buy (option) {
-      option.value === '无' ? this.reason = true : this.reason = false
+    buy(option) {
+      option.value === "无" ? (this.reason = true) : (this.reason = false);
     },
     // 是否有购房资格触发
-    lottery (option) {
-      option.value ? this.lottery_results = true : this.lottery_results = false
+    lottery(option) {
+      option.value
+        ? (this.lottery_results = true)
+        : (this.lottery_results = false);
     },
     // 时间选择器赋值
-    onConfirmDate (currentDate) {
-      this.dataTime = this.formatDate(currentDate)
-      this.newTime = this.dataTime
-      this.showPicker = false
+    onConfirmDate(currentDate) {
+      this.dataTime = this.formatDate(currentDate);
+      this.newTime = this.dataTime;
+      this.showPicker = false;
     },
     // 时间格式处理
-    formatDate: function (date) {
-      return date.getFullYear() + '-' + this.setDate((date.getMonth() + 1)) + '-' + this.setDate(date.getDate())
+    formatDate: function(date) {
+      return (
+        date.getFullYear() +
+        "-" +
+        this.setDate(date.getMonth() + 1) +
+        "-" +
+        this.setDate(date.getDate())
+      );
     },
-    setDate (date) {
-      return date < 10 ? '0' + date : date
+    setDate(date) {
+      return date < 10 ? "0" + date : date;
     },
     // 构建传输值的json格式
-    newTable (formData) {
-      let payload = { response: { entries_attributes: [] } }
+    newTable(formData) {
+      let payload = { response: { entries_attributes: [] } };
       formData.forEach(element => {
         switch (element.type) {
-          case 'Field::RadioButton': {
-            if (element.option_id !== '' && element) {
+          case "Field::RadioButton": {
+            if (element.option_id !== "" && element) {
               payload.response.entries_attributes.push({
                 field_id: element.field_id,
-                option_id: element.option_id })
+                option_id: element.option_id
+              });
             }
-            break
+            break;
           }
-          case 'Field::DateTime': {
-            if (element.option_id !== '' && element) {
+          case "Field::DateTime": {
+            if (element.option_id !== "" && element) {
               if (this.newTime) {
                 payload.response.entries_attributes.push({
                   field_id: element.field_id,
-                  value: this.newTime })
+                  value: this.newTime
+                });
               }
             }
-            break
+            break;
           }
-          case 'Field::CascadedSelect': {
-            if (element.option_id !== '' && element) {
+          case "Field::CascadedSelect": {
+            if (element.option_id !== "" && element) {
               if (this.cascadeValue) {
                 payload.response.entries_attributes.push({
                   field_id: element.field_id,
                   choice_id: element.choice_id,
                   value: element.value
-                })
+                });
               }
             }
-            break
+            break;
           }
           default: {
-            if (element.value !== '' && element) {
+            if (element.value !== "" && element) {
               payload.response.entries_attributes.push({
                 field_id: element.field_id,
-                value: element.value })
+                value: element.value
+              });
             }
           }
         }
-      })
+      });
       // 自动填充值
-      payload.user_id = this.$cookies.get('CURRENT-USER-ID')
-      let salerField = this.fields.find(element => element.identity_key === 'saler')
+      payload.user_id = this.$cookies.get("CURRENT-USER-ID");
+      let salerField = this.fields.find(
+        element => element.identity_key === "saler"
+      );
       payload.response.entries_attributes.push({
-        value: this.$cookies.get('CURRENT-NAME'),
-        field_id: salerField.id })
-      let salerPhoneField = this.fields.find(element => element.identity_key === 'saler_phone')
+        value: this.$cookies.get("CURRENT-NAME"),
+        field_id: salerField.id
+      });
+      let salerPhoneField = this.fields.find(
+        element => element.identity_key === "saler_phone"
+      );
       payload.response.entries_attributes.push({
-        value: this.$cookies.get('CURRENT-USER-PHONE'),
-        field_id: salerPhoneField.id })
+        value: this.$cookies.get("CURRENT-USER-PHONE"),
+        field_id: salerPhoneField.id
+      });
       api.postSalerArriveVisitorsAPI(payload).then(res => {
         if (res.status === 201) {
-          this.$toast('新建成功 ✨')
-          this.$router.push({ name: 'message', query: { response_id: res.data.id } })
+          this.$toast("新建成功 ✨");
+          this.$router.push({
+            name: "message",
+            query: { response_id: res.data.id }
+          });
         } else {
-          this.$toast('新建失败 >_<')
+          this.$toast("新建失败 >_<");
         }
-      })
+      });
     },
 
     // 判定手机号
-    telBlur (field) {
+    telBlur(field) {
       if (field.value.length !== 11) {
-        this.$toast('手机号位数错误🙅')
-        field.value = ''
+        this.$toast("手机号位数错误🙅");
+        field.value = "";
       }
       api.getPhoneRepeatAPI(field.value).then(res => {
         if (res.data.customer_phone) {
-          field.value = ''
-          this.created_at = res.data.created_at.slice(0, 10)
-          this.customer_name = res.data.customer_name
-          this.user_name = res.data.user_name
-          this.show = true
+          field.value = "";
+          this.created_at = res.data.created_at.slice(0, 10);
+          this.customer_name = res.data.customer_name;
+          this.user_name = res.data.user_name;
+          this.show = true;
         }
-      })
+      });
     }
   }
-}
-
+};
 </script>
 
 <style lang="scss" scoped>
