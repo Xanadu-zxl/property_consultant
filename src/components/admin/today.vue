@@ -14,51 +14,66 @@
       </p>
     </header>
     <div class="today_main">
-      <p class="today_content_header">
-        <span>类型</span>
-        <span>新增</span>
-        <span>占总数比</span>
-      </p>
-      <p class="today_content_body">
-        <span>到访客户</span>
-        <span>{{ newArrive }}</span>
-        <span>{{ percentageArrive }}</span>
-      </p>
-      <p class="today_content_body">
-        <span>来电客户</span>
-        <span>{{ newCaller }}</span>
-        <span>{{ percentageCaller }}</span>
-      </p>
-      <p class="today_content_body">
-        <span>银行放款</span>
-        <span>0</span>
-        <span>0%</span>
-      </p>
-      <p class="today_content_body">
-        <span>换房数量</span>
-        <span>0</span>
-        <span>0%</span>
-      </p>
-      <p class="today_content_body">
-        <span>退房数量</span>
-        <span>0</span>
-        <span>0%</span>
-      </p>
-      <p class="today_content_body">
-        <span>更名数量</span>
-        <span>0</span>
-        <span>0%</span>
-      </p>
-      <p class="today_content_body">
-        <span>预约数量</span>
-        <span>0</span>
-        <span>0%</span>
-      </p>
-      <p class="today_content_body">
-        <span>预约已到访人数</span>
-        <span>0</span>
-        <span>0%</span>
-      </p>
+      <van-collapse accordion v-model="activeName">
+        <van-collapse-item value="10 人" icon=" icon-Index-Icon-Foot" name="1" title="到访人数">
+          <p class="today_content_body">
+            <span>到访人数</span>
+            <span>10 人</span>
+          </p>
+          <p class="today_content_body">
+            <span>到访率</span>
+            <span>100%</span>
+          </p>
+        </van-collapse-item>
+      </van-collapse>
+
+      <van-collapse accordion v-model="activeName">
+        <van-collapse-item value="10 人" icon=" icon-Index-Icon-Warning" name="2" title="来电人数">
+          <p class="today_content_body">
+            <span>来电人数</span>
+            <span>10 人</span>
+          </p>
+          <p class="today_content_body">
+            <span>来电率</span>
+            <span>100%</span>
+          </p>
+        </van-collapse-item>
+      </van-collapse>
+
+      <van-collapse accordion v-model="activeName">
+        <van-collapse-item value="10 人" icon=" icon-Index-Icon-File" name="3" title="预约人数">
+          <p class="today_content_body">
+            <span>预约人数</span>
+            <span>10 人</span>
+          </p>
+          <p class="today_content_body">
+            <span>预约率</span>
+            <span>100%</span>
+          </p>
+        </van-collapse-item>
+      </van-collapse>
+
+      <van-collapse accordion v-model="activeName">
+        <van-collapse-item value="0 户" icon=" icon-Index-Icon-info" name="4" title="银行放款户数">
+          <p class="today_content_body">
+            <span>银行放款户数</span>
+            <span>0 户</span>
+          </p>
+          <p class="today_content_body">
+            <span>银行放款率</span>
+            <span>0 %</span>
+          </p>
+        </van-collapse-item>
+      </van-collapse>
+      <van-collapse accordion v-model="activeName">
+        <van-collapse-item value="0 个" icon=" icon-Index-Icon-Statistics" name="5" title="更名数量"></van-collapse-item>
+      </van-collapse>
+      <van-collapse accordion v-model="activeName">
+        <van-collapse-item value="0 个" icon=" icon-Index-Icon-Statistics" name="6" title="退房数量"></van-collapse-item>
+      </van-collapse>
+      <van-collapse accordion v-model="activeName">
+        <van-collapse-item value="0 个" icon=" icon-Index-Icon-Statistics" name="7" title="换房数量"></van-collapse-item>
+      </van-collapse>
     </div>
   </div>
 </template>
@@ -72,7 +87,8 @@ export default {
       newArrive: 0,
       totalArrive: 1,
       newCaller: 0,
-      totalCaller: 1
+      totalCaller: 1,
+      activeName: ""
     };
   },
   computed: {
@@ -142,23 +158,21 @@ export default {
   display: flex;
   justify-content: space-around;
 }
-.today_content_header {
-  height: 35px;
-  line-height: 35px;
-  color: #00a862;
-  font-size: 14px;
-  display: flex;
-  justify-content: space-around;
-  background: rgba(0, 168, 98, 0.08);
+
+/deep/ .van-cell__value {
+  text-align: center;
+  color: black;
 }
+.van-collapse-item__content {
+  padding: 5px;
+}
+
 .today_content_body {
-  height: 45px;
-  line-height: 45px;
-  color: #787878;
-  font-size: 14px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
+  padding: 5px;
 }
+
 span {
   width: 33%;
 }
