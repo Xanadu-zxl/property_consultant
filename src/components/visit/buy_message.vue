@@ -27,6 +27,14 @@
           </a>
         </div>
       </div>
+      <div class="buy_message_content_body">
+        <div class="buy_message_content_body_left">
+          <span>客户描摹</span>
+        </div>
+        <div class="buy_message_content_body_right">
+          <span>{{remark}}</span>
+        </div>
+      </div>
       <div class="buy_message_content">
         <div class="buy_message_content_body">
           <div class="buy_message_content_body_left">
@@ -42,22 +50,6 @@
           </div>
           <div class="buy_message_content_body_right">
             <span>{{motivation}}</span>
-          </div>
-        </div>
-        <div class="buy_message_content_body">
-          <div class="buy_message_content_body_left">
-            <span>客户描摹</span>
-          </div>
-          <div class="buy_message_content_body_right">
-            <span>{{remark}}</span>
-          </div>
-        </div>
-        <div class="buy_message_content_body">
-          <div class="buy_message_content_body_left">
-            <span>喜好户型</span>
-          </div>
-          <div class="buy_message_content_body_right">
-            <span>{{preferred_apartment}}</span>
           </div>
         </div>
         <div class="buy_message_content_body">
@@ -161,7 +153,6 @@ export default {
       response_id: "",
       channel: " ",
       motivation: " ",
-      preferred_apartment: " ",
       price_range: "",
       payment_method: "",
       entitlement: "",
@@ -203,10 +194,7 @@ export default {
       if (mappedValues.motivation) {
         this.motivation = mappedValues.motivation.text_value[0];
       }
-      if (mappedValues.preferred_apartment) {
-        this.preferred_apartment =
-          mappedValues.preferred_apartment.text_value[0];
-      }
+
       if (mappedValues.price_range) {
         this.price_range = mappedValues.price_range.text_value[0];
       }
