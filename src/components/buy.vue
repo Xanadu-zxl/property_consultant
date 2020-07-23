@@ -1,22 +1,13 @@
 <template>
   <div>
     <buy-tabbar :title="title" />
-    <van-search
-      @blur="search"
-      placeholder="输入姓名/手机号"
-      v-model="namePhone"
-    />
+    <van-search @blur="search" placeholder="输入姓名/手机号" v-model="namePhone" />
     <van-dropdown-menu active-color="#00a862">
       <van-dropdown-item :options="search_time" v-model="created_at" />
       <van-dropdown-item :options="search_intention" v-model="intention" />
-      <van-dropdown-item
-        :options="search_model"
-        v-model="preferred_apartment"
-      />
+      <van-dropdown-item :options="search_model" v-model="preferred_apartment" />
     </van-dropdown-menu>
-    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading"
-      >加载中...</van-loading
-    >
+    <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
     <van-list
       :finished="finished"
       :immediate-check="immediate_check"
@@ -39,16 +30,14 @@
           >
             <div class="information-left">
               <div class="information-left-head">
-                <img
-                  class="information-left-img"
-                  src="@/assets/img/Avator-Man.png"
-                />
+                <img class="information-left-img" src="@/assets/img/Avator-Man.png" />
               </div>
               <div class="information-left-matter">
                 <h2>{{ item.customer_name }}</h2>
-                <p>电话：{{ item.customer_phone }}</p>
-                <p>备注：{{ item.remark }}</p>
+                <!-- <p>电话：{{ item.customer_phone }}</p> -->
+                <p>客户描摹：{{ item.remark }}</p>
                 <p>客户来源：{{ item.source }}</p>
+                <p>录入时间：{{ creatData(item.created_at) }}</p>
               </div>
             </div>
           </router-link>
@@ -85,97 +74,102 @@ export default {
         { text: "时间", value: "时间" },
         { text: "一周内", value: "within_week" },
         { text: "一个月内", value: "within_month" },
-        { text: "一个月以上", value: "away_month" }
+        { text: "一个月以上", value: "away_month" },
       ],
       search_intention: [
         { text: "意向", value: "意向" },
         { text: "A很有意向", value: "A很有意向" },
         { text: "B较有意向", value: "B较有意向" },
         { text: "C可跟踪", value: "C可跟踪" },
-        { text: "D无意向", value: "D无意向" }
+        { text: "D无意向", value: "D无意向" },
       ],
       search_model: [
         { text: "喜好户型", value: "喜好户型" },
         { text: "平层户型", value: "平层户型" },
         { text: "跃层户型", value: "跃层户型" },
         { text: "错层户型", value: "错层户型" },
-        { text: "复式户型", value: "复式户型" }
+        { text: "复式户型", value: "复式户型" },
       ],
       list: [],
       loading: false,
-      finished: false
+      finished: false,
     };
   },
   watch: {
     // tab 切换
-    created_at: function(newQuestion, oldQuestion) {
+    created_at: function (newQuestion, oldQuestion) {
       this.finished = false;
       this.loadNum = 1;
       if (newQuestion === "时间") {
-        api.getSalerSearchAPI().then(res => {
+        api.getSalerSearchAPI().then((res) => {
           this.list = res.data;
         });
       } else {
         let params = { search_type: "created_at", search_key: newQuestion };
-        api.getSalerSearchAPI(params).then(res => {
+        api.getSalerSearchAPI(params).then((res) => {
           this.list = res.data;
         });
       }
     },
-    intention: function(newQuestion, oldQuestion) {
+    intention: function (newQuestion, oldQuestion) {
       this.finished = false;
       this.loadNum = 1;
       if (newQuestion === "意向") {
-        api.getSalerSearchAPI().then(res => {
+        api.getSalerSearchAPI().then((res) => {
           this.list = res.data;
         });
       } else {
         let params = { search_type: "intention", search_key: newQuestion };
-        api.getSalerSearchAPI(params).then(res => {
+        api.getSalerSearchAPI(params).then((res) => {
           this.list = res.data;
         });
       }
     },
-    preferred_apartment: function(newQuestion, oldQuestion) {
+    preferred_apartment: function (newQuestion, oldQuestion) {
       if (newQuestion === "喜好户型") {
-        api.getSalerSearchAPI().then(res => {
+        api.getSalerSearchAPI().then((res) => {
           this.list = res.data;
         });
       } else {
         let params = {
           search_type: "preferred_apartment",
-          search_key: newQuestion
+          search_key: newQuestion,
         };
-        api.getSalerSearchAPI(params).then(res => {
+        api.getSalerSearchAPI(params).then((res) => {
           this.list = res.data;
         });
       }
-    }
+    },
   },
   components: {
     HomeHeader,
     HomeNav,
-    BuyTabbar
+    BuyTabbar,
   },
   mounted() {
     // 读取cookie
     this.id = this.$cookies.get("CURRENT-USER-ID");
     this.phone = this.$cookies.get("CURRENT-USER-PHONE");
     // 拉取搜索列表
-    api.getSalerSearchAPI().then(res => {
+    api.getSalerSearchAPI().then((res) => {
       this.isLoading = false;
       this.list = res.data;
     });
   },
   methods: {
+    creatData(res) {
+      let firstDataTime = res.slice(0, 10);
+      let lastDataTime = res.slice(11, 16);
+      return firstDataTime + "  " + lastDataTime;
+    },
     search() {
       let params = {
         customer_key: this.namePhone,
-        customer_name: this.customer_name
+        customer_name: this.customer_name,
       };
       api
         .getSalerSearchAPI(params)
-        .then(res => {
+        .then((res) => {
           this.isLoading = false;
           this.list = res.data;
         })
@@ -193,9 +187,9 @@ export default {
           search_type: "created_at",
           search_key: this.created_at,
           page: this.loadNum,
-          per_page: "10"
+          per_page: "10",
         };
-        api.getSalerSearchAPI(params).then(res => {
+        api.getSalerSearchAPI(params).then((res) => {
           this.loading = false;
           let oldList = this.list;
           let newList = res.data;
@@ -214,9 +208,9 @@ export default {
           search_type: "intention",
           search_key: this.intention,
           page: this.loadNum,
-          per_page: "10"
+          per_page: "10",
         };
-        api.getSalerSearchAPI(params).then(res => {
+        api.getSalerSearchAPI(params).then((res) => {
           this.loading = false;
           let oldList = this.list;
           let newList = res.data;
@@ -235,9 +229,9 @@ export default {
           search_type: "preferred_apartment",
           search_key: this.preferred_apartment,
           page: this.loadNum,
-          per_page: "10"
+          per_page: "10",
         };
-        api.getSalerSearchAPI(params).then(res => {
+        api.getSalerSearchAPI(params).then((res) => {
           this.loading = false;
           let oldList = this.list;
           let newList = res.data;
@@ -253,7 +247,7 @@ export default {
       } else {
         this.loadNum++;
         let params = { page: this.loadNum, per_page: "10" };
-        api.getSalerSearchAPI(params).then(res => {
+        api.getSalerSearchAPI(params).then((res) => {
           this.loading = false;
           let oldList = this.list;
           let newList = res.data;
@@ -267,8 +261,8 @@ export default {
           }
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -284,7 +278,8 @@ export default {
 .content {
   width: 88%;
   margin: 0 auto;
-  height: 110px;
+  padding: 5px;
+  border-bottom: 1px solid #9e9e9e1c;
   display: flex;
   justify-content: space-between;
   align-items: center;
