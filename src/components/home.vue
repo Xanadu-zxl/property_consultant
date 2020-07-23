@@ -3,24 +3,13 @@
     <home-header ref="child"></home-header>
     <div class="content">
       <van-collapse accordion v-model="activeName">
-        <van-collapse-item
-          :value="remind"
-          icon=" icon-Index-Icon-Foot"
-          name="1"
-          title="预约提醒"
-        >
+        <van-collapse-item :value="remind" icon=" icon-Index-Icon-Foot" name="1" title="预约提醒">
           <p class="content-header">
             <span>姓名</span>
             <span>性别</span>
             <span>预约时间</span>
           </p>
-          <van-loading
-            class="loading"
-            size="27px"
-            type="spinner"
-            v-show="isLoading"
-            >加载中...</van-loading
-          >
+          <van-loading class="loading" size="27px" type="spinner" v-show="isLoading">加载中...</van-loading>
           <p
             :key="item.id"
             class="content-header-content"
@@ -32,51 +21,25 @@
             <span>{{ item.dateTime }}</span>
           </p>
         </van-collapse-item>
-        <van-collapse-item
-          :value="overdue"
-          icon=" icon-Index-Icon-Warning"
-          name="2"
-          title="回访逾期"
-        >
+        <van-collapse-item :value="overdue" icon=" icon-Index-Icon-Warning" name="2" title="回访逾期">
           <p class="content-header">
             <span>姓名</span>
             <span>意向等级</span>
             <span>逾期天数</span>
             <span>回访时间</span>
           </p>
-          <p
-            :key="item.id"
-            class="content-header-content"
-            v-for="item in overdues"
-          >
+          <p :key="item.id" class="content-header-content" v-for="item in overdues">
             <span>{{ item.customer_name }}</span>
             <span>{{ item.intention }}</span>
             <span>{{ item.overdued_days }}</span>
             <span>{{ item.lastDateTime }}</span>
           </p>
         </van-collapse-item>
-        <van-collapse-item
-          :value="collection"
-          icon=" icon-Index-Icon-File"
-          name="3"
-          title="资料催收"
-        ></van-collapse-item>
-        <van-collapse-item
-          :value="messages"
-          icon=" icon-Index-Icon-info"
-          name="4"
-          title="未读信息"
-        >
-          <p :key="item.id" class="content-message" v-for="item in message">
-            {{ item.message }}
-          </p>
+        <van-collapse-item :value="collection" icon=" icon-Index-Icon-File" name="3" title="资料催收"></van-collapse-item>
+        <van-collapse-item :value="messages" icon=" icon-Index-Icon-info" name="4" title="未读信息">
+          <p :key="item.id" class="content-message" v-for="item in message">{{ item.message }}</p>
         </van-collapse-item>
-        <van-collapse-item
-          icon=" icon-Index-Icon-Statistics"
-          name="5"
-          title="本月业绩"
-          value
-        >
+        <van-collapse-item icon=" icon-Index-Icon-Statistics" name="5" title="本月业绩" value>
           <div class="content-Statistics"></div>
         </van-collapse-item>
       </van-collapse>
@@ -105,29 +68,29 @@ export default {
       message: [
         {
           id: "1",
-          message: " "
-        }
+          message: " ",
+        },
       ],
       visit: [],
-      overdues: []
+      overdues: [],
     };
   },
   components: {
     HomeHeader,
-    HomeNav
+    HomeNav,
   },
   mounted() {
     // 读取cookie
     this.name = this.$cookies.get("CURRENT-NAME");
     this.id = this.$cookies.get("CURRENT-USER-ID");
 
-    api.getSalerWelcomeAPI().then(res => {
+    api.getSalerWelcomeAPI().then((res) => {
       if (res.status === 200) {
         this.remind = res.data.caller_planed_visit_today_count + " 条新提醒";
         this.overdue = res.data.overdued_return_visit_record_count + " 个";
       }
     });
-    api.getSalerArriveTodayAPI().then(res => {
+    api.getSalerArriveTodayAPI().then((res) => {
       if (res.status === 200) {
         this.isLoading = false;
         this.visit = res.data;
@@ -139,7 +102,7 @@ export default {
         }
       }
     });
-    api.getSalerOverduedReturnVisitRecordsAPI().then(res => {
+    api.getSalerOverduedReturnVisitRecordsAPI().then((res) => {
       if (res.status === 200) {
         this.overdues = res.data;
         // 格式化时间
@@ -150,7 +113,7 @@ export default {
         }
       }
     });
-  }
+  },
 };
 </script>
 

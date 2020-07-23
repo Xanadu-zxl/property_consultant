@@ -310,5 +310,9 @@ export default {
       "CURRENT-USER-TAGS": tags
     };
     return http.get(`/magnate/saler/search`, params, headers);
+  },
+  // 房源状态展示
+  getFormAPI(formID) {
+    return http.get(`/api/v4/forms/${formID}/responses`);
   }
 };
