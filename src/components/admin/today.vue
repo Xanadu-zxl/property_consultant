@@ -17,11 +17,11 @@
       <van-collapse accordion v-model="activeName">
         <van-collapse-item value="10 人" icon=" icon-Index-Icon-Foot" name="1" title="到访人数">
           <p class="today_content_body">
-            <span>到访人数</span>
+            <span>成交人数</span>
             <span>10 人</span>
           </p>
           <p class="today_content_body">
-            <span>到访率</span>
+            <span>成交率</span>
             <span>100%</span>
           </p>
         </van-collapse-item>
@@ -30,11 +30,11 @@
       <van-collapse accordion v-model="activeName">
         <van-collapse-item value="10 人" icon=" icon-Index-Icon-Warning" name="2" title="来电人数">
           <p class="today_content_body">
-            <span>来电人数</span>
+            <span>到访人数</span>
             <span>10 人</span>
           </p>
           <p class="today_content_body">
-            <span>来电率</span>
+            <span>电转访率</span>
             <span>100%</span>
           </p>
         </van-collapse-item>
@@ -43,11 +43,11 @@
       <van-collapse accordion v-model="activeName">
         <van-collapse-item value="10 人" icon=" icon-Index-Icon-File" name="3" title="预约人数">
           <p class="today_content_body">
-            <span>预约人数</span>
+            <span>预约已到访数</span>
             <span>10 人</span>
           </p>
           <p class="today_content_body">
-            <span>预约率</span>
+            <span>预约到访率</span>
             <span>100%</span>
           </p>
         </van-collapse-item>
@@ -56,11 +56,11 @@
       <van-collapse accordion v-model="activeName">
         <van-collapse-item value="0 户" icon=" icon-Index-Icon-info" name="4" title="银行放款户数">
           <p class="today_content_body">
-            <span>银行放款户数</span>
+            <span>未放款户数</span>
             <span>0 户</span>
           </p>
           <p class="today_content_body">
-            <span>银行放款率</span>
+            <span>放款率</span>
             <span>0 %</span>
           </p>
         </van-collapse-item>
@@ -88,7 +88,7 @@ export default {
       totalArrive: 1,
       newCaller: 0,
       totalCaller: 1,
-      activeName: ""
+      activeName: "",
     };
   },
   computed: {
@@ -97,7 +97,7 @@ export default {
     },
     percentageCaller() {
       return Math.round((this.newCaller / this.totalCaller) * 100) + "%";
-    }
+    },
   },
   mounted() {
     // 获取今天时间
@@ -105,7 +105,7 @@ export default {
     this.dateFormat(date);
     // 请求结果
     let params = { search_day: this.nowDate };
-    api.getAdminOneDayAPI(params).then(res => {
+    api.getAdminOneDayAPI(params).then((res) => {
       let data = res.data;
       this.newArrive = data.search_date_arrive_visitor_count;
       this.totalArrive = data.arrive_visitor_count;
@@ -136,7 +136,7 @@ export default {
       }
       this.nowDate = y + "-" + m + "-" + d;
       let params = { search_day: this.nowDate };
-      api.getAdminOneDayAPI(params).then(res => {
+      api.getAdminOneDayAPI(params).then((res) => {
         let data = res.data;
         this.arrive_visitor_count = data.arrive_visitor_count;
         this.caller_count = data.caller_count;
@@ -144,8 +144,8 @@ export default {
           data.search_date_arrive_visitor_count;
         this.search_date_caller_count = data.search_date_caller_count;
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

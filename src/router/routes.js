@@ -49,9 +49,10 @@ export default [
     component: () => import(/* webpackChunkName:'sign' */ "@/components/sign")
   },
   {
-    path: "/real_estate/saler/owner",
-    name: "owner",
-    component: () => import(/* webpackChunkName:'owner' */ "@/components/owner")
+    path: "/real_estate/saler/housing",
+    name: "housing",
+    component: () =>
+      import(/* webpackChunkName:'housing' */ "@/components/housing")
   },
   {
     path: "/real_estate/saler/customer",

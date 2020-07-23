@@ -50,9 +50,9 @@ export default {
         { text: "来电客户", value: "来电客户" },
         { text: "到访客户", value: "到访客户" },
         { text: "认购客户", value: "认购客户" },
-        { text: "签约客户", value: "签约客户" }
+        { text: "签约客户", value: "签约客户" },
       ],
-      list: []
+      list: [],
     };
   },
   created() {
@@ -63,9 +63,9 @@ export default {
     let params = {
       customer_type: "arrive_visitor",
       start_date: this.startDate,
-      end_date: this.endDate
+      end_date: this.endDate,
     };
-    api.getAdminSalerTopAPI(params).then(res => {
+    api.getAdminSalerTopAPI(params).then((res) => {
       let list = res.data.query_top;
       this.list = total.rank(list);
     });
@@ -84,9 +84,9 @@ export default {
       let params = {
         customer_type: "arrive_visitor",
         start_date: this.startDate,
-        end_date: this.endDate
+        end_date: this.endDate,
       };
-      api.getAdminSalerTopAPI(params).then(res => {
+      api.getAdminSalerTopAPI(params).then((res) => {
         let list = res.data.query_top;
         this.list = total.rank(list);
       });
@@ -103,14 +103,14 @@ export default {
       let params = {
         customer_type: this.customer_type,
         start_date: this.startDate,
-        end_date: this.endDate
+        end_date: this.endDate,
       };
-      api.getAdminSalerTopAPI(params).then(res => {
+      api.getAdminSalerTopAPI(params).then((res) => {
         let list = res.data.query_top;
         this.list = total.rank(list);
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

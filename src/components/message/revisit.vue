@@ -48,7 +48,7 @@
         </p>
         <div :key="item.id" class="revist_aside_content-header-content" v-for="item in revisit">
           <span>{{item.return_type}}</span>
-          <span>{{item.DataTime}}</span>
+          <span>{{item.dataTime}}</span>
           <span>{{item.return_remark}}</span>
         </div>
       </aside>
@@ -57,63 +57,56 @@
 </template>
 
 <script>
-import CustomerTabbar from '../pages/tabbar'
-import api from '@/api/api'
+import CustomerTabbar from "../pages/tabbar";
+import api from "@/api/api";
+import total from "@/api/total";
 export default {
-  data () {
+  data() {
     return {
-      title: '置业跟踪',
+      title: "置业跟踪",
       isLoading: true,
-      intention: '',
+      intention: "",
       revisit: [],
-      id: '',
-      phone: '',
-      customer_phone: '',
-      response_id: '',
-      call_count: '0',
-      visit_count: '0'
-
-    }
+      id: "",
+      phone: "",
+      customer_phone: "",
+      response_id: "",
+      call_count: "0",
+      visit_count: "0",
+    };
   },
   components: {
-    CustomerTabbar
+    CustomerTabbar,
   },
-  mounted () {
-    this.response_id = this.$route.query.response_id
-    this.customer_phone = this.$route.query.customer_phone
+  mounted() {
+    this.response_id = this.$route.query.response_id;
+    this.customer_phone = this.$route.query.customer_phone;
     // 读取cookie
-    this.id = this.$cookies.get('CURRENT-USER-ID')
-    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
+    this.id = this.$cookies.get("CURRENT-USER-ID");
+    this.phone = this.$cookies.get("CURRENT-USER-PHONE");
     // 来访
-    api.getSalerArriveVisitorsResponseIdAPI(this.response_id).then(res => {
-      let mappedValues = res.data.mapped_values
+    api.getSalerArriveVisitorsResponseIdAPI(this.response_id).then((res) => {
+      let mappedValues = res.data.mapped_values;
       if (mappedValues.intention) {
-        this.intention = mappedValues.intention.text_value[0]
+        this.intention = mappedValues.intention.text_value[0];
       }
-    })
+    });
     // 回访
-    api.getSalerCurrentUserReturnRecordsAPI(this.customer_phone).then(res => {
-      this.isLoading = false
+    api.getSalerCurrentUserReturnRecordsAPI(this.customer_phone).then((res) => {
+      this.isLoading = false;
       // 格式化时间
-      this.revisit = res.data
-      for (let i = 0; i < this.revisit.length; i++) {
-        let DataTime = this.revisit[i].created_at
-        let firstDataTime = DataTime.slice(0, 10)
-        let lastDataTime = DataTime.slice(11, 16)
-        DataTime = firstDataTime + '-' + lastDataTime
+      this.revisit = total.createData(res.data);
 
-        this.revisit[i].DataTime = DataTime
-      }
       // 回访次数
-      let data = res.data
+      let data = res.data;
       for (let i = 0; i < data.length; i++) {
-        data[i].return_type === '电话回访'
+        data[i].return_type === "电话回访"
           ? this.call_count++
-          : this.visit_count++
+          : this.visit_count++;
       }
-    })
-  }
-}
+    });
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -212,7 +205,7 @@ export default {
 }
 .revist_aside_content-header span,
 .revist_aside_content-header-content span {
-  width: 33%;
+  width: 40%;
 }
 
 .revist_aside_visit_h2 {
