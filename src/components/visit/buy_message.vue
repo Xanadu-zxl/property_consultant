@@ -27,15 +27,15 @@
           </a>
         </div>
       </div>
-      <div class="buy_message_content_body">
-        <div class="buy_message_content_body_left">
-          <span>客户描摹</span>
-        </div>
-        <div class="buy_message_content_body_right">
-          <span>{{remark}}</span>
-        </div>
-      </div>
       <div class="buy_message_content">
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
+            <span>客户描摹</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{remark}}</span>
+          </div>
+        </div>
         <div class="buy_message_content_body">
           <div class="buy_message_content_body_left">
             <span>知晓途径</span>
@@ -271,9 +271,11 @@ export default {
   }
 
   .buy_message_content_body_right {
+    padding: 0px 10px;
     color: #222;
     font-size: 14px;
-    width: 80%;
+    text-align: left;
+    width: 70%;
   }
 }
 

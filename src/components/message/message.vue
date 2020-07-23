@@ -12,8 +12,8 @@
             <div class="information-left-matter">
               <h2>{{customer_name}}</h2>
               <p>
-                意向户型：
-                <span>{{preferred_apartment}}</span>
+                客户意向：
+                <span>{{intention}}</span>
               </p>
             </div>
           </div>
@@ -42,7 +42,10 @@
           <i class="icon-Info-Icon-Foot message-style-blue"></i>
           <span class="message-project-title">置业跟踪</span>
         </router-link>
-        <a href="http://shandenabian.skylarkly.com/namespaces/1/categories/70" class="message-project">
+        <a
+          href="http://shandenabian.skylarkly.com/namespaces/1/categories/70"
+          class="message-project"
+        >
           <i class="icon-Info-Icon-Star message-style-blue"></i>
           <span class="message-project-title">客户预约</span>
         </a>
@@ -53,58 +56,58 @@
 </template>
 
 <script>
-import CustomerTabbar from '@/components/pages/tabbar'
-import MessageNav from '@/components/pages/nav'
-import api from '@/api/api'
+import CustomerTabbar from "@/components/pages/tabbar";
+import MessageNav from "@/components/pages/nav";
+import api from "@/api/api";
 export default {
-  data () {
+  data() {
     return {
-      title: '客户信息',
-      customer_name: 'xxx',
-      preferred_apartment: 'xxx',
-      planed_visit_time: '0000/00/00',
-      response_id: '',
-      customer_phone: '',
+      title: "客户信息",
+      customer_name: "xxx",
+      intention: "xxx",
+      planed_visit_time: "0000/00/00",
+      response_id: "",
+      customer_phone: "",
       isLoading: true,
-      id: '',
-      phone: '',
-      url: 'http://shandenabian.skylarkly.com/namespaces/1/categories/70'
-    }
+      id: "",
+      phone: "",
+      url: "http://shandenabian.skylarkly.com/namespaces/1/categories/70",
+    };
   },
   components: {
     CustomerTabbar,
-    MessageNav
+    MessageNav,
   },
-  mounted () {
-    this.response_id = this.$route.query.response_id
-    this.customer_phone = this.$route.query.customer_phone
+  mounted() {
+    this.response_id = this.$route.query.response_id;
+    this.customer_phone = this.$route.query.customer_phone;
     // 读取cookie
-    this.id = this.$cookies.get('CURRENT-USER-ID')
-    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
-    api.getSalerArriveVisitorsResponseIdAPI(this.response_id).then(res => {
+    this.id = this.$cookies.get("CURRENT-USER-ID");
+    this.phone = this.$cookies.get("CURRENT-USER-PHONE");
+    api.getSalerArriveVisitorsResponseIdAPI(this.response_id).then((res) => {
       if (res.status === 200) {
-        this.isLoading = false
+        this.isLoading = false;
 
-        let mappedValues = res.data.mapped_values
-        this.customer_phone = mappedValues.customer_phone.text_value[0]
+        let mappedValues = res.data.mapped_values;
+        this.customer_phone = mappedValues.customer_phone.text_value[0];
         if (mappedValues.customer_name) {
-          this.customer_name = mappedValues.customer_name.text_value[0]
+          this.customer_name = mappedValues.customer_name.text_value[0];
         }
-        if (mappedValues.preferred_apartment) {
-          this.preferred_apartment = mappedValues.preferred_apartment.text_value[0]
+        if (mappedValues.intention) {
+          this.intention = mappedValues.intention.text_value[0];
         }
         if (mappedValues.planed_visit_time) {
-          this.planed_visit_time = mappedValues.planed_visit_time.text_value[0]
+          this.planed_visit_time = mappedValues.planed_visit_time.text_value[0];
         }
       }
-    })
+    });
   },
   methods: {
-    prompt () {
-      this.$toast('开发中 ✨')
-    }
-  }
-}
+    prompt() {
+      this.$toast("开发中 ✨");
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -113,7 +116,7 @@ export default {
 }
 .message-main {
   width: 94%;
-  background: url('../../assets/img/info-bg.png');
+  background: url("../../assets/img/info-bg.png");
   margin: 0 auto;
   height: 112px;
   background-size: cover;
