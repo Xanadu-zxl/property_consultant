@@ -46,6 +46,14 @@
         </div>
         <div class="buy_message_content_body">
           <div class="buy_message_content_body_left">
+            <span>客户描摹</span>
+          </div>
+          <div class="buy_message_content_body_right">
+            <span>{{remark}}</span>
+          </div>
+        </div>
+        <div class="buy_message_content_body">
+          <div class="buy_message_content_body_left">
             <span>喜好户型</span>
           </div>
           <div class="buy_message_content_body_right">
@@ -116,14 +124,7 @@
             <span>{{lottery_results}}</span>
           </div>
         </div>
-        <div class="buy_message_content_body">
-          <div class="buy_message_content_body_left">
-            <span>备注</span>
-          </div>
-          <div class="buy_message_content_body_right">
-            <span>{{remark}}</span>
-          </div>
-        </div>
+
         <div class="buy_message_content_body">
           <div class="buy_message_content_body_left">
             <span>客户主要抗性</span>
@@ -145,103 +146,106 @@
 </template>
 
 <script>
-import BuyMessageTabbar from '../pages/tabbar'
-import api from '@/api/api'
+import BuyMessageTabbar from "../pages/tabbar";
+import api from "@/api/api";
 export default {
-  data () {
+  data() {
     return {
-      title: '客户信息',
-      intention: '暂无意向',
-      customer_name: ' ',
-      customer_phone: '',
+      title: "客户信息",
+      intention: "暂无意向",
+      customer_name: " ",
+      customer_phone: "",
       isLoading: true,
-      id: ' ',
-      phone: ' ',
-      response_id: '',
-      channel: ' ',
-      motivation: ' ',
-      preferred_apartment: ' ',
-      price_range: '',
-      payment_method: '',
-      entitlement: '',
-      reason: '',
-      living_area: '',
-      working_area: '',
-      lottery: '',
-      lottery_results: '',
-      remark: '',
-      customer_resistance: ' '
-    }
+      id: " ",
+      phone: " ",
+      response_id: "",
+      channel: " ",
+      motivation: " ",
+      preferred_apartment: " ",
+      price_range: "",
+      payment_method: "",
+      entitlement: "",
+      reason: "",
+      living_area: "",
+      working_area: "",
+      lottery: "",
+      lottery_results: "",
+      remark: "",
+      customer_resistance: " ",
+    };
   },
   components: {
-    BuyMessageTabbar
+    BuyMessageTabbar,
   },
 
-  mounted () {
-    this.response_id = this.$route.query.response_id
-    this.customer_phone = this.$route.query.customer_phone
+  mounted() {
+    this.response_id = this.$route.query.response_id;
+    this.customer_phone = this.$route.query.customer_phone;
     // 读取cookie
-    this.id = this.$cookies.get('CURRENT-USER-ID')
-    this.phone = this.$cookies.get('CURRENT-USER-PHONE')
+    this.id = this.$cookies.get("CURRENT-USER-ID");
+    this.phone = this.$cookies.get("CURRENT-USER-PHONE");
 
     // 来访
-    api.putSalerArriveVisitorsAPI(this.response_id).then(res => {
-      console.log(res)
+    api.putSalerArriveVisitorsAPI(this.response_id).then((res) => {
+      console.log(res);
 
-      this.isLoading = false
-      let mappedValues = res.data.mapped_values
+      this.isLoading = false;
+      let mappedValues = res.data.mapped_values;
       if (mappedValues.customer_name) {
-        this.customer_name = mappedValues.customer_name.text_value[0]
+        this.customer_name = mappedValues.customer_name.text_value[0];
       }
       if (mappedValues.intention) {
-        this.intention = mappedValues.intention.text_value[0]
+        this.intention = mappedValues.intention.text_value[0];
       }
       if (mappedValues.channel) {
-        this.channel = mappedValues.channel.text_value[0]
+        this.channel = mappedValues.channel.text_value[0];
       }
       if (mappedValues.motivation) {
-        this.motivation = mappedValues.motivation.text_value[0]
+        this.motivation = mappedValues.motivation.text_value[0];
       }
       if (mappedValues.preferred_apartment) {
-        this.preferred_apartment = mappedValues.preferred_apartment.text_value[0]
+        this.preferred_apartment =
+          mappedValues.preferred_apartment.text_value[0];
       }
       if (mappedValues.price_range) {
-        this.price_range = mappedValues.price_range.text_value[0]
+        this.price_range = mappedValues.price_range.text_value[0];
       }
       if (mappedValues.payment_method) {
-        this.payment_method = mappedValues.payment_method.text_value[0]
+        this.payment_method = mappedValues.payment_method.text_value[0];
       }
       if (mappedValues.entitlement) {
-        this.entitlement = mappedValues.entitlement.text_value[0]
+        this.entitlement = mappedValues.entitlement.text_value[0];
       }
       if (mappedValues.reason) {
-        this.reason = mappedValues.reason.text_value[0]
+        this.reason = mappedValues.reason.text_value[0];
       }
       if (mappedValues.living_area) {
-        this.living_area = mappedValues.living_area.text_value[0]
+        this.living_area = mappedValues.living_area.text_value[0];
       }
       if (mappedValues.working_area) {
-        this.working_area = mappedValues.working_area.text_value[0]
+        this.working_area = mappedValues.working_area.text_value[0];
       }
       if (mappedValues.lottery) {
-        this.lottery = mappedValues.lottery.text_value[0]
+        this.lottery = mappedValues.lottery.text_value[0];
       }
       if (mappedValues.lottery_results) {
-        this.lottery_results = mappedValues.lottery_results.text_value[0]
+        this.lottery_results = mappedValues.lottery_results.text_value[0];
       }
       if (mappedValues.remark) {
-        this.remark = mappedValues.remark.text_value[0]
+        this.remark = mappedValues.remark.text_value[0];
       }
       if (mappedValues.customer_resistance) {
-        this.customer_resistance = mappedValues.customer_resistance.text_value[0]
+        this.customer_resistance =
+          mappedValues.customer_resistance.text_value[0];
       }
-    })
+    });
   },
   methods: {
-    prompt () {
-      this.$toast('开发中 ✨')
-    } }
-}
+    prompt() {
+      this.$toast("开发中 ✨");
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -250,7 +254,7 @@ export default {
 }
 .message-main {
   width: 94%;
-  background: url('../../assets/img/info-bg.png');
+  background: url("../../assets/img/info-bg.png");
   margin: 0 auto;
   height: 112px;
   background-size: cover;
@@ -268,8 +272,7 @@ export default {
 .buy_message_content_body {
   display: flex;
   justify-content: start;
-  height: 51px;
-  line-height: 51px;
+  line-height: 40px;
   border-bottom: 1px solid #f0f2f4;
 
   .buy_message_content_body_left {
@@ -282,6 +285,7 @@ export default {
   .buy_message_content_body_right {
     color: #222;
     font-size: 14px;
+    width: 80%;
   }
 }
 
@@ -331,8 +335,6 @@ export default {
   text-align: center;
   line-height: 44px;
 }
-
-// card
 
 /deep/ .buy_message_content {
   width: 95%;
