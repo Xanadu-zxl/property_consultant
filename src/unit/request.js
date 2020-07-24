@@ -20,10 +20,27 @@ const service = axios.create({
       "7e9559776d2e4aac37509df2bec2c40b49013cb9b0a22ca1ee08f7986b243b73:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lc3BhY2VfaWQiOjF9.u5GQ2tNmjF6hc_um_VLdPU2GPzPLB0_LBK9rayQw5Bk"
   }
 });
+
+let pending = []; // 声明一个数组用于存储每个请求的取消函数和axios标识
+let CancelToken = axios.CancelToken;
+let removePending = config => {
+  for (let p in pending) {
+    if (pending[p].u === config.url.split("?")[0] + "&" + config.method) {
+      // 当当前请求在数组中存在时执行函数体
+      pending[p].f(); // 执行取消操作
+      pending.splice(p, 1); // 数组移除当前请求
+    }
+  }
+};
 // 2.请求拦截器
 service.interceptors.request.use(
   config => {
     // 发请求前做的一些处理，数据转化，配置请求头，设置token,设置loading等
+    removePending(config); // 在一个axios发送前执行一下取消操作
+    config.CancelToken = new CancelToken(c => {
+      // pending存放每一次请求的标识，一般是url + 参数名 + 请求方法，当然你可以自己定义
+      pending.push({ u: config.url.split("?")[0] + "&" + config.method, f: c }); // config.data为请求参数
+    });
     return config;
   },
   error => {

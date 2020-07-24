@@ -89,7 +89,6 @@ export default {
   cascade(res) {
     let columns = [];
     res.forEach(el => {
-      // console.log(el)
       let obj = {};
       if (!el.parent_id) {
         obj.text = el.name;

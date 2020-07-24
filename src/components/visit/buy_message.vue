@@ -178,8 +178,6 @@ export default {
 
     // 来访
     api.putSalerArriveVisitorsAPI(this.response_id).then((res) => {
-      console.log(res);
-
       this.isLoading = false;
       let mappedValues = res.data.mapped_values;
       if (mappedValues.customer_name) {
