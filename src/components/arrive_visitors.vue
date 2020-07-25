@@ -10,6 +10,16 @@
       <aside class="table_aside">
         <div :key="field.identity_key" v-for="field in formData">
           <!-- text -->
+          <div class="input_text" v-if="field.type === 'Field::TextArea'">
+            <van-field
+              :id="field.identity_key"
+              :label="field.title"
+              autocomplete="off"
+              placeholder="请输入"
+              type="text"
+              v-model="field.value"
+            />
+          </div>
           <div class="input_text" v-if="field.type === 'Field::TextField'">
             <p v-if="field.identity_key == 'customer_name'">
               <van-field
@@ -249,6 +259,7 @@ export default {
         "customer_name",
         "customer_phone",
         "customer_gender",
+        "remark",
         "age",
         "source",
         "entitlement",
@@ -261,7 +272,6 @@ export default {
         "focus",
         "preferred_apartment",
         "price_range",
-        "remark",
         "payment_method",
         "lottery",
         "lottery_results",
@@ -269,7 +279,7 @@ export default {
         "customer_resistance",
         "time",
         "working_area",
-        "living_area"
+        "living_area",
       ],
       formData: [],
       minDate: new Date(1900, 0, 1),
@@ -284,15 +294,15 @@ export default {
       user_name: "",
       isLoading: true,
       reason: false,
-      lottery_results: false
+      lottery_results: false,
     };
   },
   components: {
-    CustomerTabbar
+    CustomerTabbar,
   },
   mounted() {
     // 新增数据
-    api.getSaleraArriveVisitorsNewAPI().then(res => {
+    api.getSaleraArriveVisitorsNewAPI().then((res) => {
       this.isLoading = false;
       this.fields = res.data.fields;
       // 表单数据处理
@@ -303,7 +313,7 @@ export default {
   methods: {
     // 下拉
     onLivingConfirm(cascadeValue, index) {
-      this.formData.forEach(element => {
+      this.formData.forEach((element) => {
         if (element.identity_key === "living_area") {
           let cascade =
             element.columns[index[0]].children[index[1]].children[index[2]];
@@ -319,7 +329,7 @@ export default {
     },
     // 级联2
     onWorkingConfirm(cascadeValue, index) {
-      this.formData.forEach(element => {
+      this.formData.forEach((element) => {
         if (element.identity_key === "working_area") {
           let cascade =
             element.columnsCe[index[0]].children[index[1]].children[index[2]];
@@ -350,7 +360,7 @@ export default {
       this.showPicker = false;
     },
     // 时间格式处理
-    formatDate: function(date) {
+    formatDate: function (date) {
       return (
         date.getFullYear() +
         "-" +
@@ -365,13 +375,13 @@ export default {
     // 构建传输值的json格式
     newTable(formData) {
       let payload = { response: { entries_attributes: [] } };
-      formData.forEach(element => {
+      formData.forEach((element) => {
         switch (element.type) {
           case "Field::RadioButton": {
             if (element.option_id !== "" && element) {
               payload.response.entries_attributes.push({
                 field_id: element.field_id,
-                option_id: element.option_id
+                option_id: element.option_id,
               });
             }
             break;
@@ -381,7 +391,7 @@ export default {
               if (this.newTime) {
                 payload.response.entries_attributes.push({
                   field_id: element.field_id,
-                  value: this.newTime
+                  value: this.newTime,
                 });
               }
             }
@@ -393,7 +403,7 @@ export default {
                 payload.response.entries_attributes.push({
                   field_id: element.field_id,
                   choice_id: element.choice_id,
-                  value: element.value
+                  value: element.value,
                 });
               }
             }
@@ -403,7 +413,7 @@ export default {
             if (element.value !== "" && element) {
               payload.response.entries_attributes.push({
                 field_id: element.field_id,
-                value: element.value
+                value: element.value,
               });
             }
           }
@@ -412,25 +422,25 @@ export default {
       // 自动填充值
       payload.user_id = this.$cookies.get("CURRENT-USER-ID");
       let salerField = this.fields.find(
-        element => element.identity_key === "saler"
+        (element) => element.identity_key === "saler"
       );
       payload.response.entries_attributes.push({
         value: this.$cookies.get("CURRENT-NAME"),
-        field_id: salerField.id
+        field_id: salerField.id,
       });
       let salerPhoneField = this.fields.find(
-        element => element.identity_key === "saler_phone"
+        (element) => element.identity_key === "saler_phone"
       );
       payload.response.entries_attributes.push({
         value: this.$cookies.get("CURRENT-USER-PHONE"),
-        field_id: salerPhoneField.id
+        field_id: salerPhoneField.id,
       });
-      api.postSalerArriveVisitorsAPI(payload).then(res => {
+      api.postSalerArriveVisitorsAPI(payload).then((res) => {
         if (res.status === 201) {
           this.$toast("新建成功 ✨");
           this.$router.push({
             name: "buy",
-            query: { response_id: res.data.id }
+            query: { response_id: res.data.id },
           });
         } else {
           this.$toast("新建失败 >_<");
@@ -444,7 +454,7 @@ export default {
         this.$toast("手机号位数错误🙅");
         field.value = "";
       }
-      api.getPhoneRepeatAPI(field.value).then(res => {
+      api.getPhoneRepeatAPI(field.value).then((res) => {
         if (res.data.customer_phone) {
           field.value = "";
           this.created_at = res.data.created_at.slice(0, 10);
@@ -453,8 +463,8 @@ export default {
           this.show = true;
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
