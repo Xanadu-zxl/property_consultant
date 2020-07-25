@@ -23,7 +23,7 @@
         <span>客户数量(人)</span>
         <span>排名</span>
       </p>
-      <p :key="item.id" class="ranking_list_content_body" v-for="item in list">
+      <p :key="item.id" class="ranking_list_content_body" v-for="item in list" v-show="showData">
         <span>{{ item.saler }}</span>
         <span>{{ item.count }}</span>
         <span>{{ item.top }}</span>
@@ -38,7 +38,7 @@ import total from "@/api/total";
 export default {
   data() {
     return {
-      type: "到访客户",
+      type: "新建客户",
       customer_type: "arrive_visitor",
       date: "2020/5/15 - 2021/5/15",
       show: false,
@@ -47,12 +47,13 @@ export default {
       minDate: new Date(2010, 0, 1),
       maxDate: new Date(2100, 0, 31),
       types: [
-        { text: "来电客户", value: "来电客户" },
-        { text: "到访客户", value: "到访客户" },
+        { text: "预约客户", value: "预约客户" },
+        { text: "新建客户", value: "新建客户" },
         { text: "认购客户", value: "认购客户" },
         { text: "签约客户", value: "签约客户" },
       ],
       list: [],
+      showData: true,
     };
   },
   created() {
@@ -96,10 +97,18 @@ export default {
       this.overlay = false;
     },
     change() {
+      switch (this.type) {
+        case "新建客户":
+          this.showData = true;
+          this.customer_type = "arrive_visitor";
+          break;
+
+        default:
+          this.showData = false;
+          this.$toast("暂无数据 x_x");
+          break;
+      }
       // 类型change
-      this.type === "到访客户"
-        ? (this.customer_type = "arrive_visitor")
-        : (this.customer_type = "caller");
       let params = {
         customer_type: this.customer_type,
         start_date: this.startDate,
