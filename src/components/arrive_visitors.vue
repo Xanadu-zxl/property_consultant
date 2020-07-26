@@ -16,7 +16,8 @@
               :label="field.title"
               autocomplete="off"
               placeholder="请输入"
-              type="text"
+              type="textarea"
+              autosize
               v-model="field.value"
             />
           </div>
@@ -59,24 +60,6 @@
           </div>
           <!-- 级联 -->
           <div class="input_text cascade" v-else-if="field.type === 'Field::CascadedSelect'">
-            <p v-if="field.identity_key == 'living_area'">
-              <van-field
-                :id="field.identity_key"
-                :label="field.title"
-                :value="cascadeValue"
-                @click="showPickerCascade = true"
-                clickable
-                readonly
-              />
-              <van-popup position="bottom" round v-model="showPickerCascade">
-                <van-picker
-                  :columns="field.columns"
-                  @cancel="showPickerCascade = false"
-                  @confirm="onLivingConfirm"
-                  show-toolbar
-                />
-              </van-popup>
-            </p>
             <p v-if="field.identity_key == 'working_area'">
               <van-field
                 :id="field.identity_key"
@@ -97,6 +80,7 @@
             </p>
           </div>
           <!-- butoon -->
+
           <div v-else-if="field.type === 'Field::RadioButton'">
             <div v-if="field.identity_key === 'entitlement'" />
             <div v-else-if="field.identity_key === 'lottery'" />
@@ -120,8 +104,30 @@
             </div>
           </div>
 
-          <!-- button + text -->
+          <div v-else-if="field.type === 'Field::CheckBox'">
+            <van-field name="checkboxGroup" :label="field.title">
+              <template #input>
+                <van-checkbox-group v-model="field.option_id">
+                  <div :key="option.id" v-for="option in field.options">
+                    <van-checkbox :name="option.id" checked-color="#00A862">{{option.value}}</van-checkbox>
+                  </div>
+                  <div v-if="field.other_option">
+                    <p class="other">
+                      <span>其他：</span>
+                      <van-field
+                        autocomplete="off"
+                        placeholder="请输入"
+                        autosize
+                        v-model="field.value"
+                      />
+                    </p>
+                  </div>
+                </van-checkbox-group>
+              </template>
+            </van-field>
+          </div>
         </div>
+        <!-- button + text -->
         <div class="button_text">
           <div :key="field.identity_key" v-for="field in formData">
             <div v-if="field.identity_key === 'entitlement'">
@@ -245,6 +251,7 @@ import total from "@/api/total";
 export default {
   data() {
     return {
+      checkboxGroup: [],
       value: "",
       title: "新建客户",
       fields: [],
@@ -279,7 +286,7 @@ export default {
         "customer_resistance",
         "time",
         "working_area",
-        "living_area",
+        "living_area2",
       ],
       formData: [],
       minDate: new Date(1900, 0, 1),
@@ -311,22 +318,6 @@ export default {
   },
 
   methods: {
-    // 下拉
-    onLivingConfirm(cascadeValue, index) {
-      this.formData.forEach((element) => {
-        if (element.identity_key === "living_area") {
-          let cascade =
-            element.columns[index[0]].children[index[1]].children[index[2]];
-          element.choice_id = cascade.id;
-          element.value = cascade.text;
-        }
-      });
-
-      let cascadeValueLiving = cascadeValue.join(" - ");
-
-      this.cascadeValue = cascadeValueLiving;
-      this.showPickerCascade = false;
-    },
     // 级联2
     onWorkingConfirm(cascadeValue, index) {
       this.formData.forEach((element) => {
@@ -378,7 +369,7 @@ export default {
       formData.forEach((element) => {
         switch (element.type) {
           case "Field::RadioButton": {
-            if (element.option_id !== "" && element) {
+            if (element.option_id !== "") {
               payload.response.entries_attributes.push({
                 field_id: element.field_id,
                 option_id: element.option_id,
@@ -386,8 +377,26 @@ export default {
             }
             break;
           }
+          case "Field::CheckBox": {
+            if (element.option_id !== "") {
+              for (let i = 0; i < element.option_id.length; i++) {
+                payload.response.entries_attributes.push({
+                  field_id: element.field_id,
+                  option_id: element.option_id[i],
+                });
+              }
+            }
+            if (element.value) {
+              payload.response.entries_attributes.push({
+                field_id: element.field_id,
+                option_id: 0,
+                value: element.value,
+              });
+            }
+            break;
+          }
           case "Field::DateTime": {
-            if (element.option_id !== "" && element) {
+            if (element.option_id !== "") {
               if (this.newTime) {
                 payload.response.entries_attributes.push({
                   field_id: element.field_id,
@@ -398,7 +407,7 @@ export default {
             break;
           }
           case "Field::CascadedSelect": {
-            if (element.option_id !== "" && element) {
+            if (element.option_id !== "") {
               if (this.cascadeValue) {
                 payload.response.entries_attributes.push({
                   field_id: element.field_id,
@@ -410,7 +419,7 @@ export default {
             break;
           }
           default: {
-            if (element.value !== "" && element) {
+            if (element.value !== "") {
               payload.response.entries_attributes.push({
                 field_id: element.field_id,
                 value: element.value,
@@ -543,6 +552,9 @@ export default {
 .van-radio--horizontal {
   margin: 4px;
 }
+.van-checkbox {
+  margin-top: 8px;
+}
 
 .van-radio-group--horizontal {
   flex-direction: column;
@@ -615,6 +627,15 @@ a {
         line-height: 20px;
       }
     }
+  }
+}
+
+.other {
+  display: flex;
+
+  span {
+    width: 100px;
+    margin: 10px 0px 0px 28px;
   }
 }
 </style>

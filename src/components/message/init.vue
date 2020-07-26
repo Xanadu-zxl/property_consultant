@@ -8,6 +8,28 @@
       </header>
       <aside class="table_aside">
         <div :key="field.identity_key" v-for="field in formData">
+          <!-- <div v-if="field.type === 'Field::CheckBox'">
+            <van-field name="checkboxGroup" :label="field.title">
+              <template #input>
+                <van-checkbox-group v-model="field.option_id">
+                  <div :key="option.id" v-for="option in field.options">
+                    <van-checkbox :name="option.id" checked-color="#00A862">{{option.value}}</van-checkbox>
+                  </div>
+                  <div v-if="field.other_option">
+                    <p class="other">
+                      <span>其他：</span>
+                      <van-field
+                        autocomplete="off"
+                        placeholder="请输入"
+                        autosize
+                        v-model="field.value"
+                      />
+                    </p>
+                  </div>
+                </van-checkbox-group>
+              </template>
+            </van-field>
+          </div>-->
           <!-- text -->
           <div class="input_text" v-if="field.type === 'Field::TextArea'">
             <van-field
@@ -15,7 +37,8 @@
               :label="field.title"
               autocomplete="off"
               placeholder="请输入"
-              type="text"
+              type="textarea"
+              autosize
               v-model="field.value"
             />
           </div>
@@ -184,6 +207,8 @@
 <script>
 import CustomerTabbar from "../pages/tabbar";
 import api from "@/api/api";
+// import total from "@/api/total";
+
 export default {
   data() {
     return {
@@ -191,6 +216,7 @@ export default {
       isLoading: true,
       fields: [],
       orderFieldList: [
+        "more",
         "customer_source",
         "customer_name",
         "customer_phone",
@@ -209,6 +235,7 @@ export default {
         "price_range",
         "working_area",
         "living_area",
+        "living_area2",
         "payment_method",
         "lottery",
         "lottery_results",
@@ -244,6 +271,8 @@ export default {
       .getSaleraArriveVisitorsNewAPI()
       .then((res) => {
         this.fields = res.data.fields;
+        // this.formData = total.tableListData(this.fields, this.orderFieldList);
+
         this.orderFieldList.forEach((element) => {
           let field = this.fields.find(
             (field) => field.identity_key === element
@@ -261,6 +290,18 @@ export default {
                 });
                 break;
               }
+              case "Field::CheckBox": {
+                this.formData.push({
+                  field_id: field.id,
+                  identity_key: field.identity_key,
+                  type: field.type,
+                  title: field.title,
+                  option_id: field.option_id,
+                  options: field.options,
+                  other_option: field.other_option,
+                });
+                break;
+              }
               case "Field::DateTime": {
                 this.formData.push({
                   field_id: field.id,
@@ -271,6 +312,7 @@ export default {
                 });
                 break;
               }
+
               default: {
                 this.formData.push({
                   field_id: field.id,
@@ -293,6 +335,7 @@ export default {
             this.isLoading = false;
 
             Object.keys(res.data.mapped_values).forEach((element) => {
+              console.log(element);
               if (res.data.mapped_values[element]["text_value"]) {
                 let field = this.formData.find(
                   (field) => field.identity_key === element
@@ -310,6 +353,15 @@ export default {
                       ).id;
                       break;
                     }
+                    // case "Field::CheckBox": {
+                    //   let optionValue =
+                    //     res.data.mapped_values[element]["text_value"];
+                    //   let option_id = this.fields.find(
+                    //     (field) => field.identity_key === element
+                    //   ).id;
+                    //   field.option_id = optionValue;
+                    //   break;
+                    // }
                     case "Field::DateTime": {
                       field.value =
                         res.data.mapped_values[element]["text_value"][0];
@@ -360,12 +412,10 @@ export default {
     // 发送表单数据
     newTable() {
       let payload = { response: { entries_attributes: [] } };
-
       this.formData.forEach((field) => {
         let entry = this.entries.find(
           (entry) => entry.field_id === field.field_id
         );
-
         switch (field.type) {
           case "Field::RadioButton": {
             if (field.option_id) {
@@ -501,6 +551,9 @@ export default {
 .van-radio--horizontal {
   margin: 4px;
 }
+.van-checkbox {
+  margin-top: 8px;
+}
 
 .van-picker__confirm {
   color: #00a862;
@@ -527,5 +580,14 @@ a {
 
 .footer {
   height: 50px;
+}
+
+.other {
+  display: flex;
+
+  span {
+    width: 100px;
+    margin: 10px 0px 0px 28px;
+  }
 }
 </style>
