@@ -27,6 +27,17 @@ export default {
             objData.options = field.options;
             break;
           }
+          case "Field::CheckBox": {
+            objData.field_id = field.id;
+            objData.identity_key = field.identity_key;
+            objData.type = field.type;
+            objData.title = field.title;
+            objData.option_id = [];
+            objData.value = "";
+            objData.other_option = field.other_option;
+            objData.options = field.options;
+            break;
+          }
           case "Field::DateTime": {
             objData.field_id = field.id;
             objData.identity_key = field.identity_key;
