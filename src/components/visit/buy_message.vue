@@ -89,7 +89,7 @@
             <span>生活区域</span>
           </div>
           <div class="buy_message_content_body_right">
-            <span>{{living_area}}</span>
+            <span>{{living_area2}}</span>
           </div>
         </div>
         <div class="buy_message_content_body">
@@ -157,7 +157,7 @@ export default {
       payment_method: "",
       entitlement: "",
       reason: "",
-      living_area: "",
+      living_area2: "",
       working_area: "",
       lottery: "",
       lottery_results: "",
@@ -178,6 +178,7 @@ export default {
 
     // 来访
     api.putSalerArriveVisitorsAPI(this.response_id).then((res) => {
+      console.log(res);
       this.isLoading = false;
       let mappedValues = res.data.mapped_values;
       if (mappedValues.customer_name) {
@@ -205,8 +206,8 @@ export default {
       if (mappedValues.reason) {
         this.reason = mappedValues.reason.text_value[0];
       }
-      if (mappedValues.living_area) {
-        this.living_area = mappedValues.living_area.text_value[0];
+      if (mappedValues.living_area2) {
+        this.living_area2 = mappedValues.living_area2.text_value[0];
       }
       if (mappedValues.working_area) {
         this.working_area = mappedValues.working_area.text_value[0];

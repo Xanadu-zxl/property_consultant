@@ -407,8 +407,8 @@ export default {
             break;
           }
           case "Field::CascadedSelect": {
-            if (element.option_id !== "") {
-              if (this.cascadeValue) {
+            if (element.option_id !== " ") {
+              if (this.cascadeWorkingValue) {
                 payload.response.entries_attributes.push({
                   field_id: element.field_id,
                   choice_id: element.choice_id,

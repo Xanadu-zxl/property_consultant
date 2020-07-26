@@ -216,12 +216,11 @@ export default {
       isLoading: true,
       fields: [],
       orderFieldList: [
-        "more",
-        "customer_source",
         "customer_name",
         "customer_phone",
         "customer_gender",
         "remark",
+        "source",
         "age",
         "entitlement",
         "reason",
