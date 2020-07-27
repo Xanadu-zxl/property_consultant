@@ -51,6 +51,7 @@ export default {
         { text: "新建客户", value: "新建客户" },
         { text: "认购客户", value: "认购客户" },
         { text: "签约客户", value: "签约客户" },
+        { text: "来电客户", value: "来电客户" },
       ],
       list: [],
       showData: true,
