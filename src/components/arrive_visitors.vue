@@ -281,6 +281,7 @@ export default {
         "price_range",
         "payment_method",
         "lottery",
+        "line_card",
         "lottery_results",
         "unicon_test",
         "customer_resistance",

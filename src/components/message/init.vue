@@ -234,6 +234,7 @@ export default {
         "price_range",
         "working_area",
         "living_area",
+        "line_card",
         "living_area2",
         "payment_method",
         "lottery",
